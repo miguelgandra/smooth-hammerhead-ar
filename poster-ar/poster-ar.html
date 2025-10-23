@@ -5,71 +5,137 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Shark Poster AR Experience</title>
 
-    <script src="https://aframe.io/releases/1.2.0/aframe.min.js?v=99"></script>
-    
-    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.0/aframe/build/aframe-ar-nft.js?v=99"></script>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.5/aframe/build/aframe-ar-nft.js"></script>
 
     <script>
         AFRAME.registerComponent('marker-handler', {
             init: function() {
-                this.video = document.querySelector('#posterVideo');
-                this.videoPlane = document.querySelector('#video-plane');
-                this.sharkRig = document.querySelector('#shark-rig');
-
+                const marker = this.el;
+                
                 this.el.addEventListener('markerFound', () => {
                     console.log('Marker Found');
-                    this.video.play();
-                    this.videoPlane.setAttribute('visible', 'true');
-                    this.sharkRig.setAttribute('visible', 'true');
+                    const video = document.querySelector('#posterVideo');
+                    const videoPlane = document.querySelector('#video-plane');
+                    const sharkRig = document.querySelector('#shark-rig');
+                    
+                    if (video) {
+                        video.play().catch(e => console.log('Video play error:', e));
+                    }
+                    if (videoPlane) videoPlane.setAttribute('visible', 'true');
+                    if (sharkRig) sharkRig.setAttribute('visible', 'true');
                 });
 
                 this.el.addEventListener('markerLost', () => {
                     console.log('Marker Lost');
-                    this.video.pause();
-                    this.video.currentTime = 0; 
-                    this.videoPlane.setAttribute('visible', 'false');
-                    this.sharkRig.setAttribute('visible', 'false');
+                    const video = document.querySelector('#posterVideo');
+                    const videoPlane = document.querySelector('#video-plane');
+                    const sharkRig = document.querySelector('#shark-rig');
+                    
+                    if (video) {
+                        video.pause();
+                        video.currentTime = 0;
+                    }
+                    if (videoPlane) videoPlane.setAttribute('visible', 'false');
+                    if (sharkRig) sharkRig.setAttribute('visible', 'false');
                 });
             }
+        });
+
+        // Debug logging
+        window.addEventListener('load', () => {
+            console.log('Page loaded');
+            const scene = document.querySelector('a-scene');
+            
+            scene.addEventListener('loaded', () => {
+                console.log('AR.js scene loaded');
+            });
+
+            scene.addEventListener('arjs-video-loaded', () => {
+                console.log('Camera video loaded');
+            });
         });
     </script>
 
     <style>
-        body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+        body { 
+            margin: 0; 
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            overflow: hidden;
+        }
         #starter-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.8); color: #fff; z-index: 1000;
+            background: rgba(0, 0, 0, 0.85); color: #fff; z-index: 1000;
             display: flex; justify-content: center; align-items: center;
             flex-direction: column; text-align: center;
             font-size: 1.3em; cursor: pointer;
         }
         #starter-overlay h1 { font-size: 1.5em; margin: 0; }
-        #starter-overlay p { font-size: 1.1em; margin: 15px 20px 0; max-width: 400px; color: #eee; line-height: 1.5; }
-        a-scene { z-index: 1; }
+        #starter-overlay p { 
+            font-size: 1.1em; margin: 15px 20px 0; 
+            max-width: 400px; color: #eee; line-height: 1.5; 
+        }
+        #instructions {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            z-index: 999;
+            text-align: center;
+        }
+        a-scene { 
+            z-index: 1;
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
     </style>
 </head>
 <body>
 
     <div id="starter-overlay" onclick="this.style.display='none';">
-        <h1>Tap to Start AR</h1>
-        <p>You may need to grant camera and motion sensor permissions.</p>
+        <h1>🦈 Tap to Start AR</h1>
+        <p>Point your camera at the poster. Hold steady and ensure good lighting.</p>
+        <p style="font-size: 0.8em; margin-top: 10px;">Camera permission required</p>
+    </div>
+
+    <div id="instructions">
+        📷 Point camera at poster and hold steady
     </div>
 
     <a-scene
         embedded
         vr-mode-ui="enabled: false;"
-        arjs="sourceType: webcam; trackingMethod: best; debugUIEnabled: true;"
-        renderer="logarithmicDepthBuffer: true; colorManagement: true;"
+        arjs="sourceType: webcam; 
+              trackingMethod: best; 
+              debugUIEnabled: false;
+              detectionMode: mono;
+              canvasWidth: 640;
+              canvasHeight: 480;
+              maxDetectionRate: 60;
+              imageSmoothingEnabled: true;"
+        renderer="logarithmicDepthBuffer: true; 
+                  colorManagement: true; 
+                  precision: medium;
+                  antialias: true;
+                  alpha: true;"
+        device-orientation-permission-ui="enabled: false"
     >
 
         <a-assets>
             <video
                 id="posterVideo"
                 src="../media/BLS8-animation.mp4"
-                preload="auto"
+                preload="metadata"
                 loop="true"
                 muted
                 playsinline
+                webkit-playsinline
                 crossorigin="anonymous"
             ></video>
             <a-asset-item
@@ -82,7 +148,9 @@
             type="nft"
             url="../markers/BLS8-poster-train"
             smooth="true"
-            smoothCount="5"
+            smoothCount="10"
+            smoothTolerance="0.01"
+            smoothThreshold="5"
             marker-handler
         >
             <a-plane
@@ -90,12 +158,13 @@
                 rotation="-90 0 0"
                 width="1"
                 height="1.333" 
-                material="src: #posterVideo; transparent: true; opacity: 1;"
+                material="src: #posterVideo; shader: flat; side: double;"
                 visible="false" 
             ></a-plane>
 
             <a-entity
                 id="shark-rig"
+                position="0 0 0"
                 animation="property: rotation; to: 0 360 0; loop: true; dur: 25000; easing: linear;"
                 visible="false"
             >
@@ -110,7 +179,8 @@
             </a-entity>
         </a-nft>
 
-        <a-camera preset="webcam"></a-camera>
+        <a-entity camera></a-entity>
     </a-scene>
+
 </body>
 </html>
