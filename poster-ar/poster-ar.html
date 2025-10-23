@@ -5,10 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Shark Poster AR Experience</title>
 
-    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js?v=1"></script>
     
-    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.0/aframe/build/aframe-ar-nft.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.0/aframe/build/aframe-ar-nft.js?v=1"></script>
 
+    <script>
+        AFRAME.registerComponent('marker-handler', {
+            init: function() {
+                this.video = document.querySelector('#posterVideo');
+                this.videoPlane = document.querySelector('#video-plane');
+                this.sharkRig = document.querySelector('#shark-rig');
+
+                this.el.addEventListener('markerFound', () => {
+                    console.log('Marker Found');
+                    this.video.play();
+                    this.videoPlane.setAttribute('visible', 'true');
+                    this.sharkRig.setAttribute('visible', 'true');
+                });
+
+                this.el.addEventListener('markerLost', () => {
+                    console.log('Marker Lost');
+                    this.video.pause();
+                    this.video.currentTime = 0; 
+                    this.videoPlane.setAttribute('visible', 'false');
+                    this.sharkRig.setAttribute('visible', 'false');
+                });
+            }
+        });
+    </script>
     <style>
         body {
             margin: 0;
@@ -26,7 +50,7 @@
             z-index: 1000;
             display: flex;
             justify-content: center;
-            align: center;
+            align-items: center;
             flex-direction: column;
             text-align: center;
             font-size: 1.3em;
@@ -118,29 +142,5 @@
         <a-camera preset="webcam"></a-camera>
     </a-scene>
 
-    <script>
-        AFRAME.registerComponent('marker-handler', {
-            init: function() {
-                this.video = document.querySelector('#posterVideo');
-                this.videoPlane = document.querySelector('#video-plane');
-                this.sharkRig = document.querySelector('#shark-rig');
-
-                this.el.addEventListener('markerFound', () => {
-                    console.log('Marker Found');
-                    this.video.play();
-                    this.videoPlane.setAttribute('visible', 'true');
-                    this.sharkRig.setAttribute('visible', 'true');
-                });
-
-                this.el.addEventListener('markerLost', () => {
-                    console.log('Marker Lost');
-                    this.video.pause();
-                    this.video.currentTime = 0; 
-                    this.videoPlane.setAttribute('visible', 'false');
-                    this.sharkRig.setAttribute('visible', 'false');
-                });
-            }
-        });
-    </script>
-</body>
+    </body>
 </html>
