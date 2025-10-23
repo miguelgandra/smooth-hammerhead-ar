@@ -9,12 +9,43 @@
     <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.5/aframe/build/aframe-ar-nft.js"></script>
 
     <script>
+        // Consolidated load event listener
+        window.addEventListener('load', () => {
+            console.log('Page loaded');
+            const scene = document.querySelector('a-scene');
+            
+            scene.addEventListener('loaded', () => {
+                console.log('AR.js scene loaded');
+            });
+
+            scene.addEventListener('arjs-video-loaded', () => {
+                console.log('Camera video loaded');
+            });
+            
+            scene.addEventListener('arjs-nft-loaded', (e) => {
+                console.log('✅ NFT Marker data loaded successfully');
+            });
+            
+            scene.addEventListener('arjs-nft-init-data', (e) => {
+                console.log('✅ NFT initialization complete');
+            });
+
+            // Check if camera is working
+            scene.addEventListener('camera-init', (data) => {
+                console.log('✅ Camera initialized');
+            });
+
+            scene.addEventListener('camera-error', (error) => {
+                console.error('❌ Camera error:', error);
+            });
+        });
+
         AFRAME.registerComponent('marker-handler', {
             init: function() {
-                const marker = this.el;
+                console.log('🎯 Marker handler initialized');
                 
                 this.el.addEventListener('markerFound', () => {
-                    console.log('Marker Found');
+                    console.log('🎉 MARKER FOUND!');
                     const video = document.querySelector('#posterVideo');
                     const videoPlane = document.querySelector('#video-plane');
                     const sharkRig = document.querySelector('#shark-rig');
@@ -27,7 +58,7 @@
                 });
 
                 this.el.addEventListener('markerLost', () => {
-                    console.log('Marker Lost');
+                    console.log('👋 Marker lost');
                     const video = document.querySelector('#posterVideo');
                     const videoPlane = document.querySelector('#video-plane');
                     const sharkRig = document.querySelector('#shark-rig');
@@ -40,20 +71,6 @@
                     if (sharkRig) sharkRig.setAttribute('visible', 'false');
                 });
             }
-        });
-
-        // Debug logging
-        window.addEventListener('load', () => {
-            console.log('Page loaded');
-            const scene = document.querySelector('a-scene');
-            
-            scene.addEventListener('loaded', () => {
-                console.log('AR.js scene loaded');
-            });
-
-            scene.addEventListener('arjs-video-loaded', () => {
-                console.log('Camera video loaded');
-            });
         });
     </script>
 
