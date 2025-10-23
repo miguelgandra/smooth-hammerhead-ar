@@ -236,25 +236,25 @@
             <a-plane
                 id="video-plane"
                 rotation="-90 0 0"
-                position="0 0 0"
-                width="1"
-                height="1.333" 
-                material="src: #posterVideo; shader: flat; side: double; transparent: false;"
+                position="0 0 0.2"
+                width="3"
+                height="4" 
+                material="src: #posterVideo; shader: flat; side: double;"
                 visible="true"
             ></a-plane>
 
             <a-entity
                 id="shark-rig"
-                position="0 0 0"
+                position="0 0.5 0"
                 animation="property: rotation; to: 0 360 0; loop: true; dur: 25000; easing: linear;"
                 visible="true"
             >
                 <a-entity
                     id="shark"
                     gltf-model="#sharkModel"
-                    position="1.2 0.3 0"
+                    position="3 0 1"
                     rotation="0 90 0"
-                    scale="0.2 0.2 0.2"
+                    scale="0.6 0.6 0.6"
                     animation-mixer="clip: *; loop: repeat;"
                 ></a-entity>
             </a-entity>
