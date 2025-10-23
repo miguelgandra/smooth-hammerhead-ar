@@ -9,13 +9,59 @@
     <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.5/aframe/build/aframe-ar-nft.js"></script>
 
     <script>
-        // Consolidated load event listener
+        let userInteracted = false;
+        let videoReady = false;
+        let modelReady = false;
+
+        // Handle initial user interaction
+        function handleUserInteraction() {
+            console.log('✅ User interaction detected');
+            userInteracted = true;
+            
+            // Preload and prepare video
+            const video = document.querySelector('#posterVideo');
+            if (video) {
+                video.load();
+                video.play().then(() => {
+                    console.log('✅ Video preloaded successfully');
+                    video.pause();
+                    video.currentTime = 0;
+                    videoReady = true;
+                }).catch(e => {
+                    console.error('❌ Video preload error:', e);
+                });
+            }
+        }
+
         window.addEventListener('load', () => {
             console.log('Page loaded');
             const scene = document.querySelector('a-scene');
             
             scene.addEventListener('loaded', () => {
                 console.log('AR.js scene loaded');
+                
+                // Check if video is loaded
+                const video = document.querySelector('#posterVideo');
+                if (video) {
+                    video.addEventListener('loadeddata', () => {
+                        console.log('✅ Video data loaded');
+                    });
+                    video.addEventListener('error', (e) => {
+                        console.error('❌ Video loading error:', e);
+                    });
+                }
+
+                // Check if model is loaded
+                const shark = document.querySelector('#shark');
+                if (shark) {
+                    shark.addEventListener('model-loaded', () => {
+                        console.log('✅ 3D model loaded');
+                        modelReady = true;
+                    });
+                    shark.addEventListener('model-error', (e) => {
+                        console.error('❌ Model loading error:', e);
+                    });
+                }
             });
 
             scene.addEventListener('arjs-video-loaded', () => {
@@ -24,15 +70,6 @@
             
             scene.addEventListener('arjs-nft-loaded', (e) => {
                 console.log('✅ NFT Marker data loaded successfully');
-            });
-            
-            scene.addEventListener('arjs-nft-init-data', (e) => {
-                console.log('✅ NFT initialization complete');
-            });
-
-            // Check if camera is working
-            scene.addEventListener('camera-init', (data) => {
-                console.log('✅ Camera initialized');
             });
 
             scene.addEventListener('camera-error', (error) => {
@@ -43,22 +80,48 @@
         AFRAME.registerComponent('marker-handler', {
             init: function() {
                 console.log('🎯 Marker handler initialized');
+                let markerVisible = false;
                 
                 this.el.addEventListener('markerFound', () => {
                     console.log('🎉 MARKER FOUND!');
+                    markerVisible = true;
+                    
                     const video = document.querySelector('#posterVideo');
                     const videoPlane = document.querySelector('#video-plane');
                     const sharkRig = document.querySelector('#shark-rig');
                     
-                    if (video) {
-                        video.play().catch(e => console.log('Video play error:', e));
+                    console.log('Video element:', video);
+                    console.log('Video plane:', videoPlane);
+                    console.log('Shark rig:', sharkRig);
+                    console.log('User interacted:', userInteracted);
+                    console.log('Video ready:', videoReady);
+                    console.log('Model ready:', modelReady);
+                    
+                    if (videoPlane) {
+                        videoPlane.setAttribute('visible', 'true');
+                        console.log('✅ Video plane set to visible');
                     }
-                    if (videoPlane) videoPlane.setAttribute('visible', 'true');
-                    if (sharkRig) sharkRig.setAttribute('visible', 'true');
+                    
+                    if (sharkRig) {
+                        sharkRig.setAttribute('visible', 'true');
+                        console.log('✅ Shark rig set to visible');
+                    }
+                    
+                    if (video && userInteracted) {
+                        video.play().then(() => {
+                            console.log('✅ Video playing');
+                        }).catch(e => {
+                            console.error('❌ Video play error:', e);
+                        });
+                    } else if (!userInteracted) {
+                        console.warn('⚠️ Cannot play video - no user interaction yet');
+                    }
                 });
 
                 this.el.addEventListener('markerLost', () => {
                     console.log('👋 Marker lost');
+                    markerVisible = false;
+                    
                     const video = document.querySelector('#posterVideo');
                     const videoPlane = document.querySelector('#video-plane');
                     const sharkRig = document.querySelector('#shark-rig');
@@ -115,7 +178,7 @@
 </head>
 <body>
 
-    <div id="starter-overlay" onclick="this.style.display='none';">
+    <div id="starter-overlay" onclick="handleUserInteraction(); this.style.display='none';">
         <h1>🦈 Tap to Start AR</h1>
         <p>Point your camera at the poster. Hold steady and ensure good lighting.</p>
         <p style="font-size: 0.8em; margin-top: 10px;">Camera permission required</p>
@@ -144,11 +207,11 @@
         device-orientation-permission-ui="enabled: false"
     >
 
-        <a-assets>
+        <a-assets timeout="30000">
             <video
                 id="posterVideo"
-                src="https://miguelgandra.github.io/smooth-hammerhead-ar/media/BLS8-animation.mp4?v=99"
-                preload="metadata"
+                src="https://miguelgandra.github.io/smooth-hammerhead-ar/media/BLS8-animation.mp4"
+                preload="auto"
                 loop="true"
                 muted
                 playsinline
@@ -157,7 +220,7 @@
             ></video>
             <a-asset-item
                 id="sharkModel"
-                src="https://miguelgandra.github.io/smooth-hammerhead-ar/models/sixgill-shark.glb?v=99"
+                src="https://miguelgandra.github.io/smooth-hammerhead-ar/models/sixgill-shark.glb"
             ></a-asset-item>
         </a-assets>
 
@@ -173,17 +236,18 @@
             <a-plane
                 id="video-plane"
                 rotation="-90 0 0"
+                position="0 0 0"
                 width="1"
                 height="1.333" 
-                material="src: #posterVideo; shader: flat; side: double;"
-                visible="false" 
+                material="src: #posterVideo; shader: flat; side: double; transparent: false;"
+                visible="true"
             ></a-plane>
 
             <a-entity
                 id="shark-rig"
                 position="0 0 0"
                 animation="property: rotation; to: 0 360 0; loop: true; dur: 25000; easing: linear;"
-                visible="false"
+                visible="true"
             >
                 <a-entity
                     id="shark"
