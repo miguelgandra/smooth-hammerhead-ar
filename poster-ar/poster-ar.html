@@ -15,8 +15,8 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
         }
 
-        /* Basic loader */
-        .loader {
+        /* --- CHANGED: Updated loader to be a "starter" button --- */
+        #starter-overlay {
             position: fixed;
             top: 0;
             left: 0;
@@ -29,29 +29,26 @@
             justify-content: center;
             align-items: center;
             flex-direction: column;
-            font-size: 1.2em;
+            text-align: center;
+            font-size: 1.3em;
+            cursor: pointer; /* Indicates it's clickable */
         }
 
-        .loader-spinner {
-            border: 8px solid #f3f3f3;
-            border-top: 8px solid #00e0c0; /* Match your site's accent color */
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            animation: spin 1s linear infinite;
-            margin-bottom: 20px;
+        #starter-overlay h1 {
+            font-size: 1.5em;
+            margin: 0;
         }
-        
-        .loader p {
+
+        #starter-overlay p {
+            font-size: 1.1em;
+            margin: 15px 20px 0;
+            max-width: 400px;
             color: #eee;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            line-height: 1.5;
         }
         
-        /* Ensure A-Frame scene is behind loader */
+        /* --- END OF CHANGES --- */
+        
         a-scene {
             z-index: 1;
         }
@@ -59,16 +56,15 @@
 </head>
 <body>
 
-    <div class="loader" id="loader">
-        <div class="loader-spinner"></div>
-        <p>Initializing AR...<br>Please point your camera at the poster.</p>
+    <div id="starter-overlay" onclick="this.style.display='none';">
+        <h1>Tap to Start AR</h1>
+        <p>You may need to grant camera and motion sensor permissions.</p>
     </div>
 
     <a-scene
         vr-mode-ui="enabled: false;"
         arjs="sourceType: webcam; trackingMethod: best; debugUIEnabled: false;"
         renderer="logarithmicDepthBuffer: true; colorManagement: true;"
-        onload="document.getElementById('loader').style.display = 'none';"
     >
 
         <a-assets>
@@ -128,38 +124,25 @@
     <script>
         /**
          * A-Frame Component: 'marker-handler'
-         *
-         * This component listens for AR.js 'markerFound' and 'markerLost' events
-         * to control the visibility and playback of the AR content.
+         * (No changes to this script)
          */
         AFRAME.registerComponent('marker-handler', {
             init: function() {
-                // Get references to the content elements
                 this.video = document.querySelector('#posterVideo');
                 this.videoPlane = document.querySelector('#video-plane');
                 this.sharkRig = document.querySelector('#shark-rig');
 
-                // --- Marker Found Event ---
                 this.el.addEventListener('markerFound', () => {
                     console.log('Marker Found');
-                    
-                    // Start video playback
                     this.video.play();
-                    
-                    // Show the video plane and the shark
                     this.videoPlane.setAttribute('visible', 'true');
                     this.sharkRig.setAttribute('visible', 'true');
                 });
 
-                // --- Marker Lost Event ---
                 this.el.addEventListener('markerLost', () => {
                     console.log('Marker Lost');
-                    
-                    // Pause video and rewind to the start
                     this.video.pause();
                     this.video.currentTime = 0; 
-                    
-                    // Hide the video plane and the shark
                     this.videoPlane.setAttribute('visible', 'false');
                     this.sharkRig.setAttribute('visible', 'false');
                 });
