@@ -11,14 +11,11 @@
     <script>
         let userInteracted = false;
         let videoReady = false;
-        let modelReady = false;
 
-        // Handle initial user interaction
         function handleUserInteraction() {
             console.log('✅ User interaction detected');
             userInteracted = true;
             
-            // Preload and prepare video
             const video = document.querySelector('#posterVideo');
             if (video) {
                 video.load();
@@ -33,78 +30,36 @@
             }
         }
 
-        window.addEventListener('load', () => {
-            console.log('Page loaded');
-            const scene = document.querySelector('a-scene');
-            
-            scene.addEventListener('loaded', () => {
-                console.log('AR.js scene loaded');
-                
-                // Check if video is loaded
-                const video = document.querySelector('#posterVideo');
-                if (video) {
-                    video.addEventListener('loadeddata', () => {
-                        console.log('✅ Video data loaded');
-                    });
-                    video.addEventListener('error', (e) => {
-                        console.error('❌ Video loading error:', e);
-                    });
-                }
-
-                // Check if model is loaded
-                const shark = document.querySelector('#shark');
-                if (shark) {
-                    shark.addEventListener('model-loaded', () => {
-                        console.log('✅ 3D model loaded');
-                        modelReady = true;
-                    });
-                    shark.addEventListener('model-error', (e) => {
-                        console.error('❌ Model loading error:', e);
-                    });
-                }
-            });
-
-            scene.addEventListener('arjs-video-loaded', () => {
-                console.log('Camera video loaded');
-            });
-            
-            scene.addEventListener('arjs-nft-loaded', (e) => {
-                console.log('✅ NFT Marker data loaded successfully');
-            });
-
-            scene.addEventListener('camera-error', (error) => {
-                console.error('❌ Camera error:', error);
-            });
-        });
-
         AFRAME.registerComponent('marker-handler', {
             init: function() {
                 console.log('🎯 Marker handler initialized');
-                let markerVisible = false;
                 
                 this.el.addEventListener('markerFound', () => {
                     console.log('🎉 MARKER FOUND!');
-                    markerVisible = true;
                     
                     const video = document.querySelector('#posterVideo');
                     const videoPlane = document.querySelector('#video-plane');
                     const sharkRig = document.querySelector('#shark-rig');
+                    const testBox = document.querySelector('#test-box');
                     
-                    console.log('Video element:', video);
-                    console.log('Video plane:', videoPlane);
-                    console.log('Shark rig:', sharkRig);
-                    console.log('User interacted:', userInteracted);
-                    console.log('Video ready:', videoReady);
-                    console.log('Model ready:', modelReady);
+                    console.log('Video:', video ? 'Found' : 'NOT FOUND');
+                    console.log('Video plane:', videoPlane ? 'Found' : 'NOT FOUND');
+                    console.log('Shark rig:', sharkRig ? 'Found' : 'NOT FOUND');
+                    console.log('Test box:', testBox ? 'Found' : 'NOT FOUND');
                     
                     if (videoPlane) {
-                        videoPlane.setAttribute('visible', 'true');
-                        console.log('✅ Video plane set to visible');
+                        videoPlane.object3D.visible = true;
+                        console.log('✅ Video plane visibility:', videoPlane.object3D.visible);
                     }
                     
                     if (sharkRig) {
-                        sharkRig.setAttribute('visible', 'true');
-                        console.log('✅ Shark rig set to visible');
+                        sharkRig.object3D.visible = true;
+                        console.log('✅ Shark rig visibility:', sharkRig.object3D.visible);
+                    }
+
+                    if (testBox) {
+                        testBox.object3D.visible = true;
+                        console.log('✅ Test box visibility:', testBox.object3D.visible);
                     }
                     
                     if (video && userInteracted) {
@@ -113,25 +68,24 @@
                         }).catch(e => {
                             console.error('❌ Video play error:', e);
                         });
-                    } else if (!userInteracted) {
-                        console.warn('⚠️ Cannot play video - no user interaction yet');
                     }
                 });
 
                 this.el.addEventListener('markerLost', () => {
                     console.log('👋 Marker lost');
-                    markerVisible = false;
                     
                     const video = document.querySelector('#posterVideo');
                     const videoPlane = document.querySelector('#video-plane');
                     const sharkRig = document.querySelector('#shark-rig');
+                    const testBox = document.querySelector('#test-box');
                     
                     if (video) {
                         video.pause();
                         video.currentTime = 0;
                     }
-                    if (videoPlane) videoPlane.setAttribute('visible', 'false');
-                    if (sharkRig) sharkRig.setAttribute('visible', 'false');
+                    if (videoPlane) videoPlane.object3D.visible = false;
+                    if (sharkRig) sharkRig.object3D.visible = false;
+                    if (testBox) testBox.object3D.visible = false;
                 });
             }
         });
@@ -168,12 +122,6 @@
             z-index: 999;
             text-align: center;
         }
-        a-scene { 
-            z-index: 1;
-            display: block;
-            width: 100%;
-            height: 100%;
-        }
     </style>
 </head>
 <body>
@@ -194,15 +142,10 @@
         arjs="sourceType: webcam; 
               trackingMethod: best; 
               debugUIEnabled: false;
-              detectionMode: mono;
-              canvasWidth: 640;
-              canvasHeight: 480;
-              maxDetectionRate: 60;
-              imageSmoothingEnabled: true;"
+              detectionMode: mono_and_matrix;
+              matrixCodeType: 3x3;"
         renderer="logarithmicDepthBuffer: true; 
-                  colorManagement: true; 
-                  precision: medium;
-                  antialias: true;
+                  precision: mediump;
                   alpha: true;"
         device-orientation-permission-ui="enabled: false"
     >
@@ -212,7 +155,7 @@
                 id="posterVideo"
                 src="https://miguelgandra.github.io/smooth-hammerhead-ar/media/BLS8-animation.mp4"
                 preload="auto"
-                loop="true"
+                loop
                 muted
                 playsinline
                 webkit-playsinline
@@ -233,28 +176,36 @@
             smoothThreshold="5"
             marker-handler
         >
+            <!-- LARGE TEST BOX - Should be VERY visible -->
+            <a-box
+                id="test-box"
+                color="#FF0000"
+                position="0 0 1"
+                scale="0.5 0.5 0.5"
+                material="opacity: 1; transparent: false;"
+            ></a-box>
+
+            <!-- VIDEO PLANE - NO rotation, positioned forward -->
             <a-plane
                 id="video-plane"
-                rotation="-90 0 0"
-                position="0 0 0.2"
-                width="3"
-                height="4" 
-                material="src: #posterVideo; shader: flat; side: double;"
-                visible="true"
+                position="0 0 0.5"
+                width="1.5"
+                height="2" 
+                material="src: #posterVideo; shader: flat; side: double; opacity: 1; transparent: false;"
             ></a-plane>
 
+            <!-- SHARK MODEL - Positioned in front and larger -->
             <a-entity
                 id="shark-rig"
-                position="0 0.5 0"
+                position="0 0 1.5"
                 animation="property: rotation; to: 0 360 0; loop: true; dur: 25000; easing: linear;"
-                visible="true"
             >
                 <a-entity
                     id="shark"
                     gltf-model="#sharkModel"
-                    position="3 0 1"
-                    rotation="0 90 0"
-                    scale="0.6 0.6 0.6"
+                    position="0 0 0"
+                    rotation="0 0 0"
+                    scale="0.5 0.5 0.5"
                     animation-mixer="clip: *; loop: repeat;"
                 ></a-entity>
             </a-entity>
