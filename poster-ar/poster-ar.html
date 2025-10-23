@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Shark Poster AR Experience</title>
+
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        /* Basic loader */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            font-size: 1.2em;
+        }
+
+        .loader-spinner {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #00e0c0; /* Match your site's accent color */
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        
+        .loader p {
+            color: #eee;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Ensure A-Frame scene is behind loader */
+        a-scene {
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="loader" id="loader">
+        <div class="loader-spinner"></div>
+        <p>Initializing AR...<br>Please point your camera at the poster.</p>
+    </div>
+
+    <a-scene
+        vr-mode-ui="enabled: false;"
+        arjs="sourceType: webcam; trackingMethod: best; debugUIEnabled: false;"
+        renderer="logarithmicDepthBuffer: true; colorManagement: true;"
+        onload="document.getElementById('loader').style.display = 'none';"
+    >
+
+        <a-assets>
+            <video
+                id="posterVideo"
+                src="../media/BLS8-animation.mp4"
+                preload="auto"
+                loop="true"
+                muted
+                playsinline
+                crossorigin="anonymous"
+            ></video>
+
+            <a-asset-item
+                id="sharkModel"
+                src="../models/sixgill-shark.glb"
+            ></a-asset-item>
+        </a-assets>
+
+        <a-nft
+            type="nft"
+            url="../markers/BLS8-poster-train"
+            smooth="true"
+            smoothCount="5"
+            marker-handler
+        >
+
+            <a-plane
+                id="video-plane"
+                rotation="-90 0 0"
+                width="1"
+                height="1.333" 
+                material="src: #posterVideo; transparent: true; opacity: 1;"
+                visible="false" 
+            ></a-plane>
+
+            <a-entity
+                id="shark-rig"
+                animation="property: rotation; to: 0 360 0; loop: true; dur: 25000; easing: linear;"
+                visible="false"
+            >
+                <a-entity
+                    id="shark"
+                    gltf-model="#sharkModel"
+                    position="1.2 0.3 0"
+                    rotation="0 90 0"
+                    scale="0.2 0.2 0.2"
+                    animation-mixer="clip: *; loop: repeat;"
+                ></a-entity>
+            </a-entity>
+
+        </a-nft>
+
+        <a-camera preset="webcam"></a-camera>
+    </a-scene>
+
+    <script>
+        /**
+         * A-Frame Component: 'marker-handler'
+         *
+         * This component listens for AR.js 'markerFound' and 'markerLost' events
+         * to control the visibility and playback of the AR content.
+         */
+        AFRAME.registerComponent('marker-handler', {
+            init: function() {
+                // Get references to the content elements
+                this.video = document.querySelector('#posterVideo');
+                this.videoPlane = document.querySelector('#video-plane');
+                this.sharkRig = document.querySelector('#shark-rig');
+
+                // --- Marker Found Event ---
+                this.el.addEventListener('markerFound', () => {
+                    console.log('Marker Found');
+                    
+                    // Start video playback
+                    this.video.play();
+                    
+                    // Show the video plane and the shark
+                    this.videoPlane.setAttribute('visible', 'true');
+                    this.sharkRig.setAttribute('visible', 'true');
+                });
+
+                // --- Marker Lost Event ---
+                this.el.addEventListener('markerLost', () => {
+                    console.log('Marker Lost');
+                    
+                    // Pause video and rewind to the start
+                    this.video.pause();
+                    this.video.currentTime = 0; 
+                    
+                    // Hide the video plane and the shark
+                    this.videoPlane.setAttribute('visible', 'false');
+                    this.sharkRig.setAttribute('visible', 'false');
+                });
+            }
+        });
+    </script>
+</body>
+</html>

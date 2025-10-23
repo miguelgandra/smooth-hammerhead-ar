@@ -86,7 +86,7 @@
             justify-content: center;
             align-items: center;
             gap: 80px;
-            margin-bottom: 140px;
+            margin-bottom: 150px;
         }
         
         .header-logos img {
@@ -94,15 +94,21 @@
             transition: height 0.3s ease;
         }
         
-        .header-logos img:nth-child(2) {
-            margin-top: 10px; /* Aligns CCMAR logo */
+        /* Adjusted styles for individual logos */
+        .header-logos .ccmar-logo {
+            margin-top: 10px;
+        }
+
+        .header-logos .art-logo {
+            height: 85px; /* 10% bigger than 75px */
+            margin-top: 15px; /* 5 pixels down from 10px of ccmar */
         }
 
         h1 {
             font-family: 'Raleway', sans-serif;
-            font-size: 4.5em;
+            font-size: 5em;
             font-weight: 800;
-            margin-bottom: 70px; /* <-- CHANGED from 20px */
+            margin-bottom: 70px;
             background: linear-gradient(135deg, #00e0c0, #00b0c0, #0099ff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -115,12 +121,11 @@
 
         .subtitle {
             font-size: 1.3em;
-            color: #00e0c0; /* Green color */
+            color: #00e0c0;
             font-weight: 300;
-            margin-bottom: 30px; /* <-- CHANGED from 10px */
+            margin-bottom: 30px;
         }
         
-        /* NEW STYLE FOR MOVED PARAGRAPH */
         .header-description {
             font-size: 1.15em;
             color: #b0d0d0;
@@ -238,7 +243,7 @@
         .impact-section h2 {
             font-size: 2em; 
             font-weight: 800;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
             background: linear-gradient(135deg, #00e0c0, #00b0c0);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -308,6 +313,134 @@
             line-height: 1.8;
         }
 
+        /* Marker Demo Section */
+        .marker-demo-section {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 30px;
+            padding: 40px;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 224, 192, 0.2);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            margin: 80px 0;
+            text-align: center;
+        }
+
+        .marker-demo-section h2 {
+            font-size: 2em;
+            font-weight: 800;
+            margin-bottom: 35px;
+            background: linear-gradient(135deg, #00e0c0, #00b0c0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .demo-subtitle {
+            font-size: 1.1em;
+            color: #b0d0d0;
+            max-width: 900px;
+            margin: 0 auto 80px;
+        }
+
+        .demo-content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            text-align: left;
+            align-items: flex-start;
+        }
+
+        /* --- CSS CHANGE HERE --- */
+        .poster-image-container a {
+            display: block; /* Ensures the link wraps the image properly */
+            text-decoration: none;
+        }
+        
+        .poster-image-container img {
+            width: 100%;
+            border-radius: 15px;
+            border: 2px solid rgba(0, 224, 192, 0.3);
+            transition: border-color 0.3s ease; /* Added transition */
+        }
+        
+        .poster-image-container a:hover img {
+            border-color: rgba(0, 224, 192, 0.7); /* Hover effect */
+        }
+        /* --- END CSS CHANGE --- */
+        
+        .poster-credit {
+            font-size: 0.9em;
+            font-style: italic;
+            color: #a0c0c0;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .demo-instructions h3 {
+            color: #00e0c0;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .demo-instructions ol {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .demo-instructions li {
+            margin-bottom: 25px;
+            position: relative;
+            padding-left: 35px;
+        }
+        
+        .demo-instructions li::before {
+            content: counter(list-item);
+            counter-increment: list-item;
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-size: 1.1em;
+            font-weight: 700;
+            color: #00e0c0;
+            background: rgba(0, 224, 192, 0.1);
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 25px;
+        }
+        
+        .demo-instructions li strong {
+            font-size: 1.2em;
+            color: #ffffff;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 3px;
+        }
+        
+        .demo-instructions li p {
+            color: #b0d0d0;
+            margin-top: 5px;
+        }
+        
+        .qr-code-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 10px;
+            margin-top: 10px;
+            border: 2px solid #00e0c0;
+        }
+
+        .mobile-instructions {
+            display: none; /* Hidden by default */
+        }
+        
+        .mobile-instructions .cta-button {
+             margin-top: 15px;
+             text-decoration: none;
+        }
+
         /* Call to Action */
         .cta-section {
             background: linear-gradient(135deg, rgba(0, 224, 192, 0.1), rgba(0, 160, 176, 0.1));
@@ -319,7 +452,7 @@
         }
 
         .cta-section h2 {
-            font-size: 1.6em; /* <-- FURTHER REDUCED */
+            font-size: 1.6em;
             margin-bottom: 20px;
             font-weight: 800;
         }
@@ -337,11 +470,11 @@
             display: inline-block;
             background: linear-gradient(135deg, #00e0c0, #00a0b0);
             color: #020a1a;
-            padding: 16px 40px; /* <-- REDUCED PADDING */
+            padding: 16px 40px;
             border-radius: 50px;
             text-decoration: none;
             font-weight: 700;
-            font-size: 1em; /* <-- REDUCED FONT SIZE */
+            font-size: 1em;
             transition: all 0.3s ease;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -389,8 +522,12 @@
             .header-logos img {
                 height: 50px;
             }
-            .header-logos img:nth-child(2) {
+            .header-logos .ccmar-logo {
                 margin-top: 5px;
+            }
+            .header-logos .art-logo {
+                height: 55px; /* 10% bigger than 50px */
+                margin-top: 10px; /* 5 pixels down from 5px of ccmar */
             }
             
             .header-description {
@@ -404,7 +541,7 @@
             }
             .cta-button {
                 font-size: 1em;
-                padding: 16px 32px; /* Keep mobile CTA button padding consistent */
+                padding: 16px 32px;
             }
 
             model-viewer {
@@ -417,6 +554,37 @@
 
             .ar-section {
                 padding: 25px;
+            }
+
+            .demo-content-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .demo-instructions {
+                text-align: center;
+            }
+
+            .demo-instructions h3 {
+                text-align: left;
+            }
+            
+            .demo-instructions li {
+                text-align: left;
+            }
+            
+            .desktop-instructions {
+                display: none;
+            }
+            
+            .mobile-instructions {
+                display: block;
+            }
+            
+            .mobile-instructions .cta-button {
+                width: 100%;
+                padding: 16px;
+                box-sizing: border-box;
             }
         }
     </style>
@@ -435,12 +603,13 @@
     <div class="container">
         <header>
             <div class="header-logos">
-                <img src="./logos/SOSF-logo.png" alt="Save Our Seas Foundation">
-                <img src="./logos/CCMAR-logo.png" alt="CCMAR">
+                <img src="../logos/CCMAR-logo.png" alt="CCMAR" class="ccmar-logo">
+                <img src="../logos/SOSF-logo.png" alt="Save Our Seas Foundation">
+                <img src="../logos/ART-logo.png" alt="ART Logo" class="art-logo">
             </div>
 
             <h1>Digital Tools for Ocean Conservation</h1>
-            <p class="subtitle">Essential Habitats for Smooth Hammerheads</p>
+            <p class="subtitle">Project: Essential Habitats for Smooth Hammerheads</p>
             
             <p class="header-description">
                 This experience demonstrates how open-access digital tools can enhance marine science communication — translating research into meaningful conservation impact.
@@ -450,8 +619,8 @@
 
         <div class="ar-section">
             <model-viewer
-                src="./models/scalloped_hammerhead_juvenile_low_poly.glb"
-                ios-src="./models/scalloped_hammerhead_juvenile_low_poly.usdz"
+                src="../models/scalloped_hammerhead_juvenile_low_poly.glb"
+                ios-src="../models/scalloped_hammerhead_juvenile_low_poly.usdz"
                 alt="Juvenile Hammerhead Shark 3D Model"
                 auto-rotate
                 autoplay
@@ -473,14 +642,14 @@
             </model-viewer>
 
             <p class="model-credit">
-                Juvenile Hammerhead 3D Model by sharkingaround is licensed under 
+                3D Model "Juvenile Hammerhead" by sharkingaround is licensed under 
                 <a href="http://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>.
             </p>
 
             <div class="instructions">
                 <div class="instruction-card">
                     <h3>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
                         Desktop
                     </h3>
                     <p>Click and drag to rotate. Scroll to zoom. Explore every angle of this juvenile hammerhead.</p>
@@ -496,7 +665,6 @@
         </div>
 
         <div class="impact-section">
-            <h2>Interactive Ocean Storytelling Through AR</h2>
             
             <div class="impact-grid">
                 <div class="impact-card">
@@ -535,6 +703,45 @@
             </div>
         </div>
 
+        <div class="marker-demo-section">
+            <h2>Interactive Ocean Storytelling Through AR</h2>
+            <p class="demo-subtitle">Example of an AR-enhanced scientific poster — turning complex data into something audiences can see, interact with, and remember. From public exhibitions to classrooms and scientific conferences, AR opens new pathways to communicate marine science in a more interactive and inspiring way.</p>
+            
+            <div class="demo-content-grid">
+                <div class="poster-image-container">
+                    <a href="../media/BLS8-poster.png" target="_blank" rel="noopener noreferrer">
+                        <img src="../media/BLS8-poster.png" alt="Scientific Poster AR Target Image">
+                    </a>
+                    <p class="poster-credit">Scientific poster presented at the 8th International Biologging Symposium (Tokyo, Japan).</p>
+                </div>
+                
+                <div class="demo-instructions">
+                    
+                    <div class="desktop-instructions">
+                        <h3>How to try it (Desktop):</h3>
+                        <ol>
+                            <li>
+                                <strong>Scan the QR Code</strong>
+                                <p>Use your phone's camera to scan this code. This will open the AR experience in your mobile browser.</p>
+                                <img src="../media/QR-code.png" alt="QR Code to launch AR experience" class="qr-code-img">
+                            </li>
+                            <li>
+                                <strong>Point at the Poster</strong>
+                                <p>Once the camera feed opens, point your phone at the poster image on the left side of your screen.</p>
+                            </li>
+                        </ol>
+                    </div>
+                    
+                    <div class="mobile-instructions">
+                        <h3>How to try it (Mobile):</h3>
+                        <p>You're already on your phone! Tap the button below to launch the experience.</p>
+                        <a href="shark-poster-ar.html" target="_blank" class="cta-button">Launch AR Demo</a>
+                        <p style="margin-top: 20px;">After launching, you'll need to <strong>find the poster image</strong> (e.g., on another computer screen or a physical print-out) and point your camera at it.</p>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
         <div class="cta-section">
             <h2>Explore the Full Project</h2>
             <p>Learn more about smooth hammerhead nursery habitats, our methodology, and the conservation implications of this work.</p>
