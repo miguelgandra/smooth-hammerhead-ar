@@ -34,59 +34,68 @@
             init: function() {
                 console.log('🎯 Marker handler initialized');
                 
-                this.el.addEventListener('markerFound', () => {
-                    console.log('🎉 MARKER FOUND!');
-                    
-                    const video = document.querySelector('#posterVideo');
-                    const videoPlane = document.querySelector('#video-plane');
-                    const sharkRig = document.querySelector('#shark-rig');
-                    const testBox = document.querySelector('#test-box');
-                    
-                    console.log('Video:', video ? 'Found' : 'NOT FOUND');
-                    console.log('Video plane:', videoPlane ? 'Found' : 'NOT FOUND');
-                    console.log('Shark rig:', sharkRig ? 'Found' : 'NOT FOUND');
-                    console.log('Test box:', testBox ? 'Found' : 'NOT FOUND');
-                    
-                    if (videoPlane) {
-                        videoPlane.object3D.visible = true;
-                        console.log('✅ Video plane visibility:', videoPlane.object3D.visible);
-                    }
-                    
-                    if (sharkRig) {
-                        sharkRig.object3D.visible = true;
-                        console.log('✅ Shark rig visibility:', sharkRig.object3D.visible);
-                    }
+                this.poster = document.querySelector('#clickable-poster');
+                this.videoPlane = document.querySelector('#video-plane');
+                this.video = document.querySelector('#posterVideo');
 
-                    if (testBox) {
-                        testBox.object3D.visible = true;
-                        console.log('✅ Test box visibility:', testBox.object3D.visible);
-                    }
+                if (!this.poster || !this.videoPlane || !this.video) {
+                    console.error('❌ Critical elements not found!');
+                    return;
+                }
+
+                // --- Click event for the poster ---
+                this.onPosterClick = () => {
+                    console.log('🖼️ Poster clicked!');
+                    this.poster.object3D.visible = false;
+                    this.videoPlane.object3D.visible = true;
                     
-                    if (video && userInteracted) {
-                        video.play().then(() => {
+                    if (this.video && userInteracted) {
+                        this.video.play().then(() => {
                             console.log('✅ Video playing');
                         }).catch(e => {
                             console.error('❌ Video play error:', e);
                         });
+                    } else if (!userInteracted) {
+                        console.warn('⚠️ Video can\'t play - user hasn\'t interacted with the page yet.');
+                    }
+                };
+                this.poster.addEventListener('click', this.onPosterClick);
+
+                // --- Marker events ---
+                this.el.addEventListener('markerFound', () => {
+                    console.log('🎉 MARKER FOUND!');
+                    
+                    // Always show the poster first and hide the video
+                    this.poster.object3D.visible = true;
+                    this.videoPlane.object3D.visible = false;
+                    
+                    // Reset video
+                    if (this.video) {
+                        this.video.pause();
+                        this.video.currentTime = 0;
                     }
                 });
 
                 this.el.addEventListener('markerLost', () => {
                     console.log('👋 Marker lost');
                     
-                    const video = document.querySelector('#posterVideo');
-                    const videoPlane = document.querySelector('#video-plane');
-                    const sharkRig = document.querySelector('#shark-rig');
-                    const testBox = document.querySelector('#test-box');
+                    // Hide both
+                    this.poster.object3D.visible = false;
+                    this.videoPlane.object3D.visible = false;
                     
-                    if (video) {
-                        video.pause();
-                        video.currentTime = 0;
+                    // Pause and reset video
+                    if (this.video) {
+                        this.video.pause();
+                        this.video.currentTime = 0;
                     }
-                    if (videoPlane) videoPlane.object3D.visible = false;
-                    if (sharkRig) sharkRig.object3D.visible = false;
-                    if (testBox) testBox.object3D.visible = false;
                 });
+            },
+
+            remove: function() {
+                // Clean up the event listener
+                if (this.poster) {
+                    this.poster.removeEventListener('click', this.onPosterClick);
+                }
             }
         });
     </script>
@@ -161,10 +170,16 @@
                 webkit-playsinline
                 crossorigin="anonymous"
             ></video>
+            
             <a-asset-item
                 id="sharkModel"
                 src="https://miguelgandra.github.io/smooth-hammerhead-ar/models/sixgill-shark.glb"
             ></a-asset-item>
+
+            <img 
+                id="posterImage" 
+                src="https://miguelgandra.github.io/smooth-hammerhead-ar/media/BLS8-poster-train.jpg" 
+                crossorigin="anonymous">
         </a-assets>
 
         <a-nft
@@ -176,42 +191,28 @@
             smoothThreshold="5"
             marker-handler
         >
-            <!-- LARGE TEST BOX - Should be VERY visible -->
-            <a-box
-                id="test-box"
-                color="#FF0000"
-                position="0 0 1"
-                scale="0.5 0.5 0.5"
-                material="opacity: 1; transparent: false;"
-            ></a-box>
+            <a-image
+                id="clickable-poster"
+                src="#posterImage"
+                position="0 0 0.5"
+                width="1.5"
+                height="2"
+                visible="false"
+                class="clickable" 
+            ></a-image>
 
-            <!-- VIDEO PLANE - NO rotation, positioned forward -->
             <a-plane
                 id="video-plane"
                 position="0 0 0.5"
                 width="1.5"
                 height="2" 
-                material="src: #posterVideo; shader: flat; side: double; opacity: 1; transparent: false;"
+                material="src: #posterVideo; shader: flat; side: double;"
+                visible="false"
             ></a-plane>
 
-            <!-- SHARK MODEL - Positioned in front and larger -->
-            <a-entity
-                id="shark-rig"
-                position="0 0 1.5"
-                animation="property: rotation; to: 0 360 0; loop: true; dur: 25000; easing: linear;"
-            >
-                <a-entity
-                    id="shark"
-                    gltf-model="#sharkModel"
-                    position="0 0 0"
-                    rotation="0 0 0"
-                    scale="0.5 0.5 0.5"
-                    animation-mixer="clip: *; loop: repeat;"
-                ></a-entity>
-            </a-entity>
         </a-nft>
 
-        <a-entity camera></a-entity>
+        <a-entity camera cursor="rayOrigin: mouse;"></a-entity>
     </a-scene>
 
 </body>
