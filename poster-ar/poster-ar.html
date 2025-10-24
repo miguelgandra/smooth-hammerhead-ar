@@ -19,7 +19,6 @@
             }
             if (statusDiv) {
                 statusDiv.innerHTML += msg + '<br>';
-                // Keep only last 10 lines
                 const lines = statusDiv.innerHTML.split('<br>');
                 if (lines.length > 10) {
                     statusDiv.innerHTML = lines.slice(-10).join('<br>');
@@ -29,7 +28,7 @@
 
         function handleUserInteraction() {
             console.log('✅ User interaction detected');
-            updateStatus('✅ User interaction detected');
+            updateStatus('✅ User tapped - AR starting');
             userInteracted = true;
             
             const video = document.querySelector('#posterVideo');
@@ -49,11 +48,10 @@
         AFRAME.registerComponent('marker-handler', {
             init: function() {
                 console.log('🎯 Marker handler initialized');
-                updateStatus('🎯 Marker handler initialized');
+                updateStatus('🎯 Component initialized');
                 this.markerVisible = false;
                 this.videoMode = false;
                 
-                // Wait for scene to be fully loaded
                 this.el.sceneEl.addEventListener('loaded', () => {
                     this.setupHandler();
                 });
@@ -66,16 +64,15 @@
                 this.sharkModel = document.querySelector('#shark-model');
                 this.debugBox = document.querySelector('#debug-box');
 
-                updateStatus('📦 All elements loaded');
+                updateStatus('📦 Elements ready');
 
-                // Click event for the poster
                 this.onPosterClick = () => {
                     if (!this.markerVisible) {
-                        updateStatus('⚠️ Click ignored - no marker');
+                        updateStatus('⚠️ Tap ignored - point at poster');
                         return;
                     }
                     
-                    updateStatus('🖼️ Switching to video');
+                    updateStatus('🎬 Playing video & shark');
                     this.videoMode = true;
                     
                     this.poster.setAttribute('visible', false);
@@ -95,10 +92,10 @@
                 };
                 this.poster.addEventListener('click', this.onPosterClick);
 
-                // Marker found event
                 this.el.addEventListener('markerFound', () => {
                     if (!this.markerVisible) {
-                        updateStatus('🎉 MARKER FOUND!');
+                        updateStatus('🎉 MARKER TRACKED!');
+                        updateStatus('📍 Content loading...');
                         this.markerVisible = true;
                     }
                     
@@ -110,7 +107,6 @@
                         }
                         if (this.debugBox) {
                             this.debugBox.setAttribute('visible', true);
-                            updateStatus('📦 Green box visible=true');
                         }
                     }
                     
@@ -120,10 +116,9 @@
                     }
                 });
 
-                // Marker lost event
                 this.el.addEventListener('markerLost', () => {
                     if (this.markerVisible) {
-                        updateStatus('👋 Marker lost');
+                        updateStatus('👋 Marker lost - repoint camera');
                         this.markerVisible = false;
                         this.videoMode = false;
                     }
@@ -173,10 +168,11 @@
             color: #0f0;
             padding: 10px;
             font-family: monospace;
-            font-size: 11px;
+            font-size: 12px;
             z-index: 999;
             max-height: 150px;
             overflow-y: auto;
+            line-height: 1.4;
         }
     </style>
 </head>
@@ -184,10 +180,10 @@
 
     <div id="starter-overlay" onclick="handleUserInteraction(); this.style.display='none';">
         <h1>🦈 Tap to Start AR</h1>
-        <p>Point your camera at the poster. A LARGE green box should appear when tracking works.</p>
+        <p>Point your camera at the poster. Hold steady, about 40cm away.</p>
     </div>
 
-    <div id="status">Starting...</div>
+    <div id="status">Tap screen to start...</div>
 
     <a-scene
         embedded
@@ -235,37 +231,39 @@
             smoothThreshold="5"
             marker-handler
         >
-            <!-- MASSIVE debug box - should be impossible to miss -->
-            <a-box
+            <!-- Green debug box - using NFT marker dimensions -->
+            <!-- NFT marker is 1192 x 1685 units, so we match that exactly -->
+            <a-plane
                 id="debug-box"
-                position="0 0 0.5"
-                rotation="0 0 0"
+                position="596 842.5 10"
+                rotation="-90 0 0"
                 color="#00ff00"
-                opacity="0.7"
-                width="3"
-                height="4"
-                depth="0.5"
+                opacity="0.5"
+                width="1192"
+                height="1685"
                 visible="false"
-            ></a-box>
+            ></a-plane>
 
-            <!-- Clickable poster -->
-            <a-image
+            <!-- Clickable poster - matching marker dimensions -->
+            <a-plane
                 id="clickable-poster"
                 src="#posterImage"
-                position="0 0 0"
-                width="2"
-                height="2.82"
+                position="596 842.5 5"
+                rotation="-90 0 0"
+                width="1192"
+                height="1685"
                 visible="false"
                 class="clickable"
                 data-raycastable
-            ></a-image>
+            ></a-plane>
 
-            <!-- Video plane -->
+            <!-- Video plane - matching marker dimensions -->
             <a-plane
                 id="video-plane"
-                position="0 0 0"
-                width="2"
-                height="2.82" 
+                position="596 842.5 5"
+                rotation="-90 0 0"
+                width="1192"
+                height="1685"
                 material="src: #posterVideo; shader: flat; side: double;"
                 visible="false"
             ></a-plane>
@@ -274,9 +272,9 @@
             <a-entity
                 id="shark-model"
                 gltf-model="#sharkModel"
-                position="0 -0.5 0.5"
-                rotation="0 45 0"
-                scale="0.4 0.4 0.4"
+                position="596 400 300"
+                rotation="-90 0 45"
+                scale="200 200 200"
                 visible="false"
             ></a-entity>
 
