@@ -34,10 +34,28 @@
             init: function() {
                 console.log('🎯 Marker handler initialized');
                 
+                // Wait for scene to be fully loaded
+                this.el.sceneEl.addEventListener('loaded', () => {
+                    this.setupHandler();
+                });
+            },
+
+            setupHandler: function() {
                 this.poster = document.querySelector('#clickable-poster');
                 this.videoPlane = document.querySelector('#video-plane');
                 this.video = document.querySelector('#posterVideo');
                 this.sharkModel = document.querySelector('#shark-model');
+
+                console.log('📦 Elements found:');
+                console.log('  Poster:', !!this.poster);
+                console.log('  Video plane:', !!this.videoPlane);
+                console.log('  Video:', !!this.video);
+                console.log('  Shark:', !!this.sharkModel);
+
+                if (!this.poster || !this.videoPlane || !this.video) {
+                    console.error('❌ Critical elements not found!');
+                    return;
+                }
 
                 // Wait for model to load
                 this.modelReady = false;
@@ -48,25 +66,18 @@
                     });
                 }
 
-                if (!this.poster || !this.videoPlane || !this.video) {
-                    console.error('❌ Critical elements not found!');
-                    console.log('Poster:', this.poster);
-                    console.log('Video plane:', this.videoPlane);
-                    console.log('Video:', this.video);
-                    console.log('Shark:', this.sharkModel);
-                    return;
-                }
-
                 // Click event for the poster
                 this.onPosterClick = () => {
                     console.log('🖼️ Poster clicked!');
                     
-                    // Hide poster, show video and shark
-                    this.poster.object3D.visible = false;
-                    this.videoPlane.object3D.visible = true;
+                    // Use setAttribute for A-Frame visibility
+                    this.poster.setAttribute('visible', false);
+                    this.videoPlane.setAttribute('visible', true);
                     if (this.sharkModel) {
-                        this.sharkModel.object3D.visible = true;
+                        this.sharkModel.setAttribute('visible', true);
                     }
+                    
+                    console.log('✅ Visibility changed - video and shark should show');
                     
                     if (this.video && userInteracted) {
                         this.video.play().then(() => {
@@ -74,8 +85,6 @@
                         }).catch(e => {
                             console.error('❌ Video play error:', e);
                         });
-                    } else if (!userInteracted) {
-                        console.warn('⚠️ Video cannot play - user interaction required');
                     }
                 };
                 this.poster.addEventListener('click', this.onPosterClick);
@@ -83,19 +92,15 @@
                 // Marker found event
                 this.el.addEventListener('markerFound', () => {
                     console.log('🎉 MARKER FOUND!');
-                    console.log('Video element:', this.video);
-                    console.log('Video plane:', this.videoPlane);
-                    console.log('Shark model:', this.sharkModel);
-                    console.log('User interacted:', userInteracted);
-                    console.log('Video ready:', videoReady);
-                    console.log('Model ready:', this.modelReady);
                     
-                    // Show poster, hide video and shark
-                    this.poster.object3D.visible = true;
-                    this.videoPlane.object3D.visible = false;
+                    // Use setAttribute for A-Frame visibility
+                    this.poster.setAttribute('visible', true);
+                    this.videoPlane.setAttribute('visible', false);
                     if (this.sharkModel) {
-                        this.sharkModel.object3D.visible = false;
+                        this.sharkModel.setAttribute('visible', false);
                     }
+                    
+                    console.log('✅ Poster should now be visible');
                     
                     // Reset video
                     if (this.video) {
@@ -109,10 +114,10 @@
                     console.log('👋 Marker lost');
                     
                     // Hide everything
-                    this.poster.object3D.visible = false;
-                    this.videoPlane.object3D.visible = false;
+                    this.poster.setAttribute('visible', false);
+                    this.videoPlane.setAttribute('visible', false);
                     if (this.sharkModel) {
-                        this.sharkModel.object3D.visible = false;
+                        this.sharkModel.setAttribute('visible', false);
                     }
                     
                     // Pause and reset video
@@ -124,7 +129,7 @@
             },
 
             remove: function() {
-                if (this.poster) {
+                if (this.poster && this.onPosterClick) {
                     this.poster.removeEventListener('click', this.onPosterClick);
                 }
             }
@@ -226,17 +231,18 @@
             <a-image
                 id="clickable-poster"
                 src="#posterImage"
-                position="0 0 0.5"
+                position="0 0 0"
                 width="1.5"
                 height="2"
                 visible="false"
-                class="clickable" 
+                class="clickable"
+                data-raycastable
             ></a-image>
 
             <!-- Video plane (shows after click) -->
             <a-plane
                 id="video-plane"
-                position="0 0 0.5"
+                position="0 0 0"
                 width="1.5"
                 height="2" 
                 material="src: #posterVideo; shader: flat; side: double;"
@@ -247,7 +253,7 @@
             <a-entity
                 id="shark-model"
                 gltf-model="#sharkModel"
-                position="0 -0.5 0.5"
+                position="0 -0.5 0"
                 rotation="0 0 0"
                 scale="0.3 0.3 0.3"
                 visible="false"
@@ -255,7 +261,7 @@
 
         </a-nft>
 
-        <a-entity camera cursor="rayOrigin: mouse;"></a-entity>
+        <a-entity camera cursor="rayOrigin: mouse;" raycaster="objects: [data-raycastable]"></a-entity>
     </a-scene>
 
 </body>
