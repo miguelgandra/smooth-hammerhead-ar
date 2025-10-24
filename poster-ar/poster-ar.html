@@ -33,6 +33,8 @@
         AFRAME.registerComponent('marker-handler', {
             init: function() {
                 console.log('🎯 Marker handler initialized');
+                this.markerVisible = false;
+                this.videoMode = false;
                 
                 // Wait for scene to be fully loaded
                 this.el.sceneEl.addEventListener('loaded', () => {
@@ -45,12 +47,14 @@
                 this.videoPlane = document.querySelector('#video-plane');
                 this.video = document.querySelector('#posterVideo');
                 this.sharkModel = document.querySelector('#shark-model');
+                this.debugBox = document.querySelector('#debug-box');
 
                 console.log('📦 Elements found:');
                 console.log('  Poster:', !!this.poster);
                 console.log('  Video plane:', !!this.videoPlane);
                 console.log('  Video:', !!this.video);
                 console.log('  Shark:', !!this.sharkModel);
+                console.log('  Debug box:', !!this.debugBox);
 
                 if (!this.poster || !this.videoPlane || !this.video) {
                     console.error('❌ Critical elements not found!');
@@ -68,16 +72,23 @@
 
                 // Click event for the poster
                 this.onPosterClick = () => {
-                    console.log('🖼️ Poster clicked!');
+                    if (!this.markerVisible) {
+                        console.log('⚠️ Click ignored - marker not visible');
+                        return;
+                    }
                     
-                    // Use setAttribute for A-Frame visibility
+                    console.log('🖼️ Poster clicked! Switching to video mode');
+                    this.videoMode = true;
+                    
+                    // Switch to video mode
                     this.poster.setAttribute('visible', false);
                     this.videoPlane.setAttribute('visible', true);
                     if (this.sharkModel) {
                         this.sharkModel.setAttribute('visible', true);
                     }
-                    
-                    console.log('✅ Visibility changed - video and shark should show');
+                    if (this.debugBox) {
+                        this.debugBox.setAttribute('visible', false);
+                    }
                     
                     if (this.video && userInteracted) {
                         this.video.play().then(() => {
@@ -91,19 +102,25 @@
 
                 // Marker found event
                 this.el.addEventListener('markerFound', () => {
-                    console.log('🎉 MARKER FOUND!');
-                    
-                    // Use setAttribute for A-Frame visibility
-                    this.poster.setAttribute('visible', true);
-                    this.videoPlane.setAttribute('visible', false);
-                    if (this.sharkModel) {
-                        this.sharkModel.setAttribute('visible', false);
+                    if (!this.markerVisible) {
+                        console.log('🎉 MARKER FOUND! Content should appear now');
+                        this.markerVisible = true;
                     }
                     
-                    console.log('✅ Poster should now be visible');
+                    if (!this.videoMode) {
+                        // Show poster in default mode
+                        this.poster.setAttribute('visible', true);
+                        this.videoPlane.setAttribute('visible', false);
+                        if (this.sharkModel) {
+                            this.sharkModel.setAttribute('visible', false);
+                        }
+                        if (this.debugBox) {
+                            this.debugBox.setAttribute('visible', true);
+                        }
+                    }
                     
-                    // Reset video
-                    if (this.video) {
+                    // Reset video when marker reappears
+                    if (this.video && !this.videoMode) {
                         this.video.pause();
                         this.video.currentTime = 0;
                     }
@@ -111,13 +128,20 @@
 
                 // Marker lost event
                 this.el.addEventListener('markerLost', () => {
-                    console.log('👋 Marker lost');
+                    if (this.markerVisible) {
+                        console.log('👋 Marker lost');
+                        this.markerVisible = false;
+                        this.videoMode = false;
+                    }
                     
                     // Hide everything
                     this.poster.setAttribute('visible', false);
                     this.videoPlane.setAttribute('visible', false);
                     if (this.sharkModel) {
                         this.sharkModel.setAttribute('visible', false);
+                    }
+                    if (this.debugBox) {
+                        this.debugBox.setAttribute('visible', false);
                     }
                     
                     // Pause and reset video
@@ -166,6 +190,7 @@
             font-size: 0.9em;
             z-index: 999;
             text-align: center;
+            max-width: 90%;
         }
     </style>
 </head>
@@ -173,12 +198,12 @@
 
     <div id="starter-overlay" onclick="handleUserInteraction(); this.style.display='none';">
         <h1>🦈 Tap to Start AR</h1>
-        <p>Point your camera at the poster. Hold steady and ensure good lighting.</p>
+        <p>Point your camera at the poster.</p>
         <p style="font-size: 0.8em; margin-top: 10px;">Camera permission required</p>
     </div>
 
     <div id="instructions">
-        📷 Point camera at poster → Tap poster to see animation
+        📷 Point at poster → When green box appears, tap to play
     </div>
 
     <a-scene
@@ -227,13 +252,26 @@
             smoothThreshold="5"
             marker-handler
         >
+            <!-- Debug box to confirm tracking works -->
+            <a-box
+                id="debug-box"
+                position="0 0 0"
+                rotation="0 0 0"
+                color="#00ff00"
+                opacity="0.5"
+                width="0.5"
+                height="0.7"
+                depth="0.1"
+                visible="false"
+            ></a-box>
+
             <!-- Clickable poster (shows first) -->
             <a-image
                 id="clickable-poster"
                 src="#posterImage"
                 position="0 0 0"
-                width="1.5"
-                height="2"
+                width="1"
+                height="1.41"
                 visible="false"
                 class="clickable"
                 data-raycastable
@@ -243,8 +281,8 @@
             <a-plane
                 id="video-plane"
                 position="0 0 0"
-                width="1.5"
-                height="2" 
+                width="1"
+                height="1.41" 
                 material="src: #posterVideo; shader: flat; side: double;"
                 visible="false"
             ></a-plane>
@@ -253,9 +291,9 @@
             <a-entity
                 id="shark-model"
                 gltf-model="#sharkModel"
-                position="0 -0.5 0"
-                rotation="0 0 0"
-                scale="0.3 0.3 0.3"
+                position="0 -0.3 0.2"
+                rotation="0 45 0"
+                scale="0.2 0.2 0.2"
                 visible="false"
             ></a-entity>
 
