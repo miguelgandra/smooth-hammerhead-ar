@@ -231,39 +231,38 @@
             smoothThreshold="5"
             marker-handler
         >
-            <!-- Green debug box - using NFT marker dimensions -->
-            <!-- NFT marker is 1192 x 1685 units, so we match that exactly -->
+            <!-- Green debug box - exact marker size in mm -->
             <a-plane
                 id="debug-box"
-                position="596 842.5 10"
+                position="210.4 297.3 2"
                 rotation="-90 0 0"
                 color="#00ff00"
-                opacity="0.5"
-                width="1192"
-                height="1685"
+                opacity="0.3"
+                width="420.8"
+                height="594.6"
                 visible="false"
             ></a-plane>
 
-            <!-- Clickable poster - matching marker dimensions -->
+            <!-- Clickable poster - exact marker size -->
             <a-plane
                 id="clickable-poster"
                 src="#posterImage"
-                position="596 842.5 5"
+                position="210.4 297.3 1"
                 rotation="-90 0 0"
-                width="1192"
-                height="1685"
+                width="420.8"
+                height="594.6"
                 visible="false"
                 class="clickable"
                 data-raycastable
             ></a-plane>
 
-            <!-- Video plane - matching marker dimensions -->
+            <!-- Video plane - exact marker size -->
             <a-plane
                 id="video-plane"
-                position="596 842.5 5"
+                position="210.4 297.3 1"
                 rotation="-90 0 0"
-                width="1192"
-                height="1685"
+                width="420.8"
+                height="594.6"
                 material="src: #posterVideo; shader: flat; side: double;"
                 visible="false"
             ></a-plane>
@@ -272,9 +271,9 @@
             <a-entity
                 id="shark-model"
                 gltf-model="#sharkModel"
-                position="596 400 300"
+                position="210.4 150 100"
                 rotation="-90 0 45"
-                scale="200 200 200"
+                scale="50 50 50"
                 visible="false"
             ></a-entity>
 
