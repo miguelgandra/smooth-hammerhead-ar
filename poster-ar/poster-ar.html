@@ -11,24 +11,9 @@
     <script>
         let userInteracted = false;
         let videoReady = false;
-        let statusDiv;
-
-        function updateStatus(msg) {
-            if (!statusDiv) {
-                statusDiv = document.getElementById('status');
-            }
-            if (statusDiv) {
-                statusDiv.innerHTML += msg + '<br>';
-                const lines = statusDiv.innerHTML.split('<br>');
-                if (lines.length > 10) {
-                    statusDiv.innerHTML = lines.slice(-10).join('<br>');
-                }
-            }
-        }
 
         function handleUserInteraction() {
             console.log('✅ User interaction detected');
-            updateStatus('✅ User tapped - AR starting');
             userInteracted = true;
             
             const video = document.querySelector('#posterVideo');
@@ -53,24 +38,17 @@
                 this.videoPlane = document.querySelector('#video-plane');
                 this.video = document.querySelector('#posterVideo');
                 this.sharkModel = document.querySelector('#shark-model');
-                this.debugBox = document.querySelector('#debug-box');
-
-                updateStatus('📦 Elements ready');
 
                 // Click event
                 this.onPosterClick = () => {
                     if (this.videoMode) return;
                     
-                    updateStatus('🎬 Playing video & shark');
                     this.videoMode = true;
                     
                     this.poster.setAttribute('visible', false);
                     this.videoPlane.setAttribute('visible', true);
                     if (this.sharkModel) {
                         this.sharkModel.setAttribute('visible', true);
-                    }
-                    if (this.debugBox) {
-                        this.debugBox.setAttribute('visible', false);
                     }
                     
                     if (this.video && userInteracted) {
@@ -84,16 +62,11 @@
 
                 // Target found event
                 this.el.addEventListener('targetFound', () => {
-                    updateStatus('🎉 MARKER TRACKED!');
-                    
                     if (!this.videoMode) {
                         this.poster.setAttribute('visible', true);
                         this.videoPlane.setAttribute('visible', false);
                         if (this.sharkModel) {
                             this.sharkModel.setAttribute('visible', false);
-                        }
-                        if (this.debugBox) {
-                            this.debugBox.setAttribute('visible', true);
                         }
                     }
                     
@@ -105,16 +78,12 @@
 
                 // Target lost event
                 this.el.addEventListener('targetLost', () => {
-                    updateStatus('👋 Marker lost');
                     this.videoMode = false;
                     
                     this.poster.setAttribute('visible', false);
                     this.videoPlane.setAttribute('visible', false);
                     if (this.sharkModel) {
                         this.sharkModel.setAttribute('visible', false);
-                    }
-                    if (this.debugBox) {
-                        this.debugBox.setAttribute('visible', false);
                     }
                     
                     if (this.video) {
@@ -144,43 +113,17 @@
             font-size: 1.1em; margin: 15px 20px 0; 
             max-width: 400px; color: #eee; line-height: 1.5; 
         }
-        #status {
-            position: fixed;
-            top: 10px;
-            left: 10px;
-            right: 10px;
-            background: rgba(0, 0, 0, 0.8);
-            color: #0f0;
-            padding: 10px;
-            font-family: monospace;
-            font-size: 12px;
-            z-index: 999;
-            max-height: 150px;
-            overflow-y: auto;
-            line-height: 1.4;
-        }
-        #loading {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: white;
-            font-size: 1.2em;
-            z-index: 998;
-            display: none;
-        }
+
+
     </style>
 </head>
 <body>
 
-    <div id="starter-overlay" onclick="handleUserInteraction(); this.style.display='none'; document.getElementById('loading').style.display='block';">
+    <div id="starter-overlay" onclick="handleUserInteraction(); this.style.display='none';">
         <h1>🦈 Tap to Start AR</h1>
         <p>Point your camera at the poster. Hold steady, about 40cm away.</p>
         <p style="font-size: 0.9em; margin-top: 10px;">Note: You need a .mind file compiled from your poster image</p>
     </div>
-
-    <div id="loading">Loading AR tracker...</div>
-    <div id="status">Tap screen to start...</div>
 
     <a-scene
         mindar-image="imageTargetSrc: https://miguelgandra.github.io/smooth-hammerhead-ar/poster-ar/BLS8-poster-target.mind;
@@ -221,18 +164,6 @@
 
         <a-entity mindar-image-target="targetIndex: 0" poster-handler>
             
-            <!-- Green debug overlay - exactly matching tracked image -->
-            <a-plane
-                id="debug-box"
-                position="0 0 0.01"
-                rotation="0 0 0"
-                color="#00ff00"
-                opacity="0.3"
-                width="1"
-                height="1.41"
-                visible="false"
-            ></a-plane>
-
             <!-- Clickable poster - exactly matching tracked image -->
             <a-plane
                 id="clickable-poster"
