@@ -62,12 +62,19 @@
                 this.playButtonPlane = document.querySelector('#play-button-plane');
 
                 this.targetVisible = false;
+                
+                // --- NEW STATE VARIABLE ---
+                // Tracks if the video has finished playing at least once
+                this.videoHasPlayed = false;
+
+                // --- Event Handlers ---
 
                 // Click handler for the fallback button
                 this.onPlayButtonClick = () => {
-                    if (this.video && this.targetVisible) {
-                        console.log('Fallback button clicked. Playing video.');
-                        this.video.currentTime = 0;
+                    if (this.video && this.targetVisible && !this.videoHasPlayed) {
+                        console.log('Fallback button clicked. Playing video from start.');
+                        // Always play from the start when button is clicked
+                        this.video.currentTime = 0; 
                         this.video.play().catch(e => console.error('❌ Button play error:', e));
                     }
                 };
@@ -81,55 +88,89 @@
 
                 // When video finishes
                 this.onVideoEnded = () => {
-                    if (!this.targetVisible) return;
+                    // --- SET THE STATE ---
+                    this.videoHasPlayed = true; // Mark video as played
+                    
+                    if (!this.targetVisible) return; // Don't show if target is lost
+                    
                     console.log('Video ended. Switching to poster and shark.');
                     this.videoPlane.setAttribute('visible', false);
                     this.playButton.setAttribute('visible', false); 
                     this.poster.setAttribute('visible', true);
                     this.sharkModel.setAttribute('visible', true);
-                    
-                    // This will now work thanks to aframe-extras
                     this.sharkModel.setAttribute('animation-mixer', 'timeScale: 1');
                 };
 
-                // When target is found
+                // --- MODIFIED: When target is found ---
                 this.onTargetFound = () => {
                     console.log('Target found.');
                     this.targetVisible = true;
                     
-                    this.poster.setAttribute('visible', false);
-                    this.sharkModel.setAttribute('visible', false);
-                    this.sharkModel.setAttribute('animation-mixer', 'timeScale: 0');
-                    this.videoPlane.setAttribute('visible', true);
+                    if (this.videoHasPlayed) {
+                        // --- STATE: Video has already played ---
+                        // Show the poster and shark, hide the video
+                        console.log('Video has already played. Showing poster/shark.');
+                        this.poster.setAttribute('visible', true);
+                        this.sharkModel.setAttribute('visible', true);
+                        this.sharkModel.setAttribute('animation-mixer', 'timeScale: 1');
+                        this.videoPlane.setAttribute('visible', false);
+                        this.playButton.setAttribute('visible', false);
                     
-                    if (this.video && userInteracted && videoReady) {
-                        console.log('Attempting to play video...');
-                        this.video.currentTime = 0;
-                        this.video.play().catch(e => {
-                            console.error('❌ Video autoplay error:', e);
-                            this.playButton.setAttribute('visible', true);
-                        });
                     } else {
-                        console.warn('Video not ready. Showing fallback button.');
-                        this.playButton.setAttribute('visible', true);
+                        // --- STATE: Video has NOT played yet ---
+                        // Show the video, hide the poster/shark
+                        this.poster.setAttribute('visible', false);
+                        this.sharkModel.setAttribute('visible', false);
+                        this.videoPlane.setAttribute('visible', true);
+                        
+                        // Check if we are resuming from a pause
+                        if (this.video.currentTime > 0) {
+                            console.log('Resuming video playback.');
+                            this.video.play().catch(e => {
+                                console.error('❌ Video resume error:', e);
+                                this.playButton.setAttribute('visible', true);
+                            });
+                        }
+                        // Check if we are starting from the beginning
+                        else if (userInteracted && videoReady) {
+                            console.log('Attempting to play video from start...');
+                            this.video.currentTime = 0;
+                            this.video.play().catch(e => {
+                                console.error('❌ Video autoplay error:', e);
+                                this.playButton.setAttribute('visible', true);
+                            });
+                        } 
+                        // Video not ready, show button
+                        else {
+                            console.warn('Video not ready. Showing fallback button.');
+                            this.playButton.setAttribute('visible', true);
+                        }
                     }
                 };
 
-                // When target is lost
+                // --- MODIFIED: When target is lost ---
                 this.onTargetLost = () => {
                     console.log('Target lost. Hiding all.');
                     this.targetVisible = false;
                     
-                    this.poster.setAttribute('visible', false);
-                    this.videoPlane.setAttribute('visible', false);
-                    this.sharkModel.setAttribute('visible', false);
+                    // Always hide the button
                     this.playButton.setAttribute('visible', false); 
+
+                    if (this.videoHasPlayed) {
+                        // --- STATE: Video has already played ---
+                        // Hide the poster and shark
+                        this.poster.setAttribute('visible', false);
+                        this.sharkModel.setAttribute('visible', false);
+                        this.sharkModel.setAttribute('animation-mixer', 'timeScale: 0');
                     
-                    if (this.video) {
-                        this.video.pause();
-                        this.video.currentTime = 0;
+                    } else {
+                        // --- STATE: Video has NOT played yet ---
+                        // Hide and PAUSE the video (don't reset)
+                        this.videoPlane.setAttribute('visible', false);
+                        if (this.video) {
+                            this.video.pause(); // Just pause, don't reset time
+                        }
                     }
-                    this.sharkModel.setAttribute('animation-mixer', 'timeScale: 0');
                 };
 
                 // Bind Event Listeners
@@ -149,8 +190,6 @@
             }
         });
     </script>
-
-
     <style>
         body { 
             margin: 0; 
@@ -236,13 +275,13 @@
                 material="src: #posterVideo; shader: flat;"
                 visible="false"
             ></a-plane>
-
+            
             <a-entity
                 id="shark-model"
                 gltf-model="#sharkModel"
                 position="0 -0.3 0.2"
-                rotation="0 45 0"
-                scale="0.1 0.1 0.1" 
+                rotation="0 0 0"
+                scale="0.05 0.05 0.05" 
                 visible="false"
                 animation-mixer="clip: *; loop: repeat; timeScale: 0"
             ></a-entity>
