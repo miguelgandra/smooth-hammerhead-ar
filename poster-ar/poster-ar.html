@@ -37,17 +37,36 @@
                 this.poster = document.querySelector('#clickable-poster');
                 this.videoPlane = document.querySelector('#video-plane');
                 this.video = document.querySelector('#posterVideo');
+                this.sharkModel = document.querySelector('#shark-model');
+
+                // Wait for model to load
+                this.modelReady = false;
+                if (this.sharkModel) {
+                    this.sharkModel.addEventListener('model-loaded', () => {
+                        console.log('✅ Shark model loaded');
+                        this.modelReady = true;
+                    });
+                }
 
                 if (!this.poster || !this.videoPlane || !this.video) {
                     console.error('❌ Critical elements not found!');
+                    console.log('Poster:', this.poster);
+                    console.log('Video plane:', this.videoPlane);
+                    console.log('Video:', this.video);
+                    console.log('Shark:', this.sharkModel);
                     return;
                 }
 
-                // --- Click event for the poster ---
+                // Click event for the poster
                 this.onPosterClick = () => {
                     console.log('🖼️ Poster clicked!');
+                    
+                    // Hide poster, show video and shark
                     this.poster.object3D.visible = false;
                     this.videoPlane.object3D.visible = true;
+                    if (this.sharkModel) {
+                        this.sharkModel.object3D.visible = true;
+                    }
                     
                     if (this.video && userInteracted) {
                         this.video.play().then(() => {
@@ -56,18 +75,27 @@
                             console.error('❌ Video play error:', e);
                         });
                     } else if (!userInteracted) {
-                        console.warn('⚠️ Video can\'t play - user hasn\'t interacted with the page yet.');
+                        console.warn('⚠️ Video cannot play - user interaction required');
                     }
                 };
                 this.poster.addEventListener('click', this.onPosterClick);
 
-                // --- Marker events ---
+                // Marker found event
                 this.el.addEventListener('markerFound', () => {
                     console.log('🎉 MARKER FOUND!');
+                    console.log('Video element:', this.video);
+                    console.log('Video plane:', this.videoPlane);
+                    console.log('Shark model:', this.sharkModel);
+                    console.log('User interacted:', userInteracted);
+                    console.log('Video ready:', videoReady);
+                    console.log('Model ready:', this.modelReady);
                     
-                    // Always show the poster first and hide the video
+                    // Show poster, hide video and shark
                     this.poster.object3D.visible = true;
                     this.videoPlane.object3D.visible = false;
+                    if (this.sharkModel) {
+                        this.sharkModel.object3D.visible = false;
+                    }
                     
                     // Reset video
                     if (this.video) {
@@ -76,12 +104,16 @@
                     }
                 });
 
+                // Marker lost event
                 this.el.addEventListener('markerLost', () => {
                     console.log('👋 Marker lost');
                     
-                    // Hide both
+                    // Hide everything
                     this.poster.object3D.visible = false;
                     this.videoPlane.object3D.visible = false;
+                    if (this.sharkModel) {
+                        this.sharkModel.object3D.visible = false;
+                    }
                     
                     // Pause and reset video
                     if (this.video) {
@@ -92,7 +124,6 @@
             },
 
             remove: function() {
-                // Clean up the event listener
                 if (this.poster) {
                     this.poster.removeEventListener('click', this.onPosterClick);
                 }
@@ -142,7 +173,7 @@
     </div>
 
     <div id="instructions">
-        📷 Point camera at poster and hold steady
+        📷 Point camera at poster → Tap poster to see animation
     </div>
 
     <a-scene
@@ -191,6 +222,7 @@
             smoothThreshold="5"
             marker-handler
         >
+            <!-- Clickable poster (shows first) -->
             <a-image
                 id="clickable-poster"
                 src="#posterImage"
@@ -201,6 +233,7 @@
                 class="clickable" 
             ></a-image>
 
+            <!-- Video plane (shows after click) -->
             <a-plane
                 id="video-plane"
                 position="0 0 0.5"
@@ -209,6 +242,16 @@
                 material="src: #posterVideo; shader: flat; side: double;"
                 visible="false"
             ></a-plane>
+
+            <!-- Shark model (shows after click) -->
+            <a-entity
+                id="shark-model"
+                gltf-model="#sharkModel"
+                position="0 -0.5 0.5"
+                rotation="0 0 0"
+                scale="0.3 0.3 0.3"
+                visible="false"
+            ></a-entity>
 
         </a-nft>
 
