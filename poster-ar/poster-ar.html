@@ -6,116 +6,150 @@
     <title>Shark Poster AR Experience - MindAR</title>
 
     <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/aframe-extras@7.4.0/dist/aframe-extras.min.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
 
     <script>
-        // --- User Interaction Handler ---
-        // This is still needed to get around browser autoplay policies.
         let userInteracted = false;
         let videoReady = false;
 
         function handleUserInteraction() {
-            if (userInteracted) return; // Only run once
+            if (userInteracted) return;
             console.log('✅ User interaction detected');
             userInteracted = true;
             
             const video = document.querySelector('#posterVideo');
+            const posterHandlerEntity = document.querySelector('[poster-handler]');
+            
             if (video) {
-                video.load(); // Start loading the video
+                video.load(); 
                 video.play().then(() => {
-                    // Play and immediately pause to "prime" the video
                     console.log('✅ Video preloaded successfully');
                     video.pause();
                     video.currentTime = 0;
-                    videoReady = true;
+                    videoReady = true; 
+
+                    if (posterHandlerEntity) {
+                        const posterHandler = posterHandlerEntity.components['poster-handler'];
+                        if (posterHandler && posterHandler.targetVisible) {
+                            console.log('Target was already visible. Playing video now.');
+                            video.currentTime = 0;
+                            video.play().catch(e => {
+                                console.error('❌ Delayed video play error:', e);
+                                if (posterHandler.playButton) {
+                                    posterHandler.playButton.setAttribute('visible', true);
+                                }
+                            });
+                        }
+                    }
                 }).catch(e => {
                     console.error('❌ Video preload error:', e);
                 });
             }
         }
 
-        // --- A-Frame Component for AR Logic ---
         AFRAME.registerComponent('poster-handler', {
             init: function() {
                 console.log('Poster handler initialized.');
                 
-                // Get references to all our entities
                 this.poster = document.querySelector('#static-poster');
                 this.videoPlane = document.querySelector('#video-plane');
                 this.video = document.querySelector('#posterVideo');
                 this.sharkModel = document.querySelector('#shark-model');
+                this.playButton = document.querySelector('#play-button-group');
+                this.playButtonPlane = document.querySelector('#play-button-plane');
 
-                // --- Event Handlers ---
+                this.targetVisible = false;
 
-                // 1. When the video finishes playing
-                this.onVideoEnded = () => {
-                    console.log('Video ended. Switching to poster and shark.');
-                    // Hide video
-                    this.videoPlane.setAttribute('visible', false);
-                    
-                    // Show poster and shark
-                    this.poster.setAttribute('visible', true);
-                    this.sharkModel.setAttribute('visible', true);
-                    
-                    // Start the shark's animation
-                    this.sharkModel.setAttribute('animation-mixer', 'timeScale: 1');
-                };
-
-                // 2. When the target marker is found
-                this.onTargetFound = () => {
-                    console.log('Target found. Playing video.');
-                    
-                    // Ensure poster and shark are hidden
-                    this.poster.setAttribute('visible', false);
-                    this.sharkModel.setAttribute('visible', false);
-                    // Pause shark animation (just in case)
-                    this.sharkModel.setAttribute('animation-mixer', 'timeScale: 0');
-
-                    // Show the video plane
-                    this.videoPlane.setAttribute('visible', true);
-                    
-                    // Play video from the start (if user has clicked the screen)
-                    if (this.video && userInteracted) {
+                // Click handler for the fallback button
+                this.onPlayButtonClick = () => {
+                    if (this.video && this.targetVisible) {
+                        console.log('Fallback button clicked. Playing video.');
                         this.video.currentTime = 0;
-                        this.video.play().catch(e => {
-                            console.error('❌ Video play error:', e);
-                        });
+                        this.video.play().catch(e => console.error('❌ Button play error:', e));
+                    }
+                };
+                
+                // Listener to hide button whenever video starts
+                this.onVideoPlay = () => {
+                    if (this.playButton) {
+                        this.playButton.setAttribute('visible', false);
                     }
                 };
 
-                // 3. When the target marker is lost
+                // When video finishes
+                this.onVideoEnded = () => {
+                    if (!this.targetVisible) return;
+                    console.log('Video ended. Switching to poster and shark.');
+                    this.videoPlane.setAttribute('visible', false);
+                    this.playButton.setAttribute('visible', false); 
+                    this.poster.setAttribute('visible', true);
+                    this.sharkModel.setAttribute('visible', true);
+                    
+                    // This will now work thanks to aframe-extras
+                    this.sharkModel.setAttribute('animation-mixer', 'timeScale: 1');
+                };
+
+                // When target is found
+                this.onTargetFound = () => {
+                    console.log('Target found.');
+                    this.targetVisible = true;
+                    
+                    this.poster.setAttribute('visible', false);
+                    this.sharkModel.setAttribute('visible', false);
+                    this.sharkModel.setAttribute('animation-mixer', 'timeScale: 0');
+                    this.videoPlane.setAttribute('visible', true);
+                    
+                    if (this.video && userInteracted && videoReady) {
+                        console.log('Attempting to play video...');
+                        this.video.currentTime = 0;
+                        this.video.play().catch(e => {
+                            console.error('❌ Video autoplay error:', e);
+                            this.playButton.setAttribute('visible', true);
+                        });
+                    } else {
+                        console.warn('Video not ready. Showing fallback button.');
+                        this.playButton.setAttribute('visible', true);
+                    }
+                };
+
+                // When target is lost
                 this.onTargetLost = () => {
                     console.log('Target lost. Hiding all.');
+                    this.targetVisible = false;
                     
-                    // Hide all elements
                     this.poster.setAttribute('visible', false);
                     this.videoPlane.setAttribute('visible', false);
                     this.sharkModel.setAttribute('visible', false);
+                    this.playButton.setAttribute('visible', false); 
                     
-                    // Pause and reset video
                     if (this.video) {
                         this.video.pause();
                         this.video.currentTime = 0;
                     }
-                    
-                    // Pause shark animation
                     this.sharkModel.setAttribute('animation-mixer', 'timeScale: 0');
                 };
 
-                // --- Bind Event Listeners ---
+                // Bind Event Listeners
                 this.video.addEventListener('ended', this.onVideoEnded);
+                this.video.addEventListener('play', this.onVideoPlay);
                 this.el.addEventListener('targetFound', this.onTargetFound);
                 this.el.addEventListener('targetLost', this.onTargetLost);
+                this.playButtonPlane.addEventListener('click', this.onPlayButtonClick);
             },
 
-            // Clean up listeners when component is removed
             remove: function() {
                 this.video.removeEventListener('ended', this.onVideoEnded);
+                this.video.removeEventListener('play', this.onVideoPlay);
                 this.el.removeEventListener('targetFound', this.onTargetFound);
                 this.el.removeEventListener('targetLost', this.onTargetLost);
+                this.playButtonPlane.removeEventListener('click', this.onPlayButtonClick);
             }
         });
     </script>
+
 
     <style>
         body { 
@@ -141,7 +175,8 @@
 
     <div id="starter-overlay" onclick="handleUserInteraction(); this.style.display='none';">
         <h1>🦈 Tap to Start AR</h1>
-        <p>Point your camera at the poster.</p>
+        <p>Point your camera at the poster. Hold steady, about 40cm away.</p>
+        <p style="font-size: 0.9em; margin-top: 10px;">Note: You need a .mind file compiled from your poster image</p>
     </div>
 
     <a-scene
@@ -174,7 +209,7 @@
 
             <img 
                 id="posterImage" 
-                src="https://miguelgandra.github.io/smooth-hammerhead-ar/media/BLS8-poster-train.jpg" 
+                src="https.miguelgandra.github.io/smooth-hammerhead-ar/media/BLS8-poster-train.jpg" 
                 crossorigin="anonymous">
         </a-assets>
 
@@ -207,10 +242,33 @@
                 gltf-model="#sharkModel"
                 position="0 -0.3 0.2"
                 rotation="0 45 0"
-                scale="0.2 0.2 0.2"
+                scale="0.1 0.1 0.1" 
                 visible="false"
                 animation-mixer="clip: *; loop: repeat; timeScale: 0"
             ></a-entity>
+
+            <a-entity
+                id="play-button-group"
+                position="0 0 0.05"
+                visible="false"
+            >
+                <a-plane
+                    id="play-button-plane"
+                    class="clickable"
+                    color="#007BFF"
+                    opacity="0.8"
+                    width="0.5"
+                    height="0.15"
+                ></a-plane>
+                <a-text
+                    value="Play Animation"
+                    align="center"
+                    color="#FFF"
+                    position="0 0 0.01"
+                    scale="0.2 0.2 0.2"
+                    wrap-count="20"
+                ></a-text>
+            </a-entity>
 
         </a-entity>
     </a-scene>
