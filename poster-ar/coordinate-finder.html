@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Poster Coordinate Finder</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            background-color: #f0f0f0;
+            margin: 2em;
+        }
+        h1 {
+            font-weight: 500;
+        }
+        img {
+            border: 2px solid #333;
+            max-width: 80vw;
+            max-height: 80vh;
+            cursor: crosshair;
+        }
+        #output {
+            margin-top: 20px;
+            font-size: 1.2em;
+            font-family: monospace;
+            background: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            min-width: 500px;
+            text-align: center;
+        }
+        #output-code {
+            color: #d63384;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Poster Coordinate Finder</h1>
+    <p>Click anywhere on the poster image to get the A-Frame coordinates.</p>
+
+    <img id="poster" src="https://miguelgandra.github.io/smooth-hammerhead-ar/media/BLS8-poster-train.jpg">
+
+    <div id="output">
+        Click on the image...
+    </div>
+
+    <script>
+        const posterImage = document.getElementById('poster');
+        const outputDiv = document.getElementById('output');
+        const outputCode = document.createElement('span');
+        outputCode.id = 'output-code';
+        
+        // --- IMPORTANT ---
+        // These values MUST match the <a-plane> in your AR scene
+        const A_FRAME_WIDTH = 1.0;
+        const A_FRAME_HEIGHT = 1.41; 
+        
+        posterImage.addEventListener('click', function(e) {
+            // Get click position relative to the image (0,0 is top-left)
+            const clickX = e.offsetX;
+            const clickY = e.offsetY;
+            
+            // Get the displayed size of the image
+            const imgWidth = posterImage.clientWidth;
+            const imgHeight = posterImage.clientHeight;
+            
+            // Calculate percentage position
+            const percentX = clickX / imgWidth;
+            const percentY = clickY / imgHeight;
+            
+            // Convert percentage to A-Frame's centered coordinate system
+            // X: (0% -> -0.5) ... (50% -> 0) ... (100% -> 0.5)
+            // Y: (0% -> +0.705) ... (50% -> 0) ... (100% -> -0.705)
+            
+            const aframeX = (percentX - 0.5) * A_FRAME_WIDTH;
+            const aframeY = -(percentY - 0.5) * A_FRAME_HEIGHT;
+            
+            // Set a small Z-position to be in front of the poster (0.01)
+            const aframeZ = 0.01; 
+            
+            // Format the output
+            const positionString = `position="${aframeX.toFixed(3)} ${aframeY.toFixed(3)} ${aframeZ}"`;
+            
+            outputDiv.innerHTML = 'A-Frame Code: ';
+            outputCode.textContent = positionString;
+            outputDiv.appendChild(outputCode);
+        });
+    </script>
+
+</body>
+</html>
