@@ -121,6 +121,7 @@
         }
 
         .header-logos .fam-logo {
+            height: 65px;
             margin-top: 8px; /* Adjusted */
         }
 
@@ -556,7 +557,7 @@
             
             .header-logos {
                 row-gap: 15px;    
-                column-gap: 40px; 
+                column-gap: 30px; /* Was 40px */
                 margin-bottom: 60px;
                 flex-wrap: wrap; 
             }
@@ -565,19 +566,29 @@
             }
             .header-logos .ccmar-logo {
                 margin-top: 4px; /* Adjusted */
+                order: 1; /* Set mobile order */
             }
             .header-logos .art-logo {
                 height: 48px; /* Was 55px */
                 margin-top: 8px; /* Adjusted */
+                order: 3; /* Set mobile order */
             }
             
             .header-logos .fct-logo {
                 height: 38px; /* Was 45px */
                 margin-top: 4px; /* Adjusted */
+                order: 2; /* Set mobile order */
             }
             
+            /* Target SOSF logo (3rd in HTML) */
+            .header-logos img:nth-child(3) {
+                order: 4; /* Set mobile order */
+            }
+
             .header-logos .fam-logo {
-                margin-top: 4px; /* Adjusted */
+                height: 45px; /* Slightly larger than base 42px */
+                margin-top: 6px;
+                order: 5; /* Set mobile order */
             }
             
             .header-description {
@@ -673,7 +684,7 @@
             <p class="subtitle">Project: Essential Habitats for Smooth Hammerheads</p>
             
             <p class="header-description">
-                This experience demonstrates how open-access digital tools can enhance marine science communication — translating research into meaningful conservation impact.
+                This page demonstrates how open-access digital tools can enhance marine science communication — translating research into meaningful conservation impact.
             </p>
             
         </header>
