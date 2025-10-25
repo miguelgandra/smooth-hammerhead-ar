@@ -88,7 +88,7 @@
 
         /* Header */
         header {
-            padding: 20px 0 20px;
+            padding: 10px 0 20px;
             text-align: center;
         }
         
@@ -107,7 +107,7 @@
         
         /* Adjusted styles for individual logos */
         .header-logos .ccmar-logo {
-            margin-top: 8px; /* Adjusted */
+            margin-top: 12px; /* Adjusted */
         }
 
         .header-logos .art-logo {
@@ -121,8 +121,8 @@
         }
 
         .header-logos .fam-logo {
-            height: 65px;
-            margin-top: 8px; /* Adjusted */
+            height: 75px;
+            margin-top: 12px; /* Adjusted */
         }
 
         h1 {
@@ -178,7 +178,7 @@
             text-align: center;
             font-size: 0.9em;
             color: #a0c0c0; 
-            margin-top: 25px; 
+            margin-top: 15px; /* Was 25px */
             font-style: italic;
         }
         
@@ -255,25 +255,89 @@
             line-height: 1.7;
         }
         
-        /* Info Banner */
-        .info-banner-section {
-            background: linear-gradient(135deg, rgba(0, 224, 192, 0.1), rgba(0, 160, 176, 0.1));
-            border-radius: 30px;
-            padding: 40px 50px;
-            text-align: center;
-            margin: 80px 0;
-            border: 2px solid rgba(0, 224, 192, 0.3);
-        }
-        
-        .info-banner-section p {
+        .ar-description {
             font-size: 1.1em; 
             color: #b0d0d0;
             max-width: 900px;
-            margin-left: auto;
-            margin-right: auto;
+            margin: 40px auto 0; /* Adds space above it */
             line-height: 1.7;
             font-weight: 300;
+            text-align: center;
         }
+
+        /* --- NEW: Data Animation Section --- */
+        .data-animation-section {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 30px;
+            padding: 40px;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 224, 192, 0.2);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            margin: 80px 0;
+            
+            /* Initial state for Intersection Observer */
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .data-animation-section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .animation-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .animation-text h2 {
+            font-size: 2em;
+            font-weight: 800;
+            margin-bottom: 25px;
+            background: linear-gradient(135deg, #00e0c0, #00b0c0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .animation-text p {
+            color: #b0d0d0;
+            line-height: 1.7;
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+        
+        .animation-text p:last-child {
+            margin-bottom: 0;
+        }
+
+        .animation-video-container {
+            width: 100%; /* Ensure it takes full width of its grid column */
+            display: flex; /* Enable flexbox */
+            flex-direction: column; /* Stack children vertically */
+            align-items: flex-end; /* Align children (video and caption) to the right */
+        }
+
+        .animation-video-container video {
+            width: 100%;
+            height: auto;
+            border-radius: 15px;
+            background: transparent; /* Allows WEBM alpha channel to show */
+            margin-bottom: 0px; /* Space between video and caption */
+        }
+        
+        .video-caption {
+            text-align: center; /* Keep text centered within the caption block */
+            font-size: 0.9em;
+            color: #a0c0c0; 
+            font-style: italic;
+            width: 65%; /* Keep your desired width */
+            margin: 0; /* Reset margin as parent will handle positioning */
+        }
+        /* --- END NEW --- */
 
 
         /* Marker Demo Section */
@@ -548,6 +612,25 @@
         footer a:hover {
             color: #00b0c0;
         }
+        
+        .developer-info {
+            color: #a0c0c0;
+            margin: 20px 0 10px;
+            font-size: 0.9em;
+        }
+        
+        .developer-info a {
+            font-weight: 700; /* Highlight */
+            display: inline-flex; /* Align icon and text */
+            align-items: center;
+            gap: 6px; /* Space between icon and name */
+        }
+        
+        .developer-info .email-icon {
+            width: 18px; /* Small icon size */
+            height: 18px;
+        }
+
 
         /* Mobile Responsive Styles */
         @media (max-width: 768px) {
@@ -556,7 +639,7 @@
             }
             
             .header-logos {
-                row-gap: 10px;    
+                row-gap: 5px;    
                 column-gap: 30px; /* Was 40px */
                 margin-bottom: 60px;
                 flex-wrap: wrap; 
@@ -616,14 +699,35 @@
             .ar-section {
                 padding: 25px;
             }
-            
-            .info-banner-section {
-                padding: 30px 25px;
-                margin: 60px 0;
+
+            .ar-description {
+                font-size: 1.05em;
+                margin-top: 30px;
             }
-            .info-banner-section p {
+
+            /* --- Responsive Animation Section --- */
+            .animation-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .animation-text h2 {
+                font-size: 1.8em; /* Match other mobile section headers */
+            }
+            
+            .animation-text p {
                 font-size: 1.05em;
             }
+            
+            .animation-video-container {
+                order: -1; /* Places the video *above* the text on mobile */
+                align-items: center; /* Center the video and caption on mobile */
+            }
+            
+            .video-caption {
+                width: 95%; /* Wider on mobile */
+            }
+            /* --- END --- */
 
 
             .demo-content-grid {
@@ -734,17 +838,40 @@
                     <p>Tap "View in AR" to place the shark in your space using your phone's camera.</p>
                 </div>
             </div>
-        </div>
-        
-        <div class="info-banner-section">
-            <p>
+            
+            <p class="ar-description">
                 Interactive 3D assets like this can be powerful tools to support science communication. 
                 They can make ecological concepts more accessible and engaging, improving how research is shared beyond the scientific community. 
                 Thanks to online repositories like Sketchfab, AI-based 3D modelling tools, and open-source software such as Blender, producing realistic scientific visualisations is now far more accessible.
             </p>
-       </div>
-
-        <div class="marker-demo-section">
+        </div>
+        
+       <div class="data-animation-section">
+            <div class="animation-grid">
+                <div class="animation-text">
+                    <h2>Visualising Unseen Journeys</h2>
+                    <p>
+                        Data-driven animations bring complex ecological datasets to life, turning numbers and tracks into vivid, dynamic stories. By revealing patterns of behaviour, habitat use, and movement, these visualisations make scientific discoveries more tangible, captivating, and easier to understand for researchers, policymakers, and the public alike. Such results can be achieved using platforms like R, in combination with video editing tools, to produce polished, compelling visual content.
+                    </p>
+                </div>
+                <div class="animation-video-container">
+                    <video 
+                        src="./media/meagre-map-animation.webm" 
+                        muted 
+                        loop 
+                        playsinline
+                        disablepictureinpicture
+                        width="100%"
+                        height="auto">
+                        Your browser does not support the WEBM video format.
+                    </video>
+                    <p class="video-caption">
+                        Example: reconstructed movement of a tagged meagre (<i>Argyrosomus regius</i>) in the Iberian Peninsula.
+                    </p>
+                </div>
+            </div>
+        </div>
+       <div class="marker-demo-section">
             <h2>Interactive Ocean Storytelling Through AR</h2>
             <p class="demo-subtitle">Example of an AR-enhanced scientific poster — turning complex data into something audiences can see, interact with, and remember. From public exhibitions to classrooms and scientific conferences, AR opens new pathways to communicate marine science in a more interactive and inspiring way.</p>
             
@@ -811,7 +938,7 @@
                 </div>
 
                 <div class="impact-card">
-                    <div classs="impact-icon">
+                    <div class="impact-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                             <polyline points="16 18 22 12 16 6"></polyline>
                             <polyline points="8 6 2 12 8 18"></polyline>
@@ -830,17 +957,24 @@
         </div>
 
         <footer>
-            <p><strong>Save Our Seas Foundation</strong> &times; <strong>Centre of Marine Sciences</strong></p>
-            <p style="margin-top: 20px;">Demonstrating impactful digital storytelling for ocean conservation</p>
+            <p style="margin-top: 0;">Demonstrating impactful digital storytelling for ocean conservation</p>
             
-            <p style="margin-top: 20px; font-size: 0.9em;">Developed by Miguel Gandra</p>
+            <div class="developer-info">
+                Developed by 
+                <a href="mailto:m3gandra@gmail.com">
+                    <svg class="email-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                        <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                    Miguel Gandra
+                </a>
+            </div>
             
-            <p style="margin-top: 10px; font-size: 0.9em;"> Built with <a href="https://modelviewer.dev" target="_blank" rel="noopener">Model Viewer</a> • 
-                Free & Open Source • 
-                <a href="https://github.com" target="_blank" rel="noopener">View Source</a>
+            <p style="margin-top: 20px; font-size: 0.9em;"> Page content licensed under <a href="http://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>.
             </p>
+            
         </footer>
-    </div>
+        </div>
 
     <script>
         const modelViewer = document.querySelector('model-viewer');
@@ -888,6 +1022,44 @@
         header.addEventListener('mouseleave', () => {
             h1.style.textShadow = '0 5px 15px rgba(0, 0, 0, 0.3)';
         });
+        
+        
+        /* --- SCRIPT FOR VIDEO INTERSECTION OBSERVER --- */
+        
+        // Select the new section and its video
+        const animSection = document.querySelector('.data-animation-section');
+        const animVideo = animSection.querySelector('video');
+
+        // Configure the observer
+        const videoObserverOptions = {
+            root: null, // Use the viewport as the root
+            threshold: 0.3 // Trigger when 30% of the section is visible
+        };
+
+        // Create the observer
+        const videoObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                // When the section is 30% visible
+                if (entry.isIntersecting) {
+                    
+                    // 1. Add the 'is-visible' class to trigger the CSS fade-in
+                    animSection.classList.add('is-visible');
+                    
+                    // 2. Play the video
+                    animVideo.play().catch(error => {
+                        // Log a warning if autoplay is prevented by the browser
+                        console.warn("Video autoplay prevented:", error);
+                    });
+
+                    // 3. Stop observing this section to prevent re-triggering
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, videoObserverOptions);
+
+        // Start observing the animation section
+        videoObserver.observe(animSection);
+        /* --- END NEW SCRIPT --- */
 
     </script>
 </body>
