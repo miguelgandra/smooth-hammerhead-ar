@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Smooth Hammerhead AR Experience</title>
 
-    <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-0CHHX4WET9"></script>
     <script>
     window.dataLayer = window.dataLayer || [];
@@ -245,7 +244,156 @@
             color: #b0d0d0;
             line-height: 1.7;
         }
+        
+        /* --- NEW SECTION --- Info Banner */
+        .info-banner-section {
+            background: linear-gradient(135deg, rgba(0, 224, 192, 0.1), rgba(0, 160, 176, 0.1));
+            border-radius: 30px;
+            padding: 40px 50px;
+            text-align: center;
+            margin: 80px 0;
+            border: 2px solid rgba(0, 224, 192, 0.3);
+        }
+        
+        .info-banner-section p {
+            font-size: 1.1em; 
+            color: #b0d0d0;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.7;
+            font-weight: 300;
+        }
+        /* --- END NEW SECTION --- */
 
+
+        /* Marker Demo Section */
+        .marker-demo-section {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 30px;
+            padding: 40px;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 224, 192, 0.2);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            margin: 80px 0;
+            text-align: center;
+        }
+
+        .marker-demo-section h2 {
+            font-size: 2em;
+            font-weight: 800;
+            margin-bottom: 35px;
+            background: linear-gradient(135deg, #00e0c0, #00b0c0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .demo-subtitle {
+            font-size: 1.1em;
+            color: #b0d0d0;
+            max-width: 900px;
+            margin: 0 auto 80px;
+        }
+
+        .demo-content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            text-align: left;
+            align-items: flex-start;
+        }
+
+        .poster-image-container a {
+            display: block; /* Ensures the link wraps the image properly */
+            text-decoration: none;
+        }
+        
+        .poster-image-container img {
+            width: 100%;
+            border-radius: 15px;
+            border: 2px solid rgba(0, 224, 192, 0.3);
+            transition: border-color 0.3s ease;
+        }
+        
+        .poster-image-container a:hover img {
+            border-color: rgba(0, 224, 192, 0.7);
+        }
+        
+        /* --- MODIFIED RULE --- */
+        .poster-credit {
+            font-size: 0.85em;  /* Was 0.9em */
+            font-style: italic;
+            color: #a0c0c0;
+            text-align: center;
+            margin-top: 10px;   /* Was 15px */
+        }
+
+        .demo-instructions h3 {
+            color: #00e0c0;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .demo-instructions ol {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .demo-instructions li {
+            margin-bottom: 25px;
+            position: relative;
+            padding-left: 35px;
+        }
+        
+        .demo-instructions li::before {
+            content: counter(list-item);
+            counter-increment: list-item;
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-size: 1.1em;
+            font-weight: 700;
+            color: #00e0c0;
+            background: rgba(0, 224, 192, 0.1);
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 25px;
+        }
+        
+        .demo-instructions li strong {
+            font-size: 1.2em;
+            color: #ffffff;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 3px;
+        }
+        
+        .demo-instructions li p {
+            color: #b0d0d0;
+            margin-top: 5px;
+        }
+        
+        .qr-code-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 10px;
+            margin-top: 10px;
+            border: 2px solid #00e0c0;
+        }
+
+        .mobile-instructions {
+            display: none; /* Hidden by default */
+        }
+        
+        .mobile-instructions .cta-button {
+             margin-top: 15px;
+             text-decoration: none;
+        }
+        
         /* Impact Section */
         .impact-section {
             margin: 80px 0;
@@ -323,134 +471,6 @@
         .impact-card p {
             color: #b0d0d0;
             line-height: 1.8;
-        }
-
-        /* Marker Demo Section */
-        .marker-demo-section {
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 30px;
-            padding: 40px;
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(0, 224, 192, 0.2);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
-            margin: 80px 0;
-            text-align: center;
-        }
-
-        .marker-demo-section h2 {
-            font-size: 2em;
-            font-weight: 800;
-            margin-bottom: 35px;
-            background: linear-gradient(135deg, #00e0c0, #00b0c0);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        
-        .demo-subtitle {
-            font-size: 1.1em;
-            color: #b0d0d0;
-            max-width: 900px;
-            margin: 0 auto 80px;
-        }
-
-        .demo-content-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            text-align: left;
-            align-items: flex-start;
-        }
-
-        /* --- CSS CHANGE HERE --- */
-        .poster-image-container a {
-            display: block; /* Ensures the link wraps the image properly */
-            text-decoration: none;
-        }
-        
-        .poster-image-container img {
-            width: 100%;
-            border-radius: 15px;
-            border: 2px solid rgba(0, 224, 192, 0.3);
-            transition: border-color 0.3s ease; /* Added transition */
-        }
-        
-        .poster-image-container a:hover img {
-            border-color: rgba(0, 224, 192, 0.7); /* Hover effect */
-        }
-        /* --- END CSS CHANGE --- */
-        
-        .poster-credit {
-            font-size: 0.9em;
-            font-style: italic;
-            color: #a0c0c0;
-            text-align: center;
-            margin-top: 15px;
-        }
-
-        .demo-instructions h3 {
-            color: #00e0c0;
-            font-size: 1.5em;
-            margin-bottom: 20px;
-            font-weight: 700;
-        }
-
-        .demo-instructions ol {
-            list-style: none;
-            padding-left: 0;
-        }
-
-        .demo-instructions li {
-            margin-bottom: 25px;
-            position: relative;
-            padding-left: 35px;
-        }
-        
-        .demo-instructions li::before {
-            content: counter(list-item);
-            counter-increment: list-item;
-            position: absolute;
-            left: 0;
-            top: 0;
-            font-size: 1.1em;
-            font-weight: 700;
-            color: #00e0c0;
-            background: rgba(0, 224, 192, 0.1);
-            width: 25px;
-            height: 25px;
-            border-radius: 50%;
-            text-align: center;
-            line-height: 25px;
-        }
-        
-        .demo-instructions li strong {
-            font-size: 1.2em;
-            color: #ffffff;
-            font-weight: 700;
-            display: block;
-            margin-bottom: 3px;
-        }
-        
-        .demo-instructions li p {
-            color: #b0d0d0;
-            margin-top: 5px;
-        }
-        
-        .qr-code-img {
-            width: 150px;
-            height: 150px;
-            border-radius: 10px;
-            margin-top: 10px;
-            border: 2px solid #00e0c0;
-        }
-
-        .mobile-instructions {
-            display: none; /* Hidden by default */
-        }
-        
-        .mobile-instructions .cta-button {
-             margin-top: 15px;
-             text-decoration: none;
         }
 
         /* Call to Action */
@@ -567,6 +587,17 @@
             .ar-section {
                 padding: 25px;
             }
+            
+            /* --- NEW SECTION --- Info Banner */
+            .info-banner-section {
+                padding: 30px 25px;
+                margin: 60px 0;
+            }
+            .info-banner-section p {
+                font-size: 1.05em;
+            }
+            /* --- END NEW SECTION --- */
+
 
             .demo-content-grid {
                 grid-template-columns: 1fr;
@@ -675,46 +706,10 @@
                 </div>
             </div>
         </div>
-
-        <div class="impact-section">
-            
-            <div class="impact-grid">
-                <div class="impact-card">
-                    <div class="impact-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <line x1="2" y1="12" x2="22" y2="12"></line>
-                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 1Sunday, 3 November 2024 15.3 0 0 1 4-10z"></path>
-                        </svg>
-                    </div>
-                    <h3>WebXR Technology</h3>
-                    <p>Browser-based augmented reality that works on any device. No apps, no barriers—just instant access to immersive experiences.</p>
-                </div>
-
-                <div class="impact-card">
-                    <div class="impact-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v0A2.5 2.5 0 0 1 9.5 7v0A2.5 2.5 0 0 1 7 9.5v0A2.5 2.5 0 0 1 9.5 12v0A2.5 2.5 0 0 1 7 14.5v0A2.5 2.5 0 0 1 9.5 17v0A2.5 2.5 0 0 1 7 19.5v0A2.5 2.5 0 0 1 9.5 22"></path>
-                             <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v0A2.5 2.5 0 0 0 14.5 7v0A2.5 2.5 0 0 0 17 9.5v0A2.5 2.5 0 0 0 14.5 12v0A2.5 2.5 0 0 0 17 14.5v0A2.5 2.5 0 0 0 14.5 17v0A2.5 2.5 0 0 0 17 19.5v0A2.5 2.5 0 0 0 14.5 22"></path>
-                        </svg>
-                    </div>
-                    <h3>Education & Engagement</h3>
-                    <p>Translate complex data into immersive experiences — allowing audiences to visualise, engage with, and better understand species they’ve never seen.</p>
-                </div>
-
-                <div class="impact-card">
-                    <div class="impact-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="16 18 22 12 16 6"></polyline>
-                            <polyline points="8 6 2 12 8 18"></polyline>
-                        </svg>
-                    </div>
-                    <h3>Open-Source Impact</h3>
-                    <p>Built entirely with free tools. Democratizing science storytelling for researchers and conservation organizations worldwide.</p>
-                </div>
-            </div>
+        
+        <div class="info-banner-section">
+            <p>Interactive 3D assets like this can be powerful tools to support marine research and science communication. By making complex ecological concepts more tangible and visually engaging, they help bridge the gap between scientific investigation and public understanding. The growing availability of online repositories such as Sketchfab, AI-based image-to-3D conversion tools, and open-source software like Blender now enables the creation of high-quality visualisations that can effectively complement and disseminate marine research findings.</p>
         </div>
-
         <div class="marker-demo-section">
             <h2>Interactive Ocean Storytelling Through AR</h2>
             <p class="demo-subtitle">Example of an AR-enhanced scientific poster — turning complex data into something audiences can see, interact with, and remember. From public exhibitions to classrooms and scientific conferences, AR opens new pathways to communicate marine science in a more interactive and inspiring way.</p>
@@ -751,6 +746,45 @@
                         <p style="margin-top: 20px;">After launching, you'll need to <strong>find the poster image</strong> (e.g., on another computer screen or a physical print-out) and point your camera at it.</p>
                     </div>
                     
+                </div>
+            </div>
+        </div>
+
+        <div class="impact-section">
+            
+            <div class="impact-grid">
+                <div class="impact-card">
+                    <div class="impact-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="2" y1="12" x2="22" y2="12"></line>
+                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 1Sunday, 3 November 2024 15.3 0 0 1 4-10z"></path>
+                        </svg>
+                    </div>
+                    <h3>WebXR Technology</h3>
+                    <p>Browser-based augmented reality that works on any device. No apps, no barriers—just instant access to immersive experiences.</p>
+                </div>
+
+                <div class="impact-card">
+                    <div class="impact-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v0A2.5 2.5 0 0 1 9.5 7v0A2.5 2.5 0 0 1 7 9.5v0A2.5 2.5 0 0 1 9.5 12v0A2.5 2.5 0 0 1 7 14.5v0A2.5 2.5 0 0 1 9.5 17v0A2.5 2.5 0 0 1 7 19.5v0A2.5 2.5 0 0 1 9.5 22"></path>
+                             <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v0A2.5 2.5 0 0 0 14.5 7v0A2.5 2.5 0 0 0 17 9.5v0A2.5 2.5 0 0 0 14.5 12v0A2.5 2.5 0 0 0 17 14.5v0A2.5 2.5 0 0 0 14.5 17v0A2.5 2.5 0 0 0 17 19.5v0A2.5 2.5 0 0 0 14.5 22"></path>
+                        </svg>
+                    </div>
+                    <h3>Education & Engagement</h3>
+                    <p>Translate complex data into immersive experiences — allowing audiences to visualise, engage with, and better understand species they’ve never seen.</p>
+                </div>
+
+                <div class="impact-card">
+                    <div class="impact-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="16 18 22 12 16 6"></polyline>
+                            <polyline points="8 6 2 12 8 18"></polyline>
+                        </svg>
+                    </div>
+                    <h3>Open-Source Impact</h3>
+                    <p>Built entirely with free tools. Democratizing science storytelling for researchers and conservation organizations worldwide.</p>
                 </div>
             </div>
         </div>
