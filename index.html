@@ -96,12 +96,12 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 80px;
+            gap: 70px; /* Was 80px */
             margin-bottom: 150px;
         }
         
         .header-logos img {
-            height: 75px;
+            height: 70px; /* Was 75px */
             transition: height 0.3s ease;
         }
         
@@ -111,13 +111,17 @@
         }
 
         .header-logos .art-logo {
-            height: 85px; /* 10% bigger than 75px */
-            margin-top: 15px; /* 5 pixels down from 10px of ccmar */
+            height: 80px; /* Was 85px */
+            margin-top: 15px;
         }
         
-        /* --- NEW CSS RULE --- */
         .header-logos .fct-logo {
-            margin-top: 10px; /* Align with CCMAR logo */
+            height: 65px; /* Slightly smaller than base 70px */
+            margin-top: 10px; 
+        }
+
+        .header-logos .fam-logo {
+            margin-top: 10px; /* Align with CCMAR/FCT */
         }
 
         h1 {
@@ -550,11 +554,11 @@
                 font-size: 2.8em;
             }
             
-            /* --- MODIFIED RULE --- */
             .header-logos {
-                gap: 40px;
+                row-gap: 15px;    
+                column-gap: 40px; 
                 margin-bottom: 60px;
-                flex-wrap: wrap; /* Allows logos to stack in 2x2 grid */
+                flex-wrap: wrap; 
             }
             .header-logos img {
                 height: 50px;
@@ -563,13 +567,17 @@
                 margin-top: 5px;
             }
             .header-logos .art-logo {
-                height: 55px; /* 10% bigger than 50px */
-                margin-top: 10px; /* 5 pixels down from 5px of ccmar */
+                height: 55px; 
+                margin-top: 10px; 
             }
             
-            /* --- NEW CSS RULE --- */
             .header-logos .fct-logo {
-                margin-top: 5px; /* Align with CCMAR logo */
+                height: 45px; /* Smaller than base 50px */
+                margin-top: 5px; 
+            }
+            
+            .header-logos .fam-logo {
+                margin-top: 5px; /* Align with CCMAR/FCT */
             }
             
             .header-description {
@@ -655,9 +663,10 @@
         <header>
             <div class="header-logos">
                 <img src="./logos/CCMAR-logo.png" alt="CCMAR" class="ccmar-logo">
+                <img src="./logos/FCT-logo.png" alt="FCT Logo" class="fct-logo">
                 <img src="./logos/SOSF-logo.png" alt="Save Our Seas Foundation">
                 <img src="./logos/ART-logo.png" alt="ART Logo" class="art-logo">
-                <img src="./logos/FCT-logo.png" alt="FCT Logo" class="fct-logo">
+                <img src="./logos/FAM-logo.png" alt="FAM Logo" class="fam-logo">
             </div>
 
             <h1>Digital Tools for Ocean Conservation</h1>
@@ -716,14 +725,13 @@
             </div>
         </div>
         
-       <div class="info-banner-section">
-    <p>
-        Interactive 3D assets like this can be powerful tools to support science communication. 
-        They can make ecological concepts more accessible and engaging, improving how research is shared beyond the scientific community. 
-        Thanks to online repositories like Sketchfab, AI-based 3D modelling tools, and open-source software such as Blender, producing realistic scientific visualisations is now far more accessible.
-    </p>
-</div>
-
+        <div class="info-banner-section">
+            <p>
+                Interactive 3D assets like this can be powerful tools to support science communication. 
+                They can make ecological concepts more accessible and engaging, improving how research is shared beyond the scientific community. 
+                Thanks to online repositories like Sketchfab, AI-based 3D modelling tools, and open-source software such as Blender, producing realistic scientific visualisations is now far more accessible.
+            </p>
+       </div>
 
         <div class="marker-demo-section">
             <h2>Interactive Ocean Storytelling Through AR</h2>
@@ -792,7 +800,7 @@
                 </div>
 
                 <div class="impact-card">
-                    <div class="impact-icon">
+                    <div classs="impact-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                             <polyline points="16 18 22 12 16 6"></polyline>
                             <polyline points="8 6 2 12 8 18"></polyline>
