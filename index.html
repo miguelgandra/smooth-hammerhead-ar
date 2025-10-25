@@ -114,6 +114,11 @@
             height: 85px; /* 10% bigger than 75px */
             margin-top: 15px; /* 5 pixels down from 10px of ccmar */
         }
+        
+        /* --- NEW CSS RULE --- */
+        .header-logos .fct-logo {
+            margin-top: 10px; /* Align with CCMAR logo */
+        }
 
         h1 {
             font-family: 'Raleway', sans-serif;
@@ -245,7 +250,7 @@
             line-height: 1.7;
         }
         
-        /* --- NEW SECTION --- Info Banner */
+        /* Info Banner */
         .info-banner-section {
             background: linear-gradient(135deg, rgba(0, 224, 192, 0.1), rgba(0, 160, 176, 0.1));
             border-radius: 30px;
@@ -264,7 +269,6 @@
             line-height: 1.7;
             font-weight: 300;
         }
-        /* --- END NEW SECTION --- */
 
 
         /* Marker Demo Section */
@@ -320,13 +324,12 @@
             border-color: rgba(0, 224, 192, 0.7);
         }
         
-        /* --- MODIFIED RULE --- */
         .poster-credit {
-            font-size: 0.85em;  /* Was 0.9em */
+            font-size: 0.85em;
             font-style: italic;
             color: #a0c0c0;
             text-align: center;
-            margin-top: 10px;   /* Was 15px */
+            margin-top: 10px;
         }
 
         .demo-instructions h3 {
@@ -547,9 +550,11 @@
                 font-size: 2.8em;
             }
             
+            /* --- MODIFIED RULE --- */
             .header-logos {
                 gap: 40px;
                 margin-bottom: 60px;
+                flex-wrap: wrap; /* Allows logos to stack in 2x2 grid */
             }
             .header-logos img {
                 height: 50px;
@@ -560,6 +565,11 @@
             .header-logos .art-logo {
                 height: 55px; /* 10% bigger than 50px */
                 margin-top: 10px; /* 5 pixels down from 5px of ccmar */
+            }
+            
+            /* --- NEW CSS RULE --- */
+            .header-logos .fct-logo {
+                margin-top: 5px; /* Align with CCMAR logo */
             }
             
             .header-description {
@@ -588,7 +598,6 @@
                 padding: 25px;
             }
             
-            /* --- NEW SECTION --- Info Banner */
             .info-banner-section {
                 padding: 30px 25px;
                 margin: 60px 0;
@@ -596,7 +605,6 @@
             .info-banner-section p {
                 font-size: 1.05em;
             }
-            /* --- END NEW SECTION --- */
 
 
             .demo-content-grid {
@@ -649,6 +657,7 @@
                 <img src="./logos/CCMAR-logo.png" alt="CCMAR" class="ccmar-logo">
                 <img src="./logos/SOSF-logo.png" alt="Save Our Seas Foundation">
                 <img src="./logos/ART-logo.png" alt="ART Logo" class="art-logo">
+                <img src="./logos/FCT-logo.png" alt="FCT Logo" class="fct-logo">
             </div>
 
             <h1>Digital Tools for Ocean Conservation</h1>
@@ -707,9 +716,15 @@
             </div>
         </div>
         
-        <div class="info-banner-section">
-            <p>Interactive 3D assets like this can be powerful tools to support marine research and science communication. By making complex ecological concepts more tangible and visually engaging, they help bridge the gap between scientific investigation and public understanding. The growing availability of online repositories such as Sketchfab, AI-based image-to-3D conversion tools, and open-source software like Blender now enables the creation of high-quality visualisations that can effectively complement and disseminate marine research findings.</p>
-        </div>
+       <div class="info-banner-section">
+    <p>
+        Interactive 3D assets like this can be powerful tools to support science communication. 
+        They can make ecological concepts more accessible and engaging, improving how research is shared beyond the scientific community. 
+        Thanks to online repositories like Sketchfab, AI-based 3D modelling tools, and open-source software such as Blender, producing realistic scientific visualisations is now far more accessible.
+    </p>
+</div>
+
+
         <div class="marker-demo-section">
             <h2>Interactive Ocean Storytelling Through AR</h2>
             <p class="demo-subtitle">Example of an AR-enhanced scientific poster — turning complex data into something audiences can see, interact with, and remember. From public exhibitions to classrooms and scientific conferences, AR opens new pathways to communicate marine science in a more interactive and inspiring way.</p>
@@ -788,6 +803,7 @@
                 </div>
             </div>
         </div>
+
         <div class="cta-section">
             <h2>Explore the Full Project</h2>
             <p>Learn more about smooth hammerhead nursery habitats, our methodology, and the conservation implications of this work.</p>
