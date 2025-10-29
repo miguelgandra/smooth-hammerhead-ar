@@ -37,7 +37,7 @@
             line-height: 1.6;
         }
 
-        /* Animated gradient background */
+        /* Animated gradient background (for content below hero) */
         .gradient-bg {
             position: fixed;
             width: 100%;
@@ -86,10 +86,68 @@
             z-index: 1;
         }
 
-        /* Header */
-        header {
-            padding: 10px 0 20px;
+        /* --- NEW: Header Load Animation --- */
+        @keyframes fadeInHero {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* --- NEW: Bounce Animation for Scroll Indicator --- */
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+
+        /* --- NEW: Hero Section (Full Screen) --- */
+        .hero-section {
+            position: relative;
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             text-align: center;
+            overflow: hidden;
+            background: #020a1a; /* Fallback */
+        }
+        
+        #hero-model {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            --poster-color: transparent;
+        }
+        
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            background: radial-gradient(ellipse at center, rgba(2, 10, 26, 0.4) 0%, rgba(2, 10, 26, 0.9) 70%, #020a1a 100%);
+        }
+
+        /* Header content is now placed *inside* the hero */
+        header {
+            position: relative;
+            z-index: 2;
+            padding: 20px;
+            max-width: 1000px;
+            transform: translateY(-40px); /* --- Moves the block up --- */
         }
         
         .header-logos {
@@ -97,64 +155,142 @@
             justify-content: center;
             align-items: center;
             gap: 70px; 
-            margin-bottom: 150px;
+            margin-bottom: 100px; /* --- ADJUSTED --- */
+            
+            /* --- ADDED: Animation --- */
+            animation: fadeInHero 1s ease-out 0.2s forwards;
+            opacity: 0;
+            transform: translateY(20px);
         }
         
         .header-logos img {
-            height: 60px; /* Was 70px */
+            height: 60px;
             transition: height 0.3s ease;
         }
         
         /* Adjusted styles for individual logos */
         .header-logos .ccmar-logo {
-            margin-top: 12px; /* Adjusted */
+            margin-top: 14px;
         }
 
         .header-logos .art-logo {
-            height: 70px; /* Was 80px */
-            margin-top: 12px; /* Adjusted */
+            height: 70px;
+            margin-top: 12px;
         }
         
         .header-logos .fct-logo {
-            height: 55px; /* Was 65px */
-            margin-top: 8px; /* Adjusted */
+            height: 55px;
+            margin-top: 8px;
         }
 
         .header-logos .fam-logo {
             height: 75px;
-            margin-top: 12px; /* Adjusted */
+            margin-top: 12px;
         }
-
+        
         h1 {
             font-family: 'Raleway', sans-serif;
-            font-size: 5em;
+            font-size: 5.5em; /* --- ADJUSTED --- */
             font-weight: 800;
-            margin-bottom: 70px;
+            margin-bottom: 30px; /* --- ADJUSTED --- */
             background: linear-gradient(135deg, #00e0c0, #00b0c0, #0099ff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             letter-spacing: 1px;
-            line-height: 1.1;
+            line-height: 1.2em; /* --- ADJUSTED --- */
             transition: text-shadow 0.2s ease-out;
-            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            
+            /* --- ADDED: Animation --- */
+            animation: fadeInHero 1s ease-out 0.4s forwards;
+            opacity: 0;
+            transform: translateY(20px);
         }
 
-        .subtitle {
+        /* --- MODIFIED: Subtitle Styles --- */
+        .subtitle-container {
+            margin-bottom: 35px;
             font-size: 1.3em;
-            color: #00e0c0;
             font-weight: 300;
-            margin-bottom: 30px;
+            color: #b0d0d0;
+            line-height: 1.5;
+            
+            /* --- ADDED: Animation & Width Constraint --- */
+            animation: fadeInHero 1s ease-out 0.6s forwards;
+            opacity: 0;
+            transform: translateY(20px);
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
         }
+        
+        .subtitle-container p {
+            color: #b0d0d0;
+        }
+
+        .subtitle-container p:first-child {
+            font-size: 0.95em;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: rgba(176, 208, 208, 0.6);
+            margin-bottom: 15px;
+        }
+        
+        .subtitle-project {
+            color: #00e0c0;
+            font-weight: 500;
+            display: block;
+            margin: 8px 0; /* --- Reduced from 12px --- */
+            position: relative;
+            padding-left: 20px;
+        }
+
         
         .header-description {
             font-size: 1.15em;
             color: #b0d0d0;
             font-weight: 300;
-            max-width: 800px;
-            margin: 20px auto 0;
+            max-width: 900px;
+            margin: 40px auto 0; /* --- Increased top margin --- */
             line-height: 1.7;
+            
+            /* --- ADDED: Animation --- */
+            animation: fadeInHero 1s ease-out 0.8s forwards;
+            opacity: 0;
+            transform: translateY(20px);
         }
+        
+        /* --- NEW: Scroll Down Indicator --- */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 20px; /* --- Decreased from 30px --- */
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3;
+            color: #00e0c0;
+            font-size: 0.9em;
+            font-weight: 300;
+            letter-spacing: 1px;
+            
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            
+            animation: fadeInHero 1s ease-out 1.2s forwards;
+            opacity: 0;
+        }
+        
+        .scroll-indicator::after {
+            content: '';
+            width: 16px;
+            height: 16px;
+            border-bottom: 2px solid #00e0c0;
+            border-right: 2px solid #00e0c0;
+            transform: rotate(45deg);
+            animation: bounce 2s infinite;
+        }
+
 
         /* AR Viewer Section */
         .ar-section {
@@ -166,6 +302,18 @@
             border: 1px solid rgba(0, 224, 192, 0.2);
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
         }
+        
+        .ar-section h2 {
+            font-size: 2em;
+            font-weight: 800;
+            margin-bottom: 35px;
+            text-align: center;
+            background: linear-gradient(135deg, #00e0c0, #00b0c0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
 
         model-viewer {
             width: 100%;
@@ -178,12 +326,12 @@
             text-align: center;
             font-size: 0.9em;
             color: #a0c0c0; 
-            margin-top: 15px; /* Was 25px */
+            margin-top: 15px;
             font-style: italic;
         }
         
         .model-credit a {
-            color: #00e0c0; 
+             /* --- CHANGE 1: Removed color rule from here --- */
             text-decoration: none;
         }
         
@@ -259,13 +407,13 @@
             font-size: 1.1em; 
             color: #b0d0d0;
             max-width: 900px;
-            margin: 40px auto 0; /* Adds space above it */
+            margin: 40px auto 0;
             line-height: 1.7;
             font-weight: 300;
             text-align: center;
         }
 
-        /* --- NEW: Data Animation Section --- */
+        /* Data Animation Section */
         .data-animation-section {
             background: rgba(255, 255, 255, 0.03);
             border-radius: 30px;
@@ -275,7 +423,6 @@
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
             margin: 80px 0;
             
-            /* Initial state for Intersection Observer */
             opacity: 0;
             transform: translateY(30px);
             transition: opacity 0.6s ease-out, transform 0.6s ease-out;
@@ -315,30 +462,28 @@
         }
 
         .animation-video-container {
-            width: 100%; /* Ensure it takes full width of its grid column */
-            display: flex; /* Enable flexbox */
-            flex-direction: column; /* Stack children vertically */
-            align-items: flex-end; /* Align children (video and caption) to the right */
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
         }
 
         .animation-video-container video {
             width: 100%;
             height: auto;
             border-radius: 15px;
-            background: transparent; /* Allows WEBM alpha channel to show */
-            margin-bottom: 0px; /* Space between video and caption */
+            background: transparent;
+            margin-bottom: 0px;
         }
         
         .video-caption {
-            text-align: center; /* Keep text centered within the caption block */
+            text-align: center;
             font-size: 0.9em;
             color: #a0c0c0; 
             font-style: italic;
-            width: 65%; /* Keep your desired width */
-            margin: 0; /* Reset margin as parent will handle positioning */
+            width: 65%;
+            margin: 0;
         }
-        /* --- END NEW --- */
-
 
         /* Marker Demo Section */
         .marker-demo-section {
@@ -378,7 +523,7 @@
         }
 
         .poster-image-container a {
-            display: block; /* Ensures the link wraps the image properly */
+            display: block;
             text-decoration: none;
         }
         
@@ -411,6 +556,7 @@
         .demo-instructions ol {
             list-style: none;
             padding-left: 0;
+            counter-reset: desktop-step-counter; /* --- FIX: Use a unique counter name --- */
         }
 
         .demo-instructions li {
@@ -420,8 +566,8 @@
         }
         
         .demo-instructions li::before {
-            content: counter(list-item);
-            counter-increment: list-item;
+            content: counter(desktop-step-counter); /* --- FIX: Use the unique counter name --- */
+            counter-increment: desktop-step-counter; /* --- FIX: Use the unique counter name --- */
             position: absolute;
             left: 0;
             top: 0;
@@ -447,6 +593,7 @@
         .demo-instructions li p {
             color: #b0d0d0;
             margin-top: 5px;
+            max-width: 90%; /* --- Constrains text width --- */
         }
         
         .qr-code-img {
@@ -464,7 +611,7 @@
         .mobile-instructions .cta-button {
              margin-top: 15px;
              text-decoration: none;
-        }
+         }
         
         /* Impact Section */
         .impact-section {
@@ -475,11 +622,18 @@
         .impact-section h2 {
             font-size: 2em; 
             font-weight: 800;
-            margin-bottom: 40px;
+            margin-bottom: 25px;
             background: linear-gradient(135deg, #00e0c0, #00b0c0);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+        }
+        
+        .impact-description {
+            font-size: 1.1em;
+            color: #b0d0d0;
+            max-width: 900px;
+            margin: 0 auto;
         }
         
         .impact-grid {
@@ -497,6 +651,7 @@
             transition: all 0.4s ease;
             position: relative;
             overflow: hidden;
+            text-align: left;
         }
 
         .impact-card::before {
@@ -592,7 +747,7 @@
         /* Footer */
         footer {
             text-align: center;
-            padding: 60px 20px 40px;
+            padding: 40px 20px 30px; /* --- CHANGE 2: Reduced height --- */
             border-top: 1px solid rgba(0, 224, 192, 0.2);
             margin-top: 80px;
         }
@@ -613,21 +768,45 @@
             color: #00b0c0;
         }
         
+        /* --- CHANGE 1: Override for footer CC links --- */
+        footer p a,
+        footer .model-credit a {
+            color: #a0c0c0; /* Match surrounding text */
+            font-weight: 400; /* Reset to normal */
+            text-decoration: underline; /* Add underline for clarity */
+            transition: color 0.3s ease;
+        }
+
+        footer p a:hover,
+        footer .model-credit a:hover {
+            color: #ffffff; /* Hover to white instead of teal */
+        }
+        
         .developer-info {
             color: #a0c0c0;
-            margin: 20px 0 10px;
+            margin: 20px 0 30px; /* --- CHANGE 3: Increased bottom margin --- */
             font-size: 0.9em;
         }
         
         .developer-info a {
-            font-weight: 700; /* Highlight */
-            display: inline-flex; /* Align icon and text */
+            font-weight: 700;
+            display: inline-flex;
             align-items: center;
-            gap: 6px; /* Space between icon and name */
+            gap: 6px;
+        }
+        
+        /* This selector is more specific, so it will keep the dev link green */
+        .developer-info a {
+            color: #00e0c0;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .developer-info a:hover {
+            color: #00b0c0;
         }
         
         .developer-info .email-icon {
-            width: 18px; /* Small icon size */
+            width: 18px;
             height: 18px;
         }
 
@@ -635,48 +814,63 @@
         /* Mobile Responsive Styles */
         @media (max-width: 768px) {
             h1 {
-                font-size: 2.8em;
+                font-size: 2.8em; /* Adjusted for two lines */
+                line-height: 1.25em;
+            }
+
+            /* --- NEW CHANGE: Apply the transform only on desktop --- */
+            header {
+                transform: translateY(0); /* Reset on mobile */
+            }
+
+            @media (min-width: 769px) {
+                header {
+                    transform: translateY(-40px); /* Apply only on larger screens */
+                }
             }
             
             .header-logos {
-                row-gap: 5px;    
-                column-gap: 30px; /* Was 40px */
-                margin-bottom: 60px;
+                row-gap: 5px;   
+                column-gap: 30px;
+                margin-bottom: 40px;
                 flex-wrap: wrap; 
             }
             .header-logos img {
-                height: 42px; /* Was 50px */
+                height: 42px;
             }
             .header-logos .ccmar-logo {
-                margin-top: 4px; /* Adjusted */
-                order: 1; /* Set mobile order */
+                margin-top: 4px;
+                order: 1;
             }
             .header-logos .art-logo {
-                height: 48px; /* Was 55px */
-                margin-top: 8px; /* Adjusted */
-                order: 3; /* Set mobile order */
+                height: 48px;
+                margin-top: 8px;
+                order: 3;
             }
             
             .header-logos .fct-logo {
-                height: 38px; /* Was 45px */
-                margin-top: 4px; /* Adjusted */
-                order: 2; /* Set mobile order */
+                height: 38px;
+                margin-top: 4px;
+                order: 2;
             }
             
-            /* Target SOSF logo (3rd in HTML) */
             .header-logos img:nth-child(3) {
-                order: 4; /* Set mobile order */
+                order: 4;
             }
 
             .header-logos .fam-logo {
-                height: 45px; /* Slightly larger than base 42px */
+                height: 45px;
                 margin-top: 6px;
-                order: 5; /* Set mobile order */
+                order: 5;
             }
             
             .header-description {
                 font-size: 1.05em;
                 padding: 0 10px;
+            }
+            
+            .subtitle-container {
+                font-size: 1.1em;
             }
             
             .ar-button {
@@ -690,6 +884,10 @@
 
             model-viewer {
                 height: 400px; 
+            }
+            
+            .ar-section h2 {
+                font-size: 1.8em;
             }
 
             .impact-section h2 {
@@ -705,14 +903,13 @@
                 margin-top: 30px;
             }
 
-            /* --- Responsive Animation Section --- */
             .animation-grid {
                 grid-template-columns: 1fr;
                 gap: 30px;
             }
             
             .animation-text h2 {
-                font-size: 1.8em; /* Match other mobile section headers */
+                font-size: 1.8em;
             }
             
             .animation-text p {
@@ -720,15 +917,13 @@
             }
             
             .animation-video-container {
-                order: -1; /* Places the video *above* the text on mobile */
-                align-items: center; /* Center the video and caption on mobile */
+                order: -1;
+                align-items: center;
             }
             
             .video-caption {
-                width: 95%; /* Wider on mobile */
+                width: 95%;
             }
-            /* --- END --- */
-
 
             .demo-content-grid {
                 grid-template-columns: 1fr;
@@ -745,6 +940,11 @@
             
             .demo-instructions li {
                 text-align: left;
+            }
+            
+            /* Reset max-width for mobile */
+            .demo-instructions li p {
+                max-width: 100%;
             }
             
             .desktop-instructions {
@@ -774,7 +974,25 @@
     <div class="particle" style="left: 75%; animation-delay: 5s;"></div>
     <div class="particle" style="left: 90%; animation-delay: 4s;"></div>
 
-    <div class="container">
+    <div class="hero-section">
+        
+        <model-viewer
+            id="hero-model"
+            src="./models/scalloped_hammerhead_juvenile_low_poly.glb"
+            alt="Juvenile Hammerhead Shark 3D Model"
+            autoplay
+            camera-orbit="10deg 75deg 8m"
+            exposure="1.2"
+            environment-image="neutral"
+            shadow-intensity="1"
+            disable-zoom
+            disable-pan
+            disable-tap
+            interaction-prompt="none"
+        ></model-viewer>
+        
+        <div class="hero-overlay"></div>
+
         <header>
             <div class="header-logos">
                 <img src="./logos/CCMAR-logo.png" alt="CCMAR" class="ccmar-logo">
@@ -784,16 +1002,31 @@
                 <img src="./logos/FAM-logo.png" alt="FAM Logo" class="fam-logo">
             </div>
 
-            <h1>Digital Tools for Ocean Conservation</h1>
-            <p class="subtitle">Project: Essential Habitats for Smooth Hammerheads</p>
+            <h1>Digital Tools for Ocean<br>Conservation</h1>
+            
+
+            <div class="subtitle-container">
+                <p>Developed under the projects</p>
+                <span class="subtitle-project">Essential Habitats for Smooth Hammerheads</span>
+                <span class="subtitle-project">Mapping Critical Habitats of Threatened Shark Species in the Algarve Coast</span>
+            </div>
             
             <p class="header-description">
-                This page demonstrates how open-access digital tools can enhance marine science communication — translating research into meaningful conservation impact.
+                This resource showcases how modern digital technologies, including <strong>Augmented Reality (AR)</strong> and sophisticated data visualisation, can help bridge complex movement ecology research and public outreach, enhancing the clarity, accessibility, and impact of scientific findings.
             </p>
-            
         </header>
+        
+        <div class="scroll-indicator">
+            Scroll Down
+        </div>
 
+    </div>
+
+    <div class="container">
         <div class="ar-section">
+            
+            <h2>Interactive 3D Models</h2>
+            
             <model-viewer
                 src="./models/scalloped_hammerhead_juvenile_low_poly.glb"
                 ios-src="./models/scalloped_hammerhead_juvenile_low_poly.usdz"
@@ -817,15 +1050,10 @@
                 </button>
             </model-viewer>
 
-            <p class="model-credit">
-                3D Model "Juvenile Hammerhead" by sharkingaround is licensed under 
-                <a href="http://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>.
-            </p>
-
             <div class="instructions">
                 <div class="instruction-card">
                     <h3>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
                         Desktop
                     </h3>
                     <p>Click and drag to rotate. Scroll to zoom. Explore every angle of this juvenile hammerhead.</p>
@@ -840,40 +1068,48 @@
             </div>
             
             <p class="ar-description">
-                Interactive 3D assets like this can be powerful tools to support science communication. 
-                They can make ecological concepts more accessible and engaging, improving how research is shared beyond the scientific community. 
-                Thanks to online repositories like Sketchfab, AI-based 3D modelling tools, and open-source software such as Blender, producing realistic scientific visualisations is now far more accessible.
+                3D assets are a powerful tool for science communication. They make ecological concepts more accessible and engaging, helping share research beyond the scientific community. 
+                Thanks to open-source software like Blender and online repositories, producing these visualizations is more achievable than ever.
             </p>
-        </div>
+            </div>
         
        <div class="data-animation-section">
             <div class="animation-grid">
                 <div class="animation-text">
                     <h2>Visualising Unseen Journeys</h2>
+                    
                     <p>
-                        Data-driven animations bring complex ecological datasets to life, turning numbers and tracks into vivid, dynamic stories. By revealing patterns of behaviour, habitat use, and movement, these visualisations make scientific discoveries more tangible, captivating, and easier to understand for researchers, policymakers, and the public alike. Such results can be achieved using platforms like R, in combination with video editing tools, to produce polished, compelling visual content.
+                        Beyond 3D models, data-driven animations can also help bring complex ecologicaldatasets to life, turning numbers and tracks into dynamic stories. By revealing patterns of behaviour, habitat use, and movement, these visualisations make scientific discoveries more tangible, captivating, and easier to understand for researchers, policymakers, and the public alike. Such results can be achieved using platforms like R, in combination with video editing tools, to produce polished, compelling visual content.
                     </p>
-                </div>
+                    </div>
                 <div class="animation-video-container">
+
                     <video 
-                        src="./media/meagre-map-animation.webm" 
                         muted 
                         loop 
                         playsinline
-                        disablepictureinpicture
+                        autoplay  disablepictureinpicture
                         width="100%"
                         height="auto">
-                        Your browser does not support the WEBM video format.
+
+                        <source src="./media/meagre-map-animation.mov" type="video/mp4; codecs=hvc1">
+
+                        <source src="./media/meagre-map-animation.webm" type="video/webm">
+
+                        Your browser does not support the video format.
                     </video>
+
                     <p class="video-caption">
-                        Example: reconstructed movement of a tagged meagre (<i>Argyrosomus regius</i>) in the Iberian Peninsula.
+                        Example: reconstructed movement of tagged meagre (<i>Argyrosomus regius</i>) in the Iberian Peninsula.
                     </p>
                 </div>
             </div>
         </div>
        <div class="marker-demo-section">
-            <h2>Interactive Ocean Storytelling Through AR</h2>
-            <p class="demo-subtitle">Example of an AR-enhanced scientific poster — turning complex data into something audiences can see, interact with, and remember. From public exhibitions to classrooms and scientific conferences, AR opens new pathways to communicate marine science in a more interactive and inspiring way.</p>
+            
+            <h2>Image-triggered AR experience</h2>
+            
+            <p class="demo-subtitle">This example shows marker-based AR, where a physical object (like this scientific poster) acts as a trigger. By scanning the poster, a viewer can unlock a hidden digital layer—videos, 3D models, or data visualizations. This approach connects physical outreach materials directly to dynamic digital content, enriching events like scientific conferences or museum exhibits.</p>
             
             <div class="demo-content-grid">
                 <div class="poster-image-container">
@@ -897,6 +1133,10 @@
                                 <strong>Point at the Poster</strong>
                                 <p>Once the camera feed opens, point your phone at the poster image on the left side of your screen.</p>
                             </li>
+                            <li>
+                                <strong>See the Poster Come to Life</strong>
+                                <p>The poster will unlock a hidden digital layer, showing videos and 3D models directly on your screen.</p>
+                            </li>
                         </ol>
                     </div>
                     
@@ -913,17 +1153,24 @@
 
         <div class="impact-section">
             
+            <h2>Translating Science Through Digital Media</h2>
+            
+            <p class="impact-description">
+                Each example on this page follows three guiding principles for effective and responsible science communication in ocean research.
+            </p>
+            
             <div class="impact-grid">
+                
                 <div class="impact-card">
                     <div class="impact-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="12" cy="12" r="10"></circle>
                             <line x1="2" y1="12" x2="22" y2="12"></line>
-                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 1Sunday, 3 November 2024 15.3 0 0 1 4-10z"></path>
+                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
                         </svg>
                     </div>
-                    <h3>WebXR Technology</h3>
-                    <p>Browser-based augmented reality that works on any device. No apps, no barriers—just instant access to immersive experiences.</p>
+                    <h3>Science First</h3>
+                    <p>Every visualisation and AR model begins with robust, peer-reviewed data. By grounding the work in rigorous movement ecology research, we ensure that accessibility never comes at the expense of scientific accuracy.</p>
                 </div>
 
                 <div class="impact-card">
@@ -933,8 +1180,8 @@
                              <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v0A2.5 2.5 0 0 0 14.5 7v0A2.5 2.5 0 0 0 17 9.5v0A2.5 2.5 0 0 0 14.5 12v0A2.5 2.5 0 0 0 17 14.5v0A2.5 2.5 0 0 0 14.5 17v0A2.5 2.5 0 0 0 17 19.5v0A2.5 2.5 0 0 0 14.5 22"></path>
                         </svg>
                     </div>
-                    <h3>Education & Engagement</h3>
-                    <p>Translate complex data into immersive experiences — allowing audiences to visualise, engage with, and better understand species they’ve never seen.</p>
+                    <h3>Engagement Through Interactivity</h3>
+                    <p>Interactive digital tools can transform how we experience ecological data. Whether through <strong>Augmented Reality (AR)</strong> or animated data-driven visuals, our goal is to make the underlying science more engaging, interpretable, and memorable for diverse audiences.</p>
                 </div>
 
                 <div class="impact-card">
@@ -944,8 +1191,8 @@
                             <polyline points="8 6 2 12 8 18"></polyline>
                         </svg>
                     </div>
-                    <h3>Open-Source Impact</h3>
-                    <p>Built entirely with free tools. Democratizing science storytelling for researchers and conservation organizations worldwide.</p>
+                    <h3>Open and Reproducible</h3>
+                    <p>All materials are created using open-source tools — from spatial analyses in <strong>R</strong> to 3D modelling in <strong>Blender</strong> and browser-based <strong>WebXR</strong> frameworks. This approach promotes transparency, reproducibility, and broader collaboration across the marine science community.</p>
                 </div>
             </div>
         </div>
@@ -970,17 +1217,23 @@
                 </a>
             </div>
             
-            <p style="margin-top: 20px; font-size: 0.9em;"> Page content licensed under <a href="http://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>.
+            <p class="model-credit" style="margin-top: 0;">
+                3D Model "Juvenile Hammerhead" by sharkingaround is licensed under 
+                <a href="http://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>.
+            </p>
+            
+            <p style="margin-top: 10px; font-size: 0.9em;"> Page content licensed under <a href="http://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>.
             </p>
             
         </footer>
         </div>
 
     <script>
-        const modelViewer = document.querySelector('model-viewer');
+        // Separate script for the main model-viewer
+        const modelViewer = document.querySelector('.ar-section model-viewer');
         
         modelViewer.addEventListener('load', () => {
-            console.log('Model loaded successfully');
+            console.log('Interactive model loaded successfully');
         });
 
         // Add more particles dynamically
@@ -990,7 +1243,8 @@
             particle.style.left = Math.random() * 100 + '%';
             particle.style.animationDelay = Math.random() * 10 + 's';
             particle.style.animationDuration = (15 + Math.random() * 10) + 's';
-            document.body.appendChild(particle);
+            // Append to the body, so it's behind the hero
+            document.body.appendChild(particle); 
             
             setTimeout(() => particle.remove(), 25000);
         }
