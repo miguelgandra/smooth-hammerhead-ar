@@ -57,77 +57,77 @@
                 this.poster = document.querySelector('#static-poster');
                 this.videoPlane = document.querySelector('#video-plane');
                 this.video = document.querySelector('#posterVideo');
-                // --- RENAMED ---
                 this.fishSchoolModel = document.querySelector('#fish-school-model'); 
+                
+                // --- NEW: Reference to the side content ---
+                this.sideContent = document.querySelector('#side-content-column');
+
                 this.playButton = document.querySelector('#play-button-group');
                 this.playButtonPlane = document.querySelector('#play-button-plane');
 
                 this.targetVisible = false;
-                
-                // --- NEW STATE VARIABLE ---
-                // Tracks if the video has finished playing at least once
                 this.videoHasPlayed = false;
 
                 // --- Event Handlers ---
 
-                // Click handler for the fallback button
                 this.onPlayButtonClick = () => {
                     if (this.video && this.targetVisible && !this.videoHasPlayed) {
                         console.log('Fallback button clicked. Playing video from start.');
-                        // Always play from the start when button is clicked
                         this.video.currentTime = 0; 
                         this.video.play().catch(e => console.error('❌ Button play error:', e));
                     }
                 };
                 
-                // Listener to hide button whenever video starts
                 this.onVideoPlay = () => {
                     if (this.playButton) {
                         this.playButton.setAttribute('visible', false);
                     }
                 };
 
-                // When video finishes
                 this.onVideoEnded = () => {
-                    // --- SET THE STATE ---
-                    this.videoHasPlayed = true; // Mark video as played
+                    this.videoHasPlayed = true; 
                     
-                    if (!this.targetVisible) return; // Don't show if target is lost
+                    if (!this.targetVisible) return;
                     
                     console.log('Video ended. Switching to poster and fish model.');
                     this.videoPlane.setAttribute('visible', false);
                     this.playButton.setAttribute('visible', false); 
                     this.poster.setAttribute('visible', true);
-                    // --- RENAMED ---
                     this.fishSchoolModel.setAttribute('visible', true);
+                    
+                    // --- NEW: Show side content ---
+                    this.sideContent.setAttribute('visible', true);
+                    
                     this.fishSchoolModel.setAttribute('animation-mixer', 'timeScale: 1');
                 };
 
-                // --- MODIFIED: When target is found ---
                 this.onTargetFound = () => {
                     console.log('Target found.');
                     this.targetVisible = true;
                     
                     if (this.videoHasPlayed) {
-                        // --- STATE: Video has already played ---
-                        // Show the poster and fish model, hide the video
+                        // STATE: Video has already played
                         console.log('Video has already played. Showing poster/fish model.');
                         this.poster.setAttribute('visible', true);
-                        // --- RENAMED ---
                         this.fishSchoolModel.setAttribute('visible', true);
+                        
+                        // --- NEW: Show side content ---
+                        this.sideContent.setAttribute('visible', true);
+                        
                         this.fishSchoolModel.setAttribute('animation-mixer', 'timeScale: 1');
                         this.videoPlane.setAttribute('visible', false);
                         this.playButton.setAttribute('visible', false);
                     
                     } else {
-                        // --- STATE: Video has NOT played yet ---
-                        // Show the video, hide the poster/fish model
+                        // STATE: Video has NOT played yet
                         this.poster.setAttribute('visible', false);
-                        // --- RENAMED ---
                         this.fishSchoolModel.setAttribute('visible', false);
+                        
+                        // --- NEW: Hide side content ---
+                        this.sideContent.setAttribute('visible', false);
+                        
                         this.videoPlane.setAttribute('visible', true);
                         
-                        // Check if we are resuming from a pause
                         if (this.video.currentTime > 0) {
                             console.log('Resuming video playback.');
                             this.video.play().catch(e => {
@@ -135,7 +135,6 @@
                                 this.playButton.setAttribute('visible', true);
                             });
                         }
-                        // Check if we are starting from the beginning
                         else if (userInteracted && videoReady) {
                             console.log('Attempting to play video from start...');
                             this.video.currentTime = 0;
@@ -144,7 +143,6 @@
                                 this.playButton.setAttribute('visible', true);
                             });
                         } 
-                        // Video not ready, show button
                         else {
                             console.warn('Video not ready. Showing fallback button.');
                             this.playButton.setAttribute('visible', true);
@@ -152,29 +150,27 @@
                     }
                 };
 
-                // --- MODIFIED: When target is lost ---
+                // --- MODIFIED: Simplified target lost ---
                 this.onTargetLost = () => {
                     console.log('Target lost. Hiding all.');
                     this.targetVisible = false;
                     
-                    // Always hide the button
+                    // Hide everything
                     this.playButton.setAttribute('visible', false); 
-
-                    if (this.videoHasPlayed) {
-                        // --- STATE: Video has already played ---
-                        // Hide the poster and fish model
-                        this.poster.setAttribute('visible', false);
-                        // --- RENAMED ---
-                        this.fishSchoolModel.setAttribute('visible', false);
-                        this.fishSchoolModel.setAttribute('animation-mixer', 'timeScale: 0');
+                    this.poster.setAttribute('visible', false);
+                    this.fishSchoolModel.setAttribute('visible', false);
+                    this.videoPlane.setAttribute('visible', false);
                     
-                    } else {
-                        // --- STATE: Video has NOT played yet ---
-                        // Hide and PAUSE the video (don't reset)
-                        this.videoPlane.setAttribute('visible', false);
-                        if (this.video) {
-                            this.video.pause(); // Just pause, don't reset time
-                        }
+                    // --- NEW: Hide side content ---
+                    this.sideContent.setAttribute('visible', false); 
+
+                    if (this.fishSchoolModel) {
+                        this.fishSchoolModel.setAttribute('animation-mixer', 'timeScale: 0');
+                    }
+                    
+                    // Pause video if it was playing
+                    if (!this.videoHasPlayed && this.video) {
+                        this.video.pause(); 
                     }
                 };
 
@@ -252,6 +248,10 @@
                 id="posterImage" 
                 src="https://miguelgandra.github.io/smooth-hammerhead-ar/media/BLS8-poster-train.jpg" 
                 crossorigin="anonymous">
+
+            <img id="paperImage" src="https://miguelgandra.github.io/smooth-hammerhead-ar/media/Paper.jpg" crossorigin="anonymous">
+            <img id="profileImage" src="https://miguelgandra.github.io/smooth-hammerhead-ar/media/Profile.png" crossorigin="anonymous">
+
         </a-assets>
 
         <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
@@ -281,13 +281,54 @@
             <a-entity
                 id="fish-school-model"
                 gltf-model="#fishSchoolModel"
-                position="-0.33 0.35 0.2"
+                position="-0.33 0.35 0.05"
                 rotation="0 0 0"
-                scale="0.2 0.2 0.2" 
+                scale="0.3 0.3 0.3" 
                 visible="false"
                 animation-mixer="clip: *; loop: repeat; timeScale: 0"
             ></a-entity>
+            
+            <a-entity 
+                id="side-content-column" 
+                position="-0.9 0 0" 
+                visible="false"
+            >
+                <a-entity id="paper-group">
+                    <a-image 
+                        src="#paperImage" 
+                        width="0.8" 
+                        height="1.13" 
+                        position="0 0.65 0"
+                    ></a-image> 
+                    
+                    <a-entity 
+                        class="clickable" 
+                        link="href: https://doi.org/10.1016/j.ocecoaman.2025.107782" 
+                        position="0 0 0"
+                    >
+                        <a-plane color="#007BFF" width="0.7" height="0.15" opacity="0.8"></a-plane>
+                        <a-text value="Read the full paper" align="center" color="#FFF" scale="0.15 0.15 0.15" position="0 0 0.01" wrap-count="20"></a-text>
+                    </a-entity>
+                </a-entity>
 
+                <a-entity id="profile-group" position="0 -1.3 0">
+                    <a-image 
+                        src="#profileImage" 
+                        width="0.8" 
+                        height="0.8" 
+                        position="0 0 0"
+                    ></a-image> 
+                    
+                    <a-entity 
+                        class="clickable" 
+                        link="href: mailto:m3gandra@gmail.com" 
+                        position="0 -0.55 0"
+                    >
+                        <a-plane color="#444" width="0.7" height="0.15" opacity="0.8"></a-plane>
+                        <a-text value="Get in touch" align="center" color="#FFF" scale="0.15 0.15 0.15" position="0 0 0.01" wrap-count="20"></a-text>
+                    </a-entity>
+                </a-entity>
+            </a-entity>
             <a-entity
                 id="play-button-group"
                 position="0 0 0.05"
