@@ -927,8 +927,9 @@
         /* --- Mobile Responsive Styles --- */
         @media (max-width: 768px) {
             h1 {
-                font-size: 2.8em; /* Adjusted for two lines */
+                font-size: 2.8em; 
                 line-height: 1.25em;
+                margin-bottom: 20px; /* --- ADDED --- */
             }
 
             /* --- NEW CHANGE: Apply the transform only on desktop --- */
@@ -943,9 +944,10 @@
             }
             
             .header-logos {
-                row-gap: 10px;   /* CHANGED from 5px */
-                column-gap: 25px; /* CHANGED from 30px */
-                margin-bottom: 40px;
+                row-gap: 10px;
+                column-gap: 25px;
+                margin-bottom: 30px; /* --- CHANGED from 40px --- */
+                margin-top: 20px; /* --- ADDED --- */
                 flex-wrap: wrap; 
             }
             .header-logos img {
@@ -978,17 +980,19 @@
             }
             
             .header-description {
-                font-size: 1em; /* CHANGED from 1.05em */
+                font-size: 1em; 
                 padding: 0 10px;
+                margin-top: 30px; /* --- ADDED --- */
             }
             
             .subtitle-container {
                 font-size: 1.1em;
+                margin-bottom: 25px; /* --- ADDED --- */
             }
             
             .ar-button {
-                font-size: 1em;
-                padding: 14px 28px;
+                font-size: 0.9em; /* --- CHANGED from 1em --- */
+                padding: 12px 24px; /* --- CHANGED from 14px 28px --- */
             }
             .cta-button {
                 font-size: 1em;
@@ -1008,11 +1012,11 @@
             }
 
             .ar-section {
-                padding: 25px;
+                padding: 25px 20px; /* --- CHANGED from 25px --- */
             }
 
             .ar-description {
-                font-size: 1em; /* CHANGED from 1.05em */
+                font-size: 1em; 
                 margin-top: 30px;
             }
 
@@ -1025,7 +1029,7 @@
                 font-size: 1.8em;
             }
             
-            .animation-banner p { /* CHANGED selector and size */
+            .animation-banner p { 
                 font-size: 1em; 
             }
             
@@ -1074,7 +1078,7 @@
                 box-sizing: border-box;
             }
 
-            /* --- NEW RULES for font and padding --- */
+            /* --- NEW/UPDATED RULES for font and padding --- */
             .instruction-card p,
             .impact-card p,
             .demo-instructions li p,
@@ -1083,8 +1087,17 @@
                 font-size: 1em;
             }
 
+            .data-animation-section,
+            .marker-demo-section {
+                padding: 30px 20px; /* --- ADDED --- */
+            }
+            
+            .animation-banner {
+                padding: 25px 20px; /* --- ADDED --- */
+            }
+
             .impact-card {
-                padding: 30px 25px; /* Was padding: 35px */
+                padding: 30px 20px; /* --- CHANGED from 30px 25px --- */
             }
             /* --- END NEW RULES --- */
         }
