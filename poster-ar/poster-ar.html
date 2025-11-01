@@ -51,6 +51,27 @@
             }
         }
 
+        // Custom clickable component
+        AFRAME.registerComponent('clickable', {
+            schema: {
+                url: {type: 'string', default: ''}
+            },
+            init: function() {
+                const self = this;
+                this.onClick = function() {
+                    console.log('✅ Clickable element clicked:', self.data.url);
+                    if (self.data.url) {
+                        window.open(self.data.url, '_blank');
+                    }
+                };
+                
+                this.el.addEventListener('click', this.onClick);
+            },
+            remove: function() {
+                this.el.removeEventListener('click', this.onClick);
+            }
+        });
+
         AFRAME.registerComponent('poster-handler', {
             init: function() {
                 console.log('Poster handler initialized.');
@@ -68,7 +89,8 @@
                 this.targetVisible = false;
                 this.videoHasPlayed = false;
 
-                this.onPlayButtonClick = () => {
+                this.onPlayButtonClick = (event) => {
+                    console.log('Play button clicked!');
                     if (this.video && this.targetVisible && !this.videoHasPlayed) {
                         console.log('Fallback button clicked. Playing video from start.');
                         this.video.currentTime = 0; 
@@ -247,8 +269,8 @@
         <a-camera
             position="0 0 0"
             look-controls="enabled: false"
-            cursor="rayOrigin: mouse; fuse: false;"
-            raycaster="objects: .link, #play-button-plane-rounded;"
+            cursor="fuse: false; rayOrigin: mouse;"
+            raycaster="far: 10000; objects: .clickable"
         ></a-camera>
 
         <a-entity mindar-image-target="targetIndex: 0" poster-handler>
@@ -295,8 +317,8 @@
                         width="0.32" 
                         height="0.48" 
                         position="0 0.265 0"
-                        class="link"
-                        link="href: https://doi.org/10.1016/j.ocecoaman.2025.107782"
+                        class="clickable"
+                        clickable="url: https://doi.org/10.1016/j.ocecoaman.2025.107782"
                     ></a-image> 
                     
                     <a-entity position="0 -0.025 0.005">
@@ -305,8 +327,8 @@
                             color="#008080" 
                             width="0.42" 
                             height="0.07"
-                            class="link"
-                            link="href: https://doi.org/10.1016/j.ocecoaman.2025.107782"
+                            class="clickable"
+                            clickable="url: https://doi.org/10.1016/j.ocecoaman.2025.107782"
                         ></a-plane>
                         <a-text value="Read the Full Paper" align="center" color="#FFF" scale="0.1 0.1 0.1" position="0 0 0.01" wrap-count="20"></a-text>
                     </a-entity>
@@ -318,8 +340,8 @@
                         width="0.24" 
                         height="0.24" 
                         position="0 0.145 0"
-                        class="link"
-                        link="href: mailto:m3gandra@gmail.com"
+                        class="clickable"
+                        clickable="url: mailto:m3gandra@gmail.com"
                     ></a-image> 
                     
                     <a-entity position="0 -0.025 0.005">
@@ -328,8 +350,8 @@
                             color="#008080" 
                             width="0.32" 
                             height="0.07"
-                            class="link"
-                            link="href: mailto:m3gandra@gmail.com"
+                            class="clickable"
+                            clickable="url: mailto:m3gandra@gmail.com"
                         ></a-plane>
                         <a-text value="Get in Touch" align="center" color="#FFF" scale="0.1 0.1 0.1" position="0 0 0.01" wrap-count="20"></a-text>
                     </a-entity>
@@ -343,6 +365,7 @@
             >
                 <a-plane
                     id="play-button-plane-rounded"
+                    class="clickable"
                     color="#008080"
                     width="0.3"
                     height="0.05"
