@@ -1,0 +1,11 @@
+Model Information:
+* title:	Blue shark
+* source:	https://sketchfab.com/3d-models/blue-shark-cd2ac655531b4bd5b57cbabd81a5a5ba
+* author:	miguelgandra (https://sketchfab.com/miguelgandra)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Blue shark" (https://sketchfab.com/3d-models/blue-shark-cd2ac655531b4bd5b57cbabd81a5a5ba) by miguelgandra (https://sketchfab.com/miguelgandra) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

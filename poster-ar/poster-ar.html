@@ -219,8 +219,8 @@
 
     <a-scene
         mindar-image="imageTargetSrc: https://miguelgandra.github.io/smooth-hammerhead-ar/poster-ar/BLS8-poster-target.mind;
-                      filterMinCF: 0.001;
-                      filterBeta: 100;
+                      filterMinCF: 0.0001;
+                      filterBeta: 1000;
                       warmupTolerance: 3;
                       missTolerance: 5;"
         color-space="sRGB"
@@ -242,7 +242,7 @@
             
             <a-asset-item
                 id="sharkModel"
-                src="https://miguelgandra.github.io/smooth-hammerhead-ar/models/sixgill-shark.glb"
+                src="the_fish_particle.glb"
             ></a-asset-item>
 
             <img 
@@ -278,7 +278,7 @@
             <a-entity
                 id="shark-model"
                 gltf-model="#sharkModel"
-                position="0 -0.3 0.2"
+                position="0 0.35 0.2"
                 rotation="0 0 0"
                 scale="0.05 0.05 0.05" 
                 visible="false"

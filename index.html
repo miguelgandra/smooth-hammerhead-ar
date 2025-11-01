@@ -155,6 +155,7 @@
             justify-content: center;
             align-items: center;
             gap: 70px; 
+            margin-top: 40px; 
             margin-bottom: 100px; /* --- ADJUSTED --- */
             
             /* --- ADDED: Animation --- */
@@ -198,7 +199,7 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             letter-spacing: 1px;
-            line-height: 1.2em; /* --- ADJUSTED --- */
+            line-height: 1.1em; 
             transition: text-shadow 0.2s ease-out;
             
             /* --- ADDED: Animation --- */
@@ -403,15 +404,76 @@
             line-height: 1.7;
         }
         
+        /* --- START: User Request --- */
         .ar-description {
             font-size: 1.1em; 
             color: #b0d0d0;
-            max-width: 900px;
+            max-width: 1200px; 
             margin: 40px auto 0;
+            /* margin-left: 40px; <-- CHANGE: Removed */
             line-height: 1.7;
             font-weight: 300;
-            text-align: center;
+            text-align: left; /* Changed from 'center' */
         }
+        
+        /* --- NEW RULE --- */
+        .ar-description p:first-child {
+            font-size: 1.2em;
+            font-weight: 400;
+            color: #ffffff;
+            margin-bottom: 35px; /* More separation from the list */
+        }
+        
+        .ar-description p:not(:first-child) {
+            margin-bottom: 15px; /* Add spacing between paragraphs */
+        }
+
+        .ar-description .step-list {
+            list-style: none;
+            padding-left: 0;
+            counter-reset: ar-step-counter; /* Use a new counter name */
+            margin-top: 30px; /* Add some space above the list */
+            /* max-width: 800px; <-- CHANGE: Removed (now inherited) */
+        }
+        /* --- END: User Request --- */
+
+        .ar-description .step-list li {
+            margin-bottom: 25px;
+            position: relative;
+            padding-left: 35px;
+        }
+        
+        .ar-description .step-list li::before {
+            content: counter(ar-step-counter); /* Use the new counter */
+            counter-increment: ar-step-counter; /* Use the new counter */
+            position: absolute;
+            left: 0;
+            top: 2px; /* <-- FIX: Was 0 */
+            font-size: 1.1em;
+            font-weight: 700;
+            color: #00e0c0;
+            background: rgba(0, 224, 192, 0.1);
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 25px;
+        }
+        
+        .ar-description .step-list li strong {
+            font-size: 1.2em;
+            color: #ffffff;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 3px;
+        }
+        
+        .ar-description .step-list li p {
+            color: #b0d0d0;
+            margin-top: 5px;
+            margin-bottom: 0; /* Reset paragraph margin inside li */
+        }
+
 
         /* Data Animation Section */
         .data-animation-section {
@@ -435,7 +497,7 @@
 
         .animation-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 3fr 2fr; /* <-- CHANGE: Was 1fr 1fr */
             gap: 40px;
             align-items: center;
         }
@@ -450,30 +512,64 @@
             background-clip: text;
         }
 
-        .animation-text p {
+        /* --- START: UPDATED STYLES --- */
+        /* This new rule creates the vertical stack with spacing */
+        .animation-banner-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 20px; /* Replaces the old p margin-bottom */
+        }
+
+        /* This is the new banner style, based on .instruction-card */
+        .animation-banner {
+            background: rgba(0, 224, 192, 0.05);
+            padding: 25px;
+            border-radius: 20px;
+            border: 1px solid rgba(0, 224, 192, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        /* Optional: Add the same hover effect as the other cards */
+        .animation-banner:hover {
+            background: rgba(0, 224, 192, 0.1);
+            transform: translateY(-5px);
+            border-color: rgba(0, 224, 192, 0.4);
+        }
+
+        /* This re-applies the text style to the <p> tags inside the new banners */
+        .animation-banner p {
             color: #b0d0d0;
             line-height: 1.7;
             font-size: 1.1em;
-            margin-bottom: 20px;
+            margin-bottom: 0; /* No margin needed, 'gap' handles it */
         }
-        
-        .animation-text p:last-child {
-            margin-bottom: 0;
-        }
+        /* --- END: UPDATED STYLES --- */
+
 
         .animation-video-container {
             width: 100%;
             display: flex;
             flex-direction: column;
-            align-items: flex-end;
+            align-items: center;
+        }
+        
+        /* --- NEW RULE --- */
+        .video-wrapper {
+            width: 100%;
+            overflow: hidden;
+            border-radius: 15px;
         }
 
         .animation-video-container video {
             width: 100%;
             height: auto;
-            border-radius: 15px;
+            /* border-radius: 15px; <-- REMOVED */
             background: transparent;
             margin-bottom: 0px;
+            
+            /* --- NEW: Zoom and Pan --- */
+            transform: scale(1.2) translateX(-18%);
+            transform-origin: center center;
         }
         
         .video-caption {
@@ -481,8 +577,9 @@
             font-size: 0.9em;
             color: #a0c0c0; 
             font-style: italic;
-            width: 65%;
+            width: 80%;
             margin: 0;
+            margin-top: 10px; /* <-- ADDED */
         }
 
         /* Marker Demo Section */
@@ -570,7 +667,7 @@
             counter-increment: desktop-step-counter; /* --- FIX: Use the unique counter name --- */
             position: absolute;
             left: 0;
-            top: 0;
+            top: 2px; /* <-- FIX: Was 0 */
             font-size: 1.1em;
             font-weight: 700;
             color: #00e0c0;
@@ -744,6 +841,18 @@
             box-shadow: 0 15px 40px rgba(0, 224, 192, 0.5);
         }
 
+        /* Styles to make CTA buttons stack */
+        .cta-button-stack .cta-button {
+            display: block;
+            margin: 15px auto;
+            max-width: 350px; /* Constrain width and center */
+        }
+        
+        .cta-button-stack .cta-button:first-child {
+            margin-top: 0;
+        }
+
+
         /* Footer */
         footer {
             text-align: center;
@@ -786,24 +895,28 @@
             color: #a0c0c0;
             margin: 20px 0 30px; /* --- CHANGE 3: Increased bottom margin --- */
             font-size: 0.9em;
+            line-height: 1.8; /* Added for better spacing between lines */
         }
         
-        .developer-info a {
-            font-weight: 700;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-        
-        /* This selector is more specific, so it will keep the dev link green */
-        .developer-info a {
+        /* This span will hold the developer name */
+        .dev-name {
             color: #00e0c0;
-            text-decoration: none;
             font-weight: 600;
         }
-        .developer-info a:hover {
-            color: #00b0c0;
+
+        /* This link will hold the email icon */
+        .dev-email-link {
+            color: #00e0c0; /* SVG stroke color inherits this */
+            display: inline-flex;
+            vertical-align: middle; /* Align icon with text */
+            margin-left: 6px; /* Space after 'Get in touch' */
+            transition: color 0.3s ease;
         }
+        
+        .dev-email-link:hover {
+            color: #00b0c0; /* Hover color */
+        }
+        
         
         .developer-info .email-icon {
             width: 18px;
@@ -912,13 +1025,14 @@
                 font-size: 1.8em;
             }
             
-            .animation-text p {
+            /* --- UPDATED RULE --- */
+            .animation-banner p {
                 font-size: 1.05em;
             }
             
             .animation-video-container {
-                order: -1;
-                align-items: center;
+                /* order: -1; */ 
+                align-items: center; /* Center wrapper and caption on mobile */
             }
             
             .video-caption {
@@ -978,10 +1092,10 @@
         
         <model-viewer
             id="hero-model"
-            src="./models/scalloped_hammerhead_juvenile_low_poly.glb"
+            src="./models/blue-shark.glb"
             alt="Juvenile Hammerhead Shark 3D Model"
             autoplay
-            camera-orbit="10deg 75deg 8m"
+            camera-orbit="-75deg 75deg 8m"
             exposure="1.2"
             environment-image="neutral"
             shadow-intensity="1"
@@ -1067,37 +1181,72 @@
                 </div>
             </div>
             
-            <p class="ar-description">
-                3D assets are a powerful tool for science communication. They make ecological concepts more accessible and engaging, helping share research beyond the scientific community. 
-                Thanks to open-source software like Blender and online repositories, producing these visualizations is more achievable than ever.
-            </p>
+            <div class="ar-description">
+                <p>3D assets are powerful tools for science communication, transforming ecological data into interactive and engaging visualisations. Open-source software, AI-based modelling tools, and online repositories now make producing, displaying, and sharing high-quality 3D content easier than ever.</p>
+                
+                <ol class="step-list">
+                    <li>
+                        <strong>Conceptualise and Collect Data</strong>
+                        <p>Start by defining what you want to communicate — whether it’s a species’ anatomy, behaviour, or habitat — and gather the necessary reference material or field data (e.g., simple photos, drones, photogrammetry, or sonar-based instruments).</p>
+                    </li>
+                    <li>
+                        <strong>Create or Adapt Models</strong>
+                        <p>Build, modify, or animate 3D assets using free and open-source platforms such as <i>Blender</i>, or other modelling tools. Ready-made 3D models are also available through repositories like  <i>Sketchfab</i>, while novel AI-powered tools can automatically generate models from 2D images.</p>
+                    </li>
+                    <li>
+                        <strong>Share and Explore</strong>
+                        <p>Publish and embed interactive visualisations online using tools such as the <i>&lt;model-viewer&gt;</i> web component, which allows 3D assets to be displayed and explored directly in the browser. These interactive experiences help make marine research more accessible, engaging, and educational for diverse audiences.</p>
+                    </li>
+                </ol>
+            </div>
             </div>
         
        <div class="data-animation-section">
             <div class="animation-grid">
+                
                 <div class="animation-text">
                     <h2>Visualising Unseen Journeys</h2>
-                    
-                    <p>
-                        Beyond 3D models, data-driven animations can also help bring complex ecologicaldatasets to life, turning numbers and tracks into dynamic stories. By revealing patterns of behaviour, habitat use, and movement, these visualisations make scientific discoveries more tangible, captivating, and easier to understand for researchers, policymakers, and the public alike. Such results can be achieved using platforms like R, in combination with video editing tools, to produce polished, compelling visual content.
-                    </p>
+
+                    <div class="animation-banner-stack">
+                        
+                        <div class="animation-banner">
+                            <p>
+                                Beyond static 3D models, data-driven animations can bring ecological datasets to life — transforming numbers, tracks, and time series into dynamic visual stories. These animations help reveal patterns of movement, habitat use, and behaviour that might otherwise remain hidden in spreadsheets or maps.
+                            </p>
+                        </div>
+
+                        <div class="animation-banner">
+                            <p>
+                                Using programming environments such as R, researchers can generate sequential plots or maps that illustrate animal tracks, environmental changes, or temporal patterns. These frames can then be combined and rendered into smooth animations using video processing tools like <i>FFmpeg</i> or video editors, resulting in polished, scientifically grounded visual content.
+                            </p>
+                        </div>
+
+                        <div class="animation-banner">
+                            <p>
+                                By turning raw data into motion, these visualisations make complex ecological processes more intuitive and engaging — helping researchers, policymakers, and the public better grasp the dynamics of marine life and ecosystems.
+                            </p>
+                        </div>
+
                     </div>
+                </div>
                 <div class="animation-video-container">
-
-                    <video 
-                        muted 
-                        loop 
-                        playsinline
-                        autoplay  disablepictureinpicture
-                        width="100%"
-                        height="auto">
-
-                        <source src="./media/meagre-map-animation.mov" type="video/mp4; codecs=hvc1">
-
-                        <source src="./media/meagre-map-animation.webm" type="video/webm">
-
-                        Your browser does not support the video format.
-                    </video>
+                    
+                    <div class="video-wrapper">
+                        <video 
+                            muted 
+                            loop 
+                            playsinline
+                            autoplay  disablepictureinpicture
+                            width="100%"
+                            height="auto">
+    
+                            <source src="./media/meagre-map-animation.mov" type="video/mp4; codecs=hvc1">
+    
+                            <source src="./media/meagre-map-animation.webm" type="video/webm">
+    
+                            Your browser does not support the video format.
+                        </video>
+                    </div>
 
                     <p class="video-caption">
                         Example: reconstructed movement of tagged meagre (<i>Argyrosomus regius</i>) in the Iberian Peninsula.
@@ -1170,7 +1319,7 @@
                         </svg>
                     </div>
                     <h3>Science First</h3>
-                    <p>Every visualisation and AR model begins with robust, peer-reviewed data. By grounding the work in rigorous movement ecology research, we ensure that accessibility never comes at the expense of scientific accuracy.</p>
+                    <p>Every visualisation and AR model begins with robust scientific data. By grounding the work in rigorous movement ecology research, we ensure that accessibility never comes at the expense of scientific accuracy.</p>
                 </div>
 
                 <div class="impact-card">
@@ -1198,22 +1347,27 @@
         </div>
 
         <div class="cta-section">
-            <h2>Explore the Full Project</h2>
-            <p>Learn more about smooth hammerhead nursery habitats, our methodology, and the conservation implications of this work.</p>
-            <a href="https://saveourseas.com/project/essential-habitats-for-smooth-hammerheads/" target="_blank" class="cta-button">Visit SOSF Project Page</a>
+            <h2>Explore the Full Projects</h2>
+            <p>Learn more about our projects on the nursery habitats, spatial ecology, and conservation of smooth hammerhead and blue sharks, and the methodologies behind this work.</p>
+            <div class="cta-button-stack">
+                <a href="https://saveourseas.com/project/essential-habitats-for-smooth-hammerheads/" target="_blank" class="cta-button">Visit SOSF Project Page</a>
+                <a href="https://www.fam.foundation/post/mapping-critical-habitats-of-threatened-shark-species-in-the-algarve-coast-ccmar-algarve-univers" target="_blank" class="cta-button">VISIT FAM PROJECT PAGE</a>
+            </div>
         </div>
+
 
         <footer>
             <p style="margin-top: 0;">Demonstrating impactful digital storytelling for ocean conservation</p>
             
             <div class="developer-info">
-                Developed by 
-                <a href="mailto:m3gandra@gmail.com">
+                Developed by <span class="dev-name">Miguel Gandra</span>
+                <br>
+                Get in touch 
+                <a href="mailto:m3gandra@gmail.com" class="dev-email-link" aria-label="Email Miguel Gandra">
                     <svg class="email-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
                         <polyline points="22,6 12,13 2,6"></polyline>
                     </svg>
-                    Miguel Gandra
                 </a>
             </div>
             
