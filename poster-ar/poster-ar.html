@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shark Poster AR Experience - MindAR</title>
+    <title>Fish School Poster AR Experience - MindAR</title>
 
     <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
 
@@ -57,7 +57,8 @@
                 this.poster = document.querySelector('#static-poster');
                 this.videoPlane = document.querySelector('#video-plane');
                 this.video = document.querySelector('#posterVideo');
-                this.sharkModel = document.querySelector('#shark-model');
+                // --- RENAMED ---
+                this.fishSchoolModel = document.querySelector('#fish-school-model'); 
                 this.playButton = document.querySelector('#play-button-group');
                 this.playButtonPlane = document.querySelector('#play-button-plane');
 
@@ -93,12 +94,13 @@
                     
                     if (!this.targetVisible) return; // Don't show if target is lost
                     
-                    console.log('Video ended. Switching to poster and shark.');
+                    console.log('Video ended. Switching to poster and fish model.');
                     this.videoPlane.setAttribute('visible', false);
                     this.playButton.setAttribute('visible', false); 
                     this.poster.setAttribute('visible', true);
-                    this.sharkModel.setAttribute('visible', true);
-                    this.sharkModel.setAttribute('animation-mixer', 'timeScale: 1');
+                    // --- RENAMED ---
+                    this.fishSchoolModel.setAttribute('visible', true);
+                    this.fishSchoolModel.setAttribute('animation-mixer', 'timeScale: 1');
                 };
 
                 // --- MODIFIED: When target is found ---
@@ -108,19 +110,21 @@
                     
                     if (this.videoHasPlayed) {
                         // --- STATE: Video has already played ---
-                        // Show the poster and shark, hide the video
-                        console.log('Video has already played. Showing poster/shark.');
+                        // Show the poster and fish model, hide the video
+                        console.log('Video has already played. Showing poster/fish model.');
                         this.poster.setAttribute('visible', true);
-                        this.sharkModel.setAttribute('visible', true);
-                        this.sharkModel.setAttribute('animation-mixer', 'timeScale: 1');
+                        // --- RENAMED ---
+                        this.fishSchoolModel.setAttribute('visible', true);
+                        this.fishSchoolModel.setAttribute('animation-mixer', 'timeScale: 1');
                         this.videoPlane.setAttribute('visible', false);
                         this.playButton.setAttribute('visible', false);
                     
                     } else {
                         // --- STATE: Video has NOT played yet ---
-                        // Show the video, hide the poster/shark
+                        // Show the video, hide the poster/fish model
                         this.poster.setAttribute('visible', false);
-                        this.sharkModel.setAttribute('visible', false);
+                        // --- RENAMED ---
+                        this.fishSchoolModel.setAttribute('visible', false);
                         this.videoPlane.setAttribute('visible', true);
                         
                         // Check if we are resuming from a pause
@@ -158,10 +162,11 @@
 
                     if (this.videoHasPlayed) {
                         // --- STATE: Video has already played ---
-                        // Hide the poster and shark
+                        // Hide the poster and fish model
                         this.poster.setAttribute('visible', false);
-                        this.sharkModel.setAttribute('visible', false);
-                        this.sharkModel.setAttribute('animation-mixer', 'timeScale: 0');
+                        // --- RENAMED ---
+                        this.fishSchoolModel.setAttribute('visible', false);
+                        this.fishSchoolModel.setAttribute('animation-mixer', 'timeScale: 0');
                     
                     } else {
                         // --- STATE: Video has NOT played yet ---
@@ -213,14 +218,14 @@
 <body>
 
     <div id="starter-overlay" onclick="handleUserInteraction(); this.style.display='none';">
-        <h1>🦈 Tap to Start AR</h1>
+        <h1>🐟 Tap to Start AR</h1>
         <p>Point your camera at the poster.</p>
     </div>
 
     <a-scene
         mindar-image="imageTargetSrc: https://miguelgandra.github.io/smooth-hammerhead-ar/poster-ar/BLS8-poster-target.mind;
-                      filterMinCF: 0.0001;
-                      filterBeta: 1000;
+                      filterMinCF: 0.00001;
+                      filterBeta: 20000;
                       warmupTolerance: 3;
                       missTolerance: 5;"
         color-space="sRGB"
@@ -241,8 +246,8 @@
             ></video>
             
             <a-asset-item
-                id="sharkModel"
-                src="the_fish_particle.glb"
+                id="fishSchoolModel"
+                src="https://miguelgandra.github.io/smooth-hammerhead-ar/models/the_fish_particle.glb"
             ></a-asset-item>
 
             <img 
@@ -276,8 +281,8 @@
             ></a-plane>
             
             <a-entity
-                id="shark-model"
-                gltf-model="#sharkModel"
+                id="fish-school-model"
+                gltf-model="#fishSchoolModel"
                 position="0 0.35 0.2"
                 rotation="0 0 0"
                 scale="0.05 0.05 0.05" 
