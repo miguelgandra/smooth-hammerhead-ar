@@ -6,11 +6,83 @@
     <title>Fish School Poster AR Experience - MindAR</title>
 
     <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/aframe-extras@7.4.0/dist/aframe-extras.min.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
 
     <script>
-        // // // Your existing script logic
+        // Custom A-Frame component for a rounded rectangle primitive
+        AFRAME.registerPrimitive('a-rounded-rectangle', {
+            defaultComponents: {
+                geometry: {
+                    primitive: 'plane',
+                    width: 1,
+                    height: 1
+                },
+                material: {
+                    shader: 'flat',
+                    color: '#FF0000',
+                    side: 'double'
+                },
+                'rounded-plane': {} // Attach our component to draw the shape
+            },
+            mappings: {
+                width: 'geometry.width',
+                height: 'geometry.height',
+                color: 'material.color',
+                radius: 'rounded-plane.radius'
+            }
+        });
+
+        AFRAME.registerComponent('rounded-plane', {
+            schema: {
+                width: { type: 'number', default: 1 },
+                height: { type: 'number', default: 1 },
+                radius: { type: 'number', default: 0.1 } // Radius of the corners
+            },
+            init: function() {
+                this.updateGeometry();
+            },
+            update: function(oldData) {
+                if (
+                    oldData.width !== this.data.width ||
+                    oldData.height !== this.data.height ||
+                    oldData.radius !== this.data.radius
+                ) {
+                    this.updateGeometry();
+                }
+            },
+            updateGeometry: function() {
+                const data = this.data;
+                const width = data.width;
+                const height = data.height;
+                let radius = data.radius;
+
+                // Ensure radius is not too large
+                radius = Math.min(radius, Math.min(width, height) / 2);
+
+                const shape = new THREE.Shape();
+
+                const x = -width / 2;
+                const y = -height / 2;
+
+                shape.moveTo(x + radius, y);
+                shape.lineTo(x + width - radius, y);
+                shape.quadraticCurveTo(x + width, y, x + width, y + radius);
+                shape.lineTo(x + width, y + height - radius);
+                shape.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+                shape.lineTo(x + radius, y + height);
+                shape.quadraticCurveTo(x, y + height, x, y + height - radius);
+                shape.lineTo(x, y + radius);
+                shape.quadraticCurveTo(x, y, x + radius, y);
+
+                const geometry = new THREE.ShapeGeometry(shape);
+                this.el.setObject3D('mesh', new THREE.Mesh(geometry, this.el.components.material.material));
+            }
+        });
+
+        // Your existing script logic
         let userInteracted = false;
         let videoReady = false;
 
@@ -61,7 +133,8 @@
                 this.sideContent = document.querySelector('#side-content-column');
 
                 this.playButton = document.querySelector('#play-button-group');
-                this.playButtonPlane = document.querySelector('#play-button-plane-rounded'); // This ID still works
+                this.playButtonPlane = document.querySelector('#play-button-plane-rounded'); // Updated ID
+
                 this.targetVisible = false;
                 this.videoHasPlayed = false;
 
@@ -164,11 +237,7 @@
                 this.video.addEventListener('play', this.onVideoPlay);
                 this.el.addEventListener('targetFound', this.onTargetFound);
                 this.el.addEventListener('targetLost', this.onTargetLost);
-                
-                // We add the listener to the plane itself
                 this.playButtonPlane.addEventListener('click', this.onPlayButtonClick);
-
-                // // (The 'link' component handles clicks automatically if raycaster is present)
             },
 
             remove: function() {
@@ -245,12 +314,7 @@
 
         </a-assets>
 
-        <a-camera 
-            position="0 0 0" 
-            look-controls="enabled: false"
-            cursor="rayOrigin: mouse; fuse: false;"
-            raycaster="objects: .clickable"
-        ></a-camera>
+        <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
         <a-entity mindar-image-target="targetIndex: 0" poster-handler>
             
@@ -301,24 +365,56 @@
                     <a-entity 
                         class="clickable" 
                         link="href: https://doi.org/10.1016/j.ocecoaman.2025.107782" 
-                        position="0 0.2 0.005" >
-                        <a-plane id="paper-button-rounded" color="#008080" width="0.2" height="0.05"></a-plane>
+                        position="0 -0.15 0.005"
+                    >
+                        <a-rounded-rectangle id="paper-button-rounded" color="#008080" width="0.2" height="0.05" radius="0.05"></a-rounded-rectangle>
                         <a-text value="Read the Full Paper" align="center" color="#FFF" scale="0.1 0.1 0.1" position="0 0 0.01" wrap-count="20"></a-text>
                     </a-entity>
                 </a-entity>
 
-                <a-entity id="profile-group" position="0 -0.4 0">
+                <a-entity id="profile-group" position="0 0 0">
                     <a-image 
                         src="#profileImage" 
                         width="0.3" 
                         height="0.3" 
-                        position="0 0.1 0"
+                        position="0 0.375 0"
                     ></a-image> 
                     
                     <a-entity 
                         class="clickable" 
                         link="href: mailto:m3gandra@gmail.com" 
-                        position="0 -0.1 0.005"
+                        position="0 -0.05 0.005"
                     >
-                        <a-plane id="profile-button-rounded" color="#008080" width="0.2" height="0.05"></a-plane>
-                        <a-text value="Get in Touch" align="center" color="#FFF" scale="0.1 0.1 0.1" position="0 0 0.01" wrap-count="20"></a
+                        <a-rounded-rectangle id="profile-button-rounded" color="#008080" width="0.2" height="0.05" radius="0.05"></a-rounded-rectangle>
+                        <a-text value="Get in Touch" align="center" color="#FFF" scale="0.1 0.1 0.1" position="0 0 0.01" wrap-count="20"></a-text>
+                    </a-entity>
+                </a-entity>
+            </a-entity>
+            <a-entity
+                id="play-button-group"
+                position="0 0 0.05"
+                visible="false"
+            >
+                <a-rounded-rectangle
+                    id="play-button-plane-rounded"
+                    class="clickable"
+                    color="#008080"
+                    width="0.2"
+                    height="0.05"
+                    radius="0.05"
+                ></a-rounded-rectangle>
+                <a-text
+                    value="Play Animation"
+                    align="center"
+                    color="#FFF"
+                    position="0 0 0.01"
+                    scale="0.2 0.2 0.2"
+                    wrap-count="20"
+                ></a-text>
+            </a-entity>
+
+        </a-entity>
+    </a-scene>
+
+</body>
+</html>
