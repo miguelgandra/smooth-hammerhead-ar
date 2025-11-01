@@ -6,20 +6,15 @@
     <title>Fish School Poster AR Experience - MindAR</title>
 
     <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/aframe-extras@7.4.0/dist/aframe-extras.min.js"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
 
     <script>
-        // Custom A-Frame component for a rounded rectangle primitive
+        // // Custom A-Frame component for a rounded rectangle primitive
         AFRAME.registerPrimitive('a-rounded-rectangle', {
             defaultComponents: {
-                geometry: {
-                    primitive: 'plane',
-                    width: 1,
-                    height: 1
-                },
+                // Removed the default 'geometry' component.
+                // 'rounded-plane' will create and manage its own geometry.
                 material: {
                     shader: 'flat',
                     color: '#FF0000',
@@ -28,14 +23,13 @@
                 'rounded-plane': {} // Attach our component to draw the shape
             },
             mappings: {
-                width: 'geometry.width',
-                height: 'geometry.height',
+                width: 'rounded-plane.width',     // <-- Mapped to rounded-plane.width
+                height: 'rounded-plane.height',   // <-- Mapped to rounded-plane.height
                 color: 'material.color',
                 radius: 'rounded-plane.radius'
             }
         });
-
-        AFRAME.registerComponent('rounded-plane', {
+        // AFRAME.registerComponent('rounded-plane', {
             schema: {
                 width: { type: 'number', default: 1 },
                 height: { type: 'number', default: 1 },
@@ -78,7 +72,13 @@
                 shape.quadraticCurveTo(x, y, x + radius, y);
 
                 const geometry = new THREE.ShapeGeometry(shape);
-                this.el.setObject3D('mesh', new THREE.Mesh(geometry, this.el.components.material.material));
+                // Ensure we create a new material if one doesn't exist,
+                // or update the existing one.
+                let material = this.el.components.material.material;
+                if (!material) {
+                   material = new THREE.MeshBasicMaterial();
+                }
+                this.el.setObject3D('mesh', new THREE.Mesh(geometry, material));
             }
         });
 
@@ -314,8 +314,12 @@
 
         </a-assets>
 
-        <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
-
+        <a-camera 
+            position="0 0 0" 
+            look-controls="enabled: false"
+            cursor="rayOrigin: mouse; fuse: false;"
+            raycaster="objects: .clickable"
+        ></a-camera>
         <a-entity mindar-image-target="targetIndex: 0" poster-handler>
             
             <a-plane
@@ -365,31 +369,26 @@
                     <a-entity 
                         class="clickable" 
                         link="href: https://doi.org/10.1016/j.ocecoaman.2025.107782" 
-                        position="0 -0.15 0.005"
-                    >
-                        <a-rounded-rectangle id="paper-button-rounded" color="#008080" width="0.2" height="0.05" radius="0.05"></a-rounded-rectangle>
-                        <a-text value="Read the Full Paper" align="center" color="#FFF" scale="0.1 0.1 0.1" position="0 0 0.01" wrap-count="20"></a-text>
+                        position="0 0.2 0.005" >
+                        <a-rounded-rectangle id="paper-button-rounded" color="#008080" width="0.2" height="0.05" radius="0.025"></a-rounded-rectangle> <a-text value="Read the Full Paper" align="center" color="#FFF" scale="0.1 0.1 0.1" position="0 0 0.01" wrap-count="20"></a-text>
                     </a-entity>
                 </a-entity>
 
-                <a-entity id="profile-group" position="0 0 0">
-                    <a-image 
+                <a-entity id="profile-group" position="0 -0.4 0"> <a-image 
                         src="#profileImage" 
                         width="0.3" 
                         height="0.3" 
-                        position="0 0.375 0"
-                    ></a-image> 
+                        position="0 0.1 0" ></a-image> 
                     
                     <a-entity 
                         class="clickable" 
                         link="href: mailto:m3gandra@gmail.com" 
-                        position="0 -0.05 0.005"
-                    >
-                        <a-rounded-rectangle id="profile-button-rounded" color="#008080" width="0.2" height="0.05" radius="0.05"></a-rounded-rectangle>
-                        <a-text value="Get in Touch" align="center" color="#FFF" scale="0.1 0.1 0.1" position="0 0 0.01" wrap-count="20"></a-text>
+                        position="0 -0.1 0.005" >
+                        <a-rounded-rectangle id="profile-button-rounded" color="#008080" width="0.2" height="0.05" radius="0.025"></a-rounded-rectangle> <a-text value="Get in Touch" align="center" color="#FFF" scale="0.1 0.1 0.1" position="0 0 0.01" wrap-count="20"></a-text>
                     </a-entity>
                 </a-entity>
             </a-entity>
+            
             <a-entity
                 id="play-button-group"
                 position="0 0 0.05"
@@ -401,15 +400,13 @@
                     color="#008080"
                     width="0.2"
                     height="0.05"
-                    radius="0.05"
-                ></a-rounded-rectangle>
+                    radius="0.025" ></a-rounded-rectangle>
                 <a-text
                     value="Play Animation"
                     align="center"
                     color="#FFF"
                     position="0 0 0.01"
-                    scale="0.2 0.2 0.2"
-                    wrap-count="20"
+                    scale="0.1 0.1 0.1" wrap-count="20"
                 ></a-text>
             </a-entity>
 
