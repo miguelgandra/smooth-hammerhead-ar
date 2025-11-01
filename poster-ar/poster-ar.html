@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-AR-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fish School Poster AR Experience - MindAR</title>
 
@@ -202,7 +202,7 @@
 <body>
 
     <div id="starter-overlay" onclick="handleUserInteraction(); this.style.display='none';">
-        <h1>🐟 Tap to Start AR</h1>
+        <h1>🦈 Tap to Start AR</h1>
         <p>Point your camera at the poster.</p>
     </div>
 
@@ -248,7 +248,7 @@
             position="0 0 0"
             look-controls="enabled: false"
             cursor="rayOrigin: mouse; fuse: false;"
-            raycaster="objects: .clickable;"
+            raycaster="objects: [link], #play-button-plane-rounded;"
         ></a-camera>
 
         <a-entity mindar-image-target="targetIndex: 0" poster-handler>
@@ -295,14 +295,17 @@
                         width="0.32" 
                         height="0.48" 
                         position="0 0.265 0"
+                        link="href: https://doi.org/10.1016/j.ocecoaman.2025.107782"
                     ></a-image> 
                     
-                    <a-entity 
-                        class="clickable" 
-                        link="href: https://doi.org/10.1016/j.ocecoaman.2025.107782" 
-                        position="0 -0.025 0.005"
-                    >
-                        <a-plane id="paper-button-rounded" color="#008080" width="0.4" height="0.05"></a-plane>
+                    <a-entity position="0 -0.025 0.005">
+                        <a-plane 
+                            id="paper-button-rounded" 
+                            color="#008080" 
+                            width="0.45" 
+                            height="0.05"
+                            link="href: https://doi.org/10.1016/j.ocecoaman.2025.107782"
+                        ></a-plane>
                         <a-text value="Read the Full Paper" align="center" color="#FFF" scale="0.1 0.1 0.1" position="0 0 0.01" wrap-count="20"></a-text>
                     </a-entity>
                 </a-entity>
@@ -313,14 +316,17 @@
                         width="0.24" 
                         height="0.24" 
                         position="0 0.145 0"
+                        link="href: mailto:m3gandra@gmail.com"
                     ></a-image> 
                     
-                    <a-entity 
-                        class="clickable" 
-                        link="href: mailto:m3gandra@gmail.com" 
-                        position="0 -0.025 0.005"
-                    >
-                        <a-plane id="profile-button-rounded" color="#008080" width="0.3" height="0.05"></a-plane>
+                    <a-entity position="0 -0.025 0.005">
+                        <a-plane 
+                            id="profile-button-rounded" 
+                            color="#008080" 
+                            width="0.35" 
+                            height="0.05"
+                            link="href: mailto:m3gandra@gmail.com"
+                        ></a-plane>
                         <a-text value="Get in Touch" align="center" color="#FFF" scale="0.1 0.1 0.1" position="0 0 0.01" wrap-count="20"></a-text>
                     </a-entity>
                 </a-entity>
@@ -333,7 +339,6 @@
             >
                 <a-plane
                     id="play-button-plane-rounded"
-                    class="clickable"
                     color="#008080"
                     width="0.3"
                     height="0.05"
