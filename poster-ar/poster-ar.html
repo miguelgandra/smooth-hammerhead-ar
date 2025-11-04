@@ -252,7 +252,7 @@
         #starter-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.85); color: #fff; z-index: 1000;
-            display: flex; justify-content: center; align: items-center;
+            display: flex; justify-content: center; align-items: center;
             flex-direction: column; text-align: center;
             font-size: 1.3em; cursor: pointer;
         }
@@ -356,7 +356,7 @@
                 visible="false"
             >
                 <a-entity id="paper-group"
-                    animation="property: scale; to: 1.05 1.05 1.05; dur: 750; dir: alternate; easing: easeInOutSine; loop: true"
+                    animation="property: material.opacity; from: 0.7; to: 1.0; dur: 750; dir: alternate; easing: easeInOutSine; loop: true"
                 >
                     <a-image 
                         src="#paperImage" 
@@ -381,7 +381,7 @@
                 </a-entity>
 
                 <a-entity id="profile-group" position="0 -0.415 0"
-                    animation="property: scale; to: 1.05 1.05 1.05; dur: 750; dir: alternate; easing: easeInOutSine; loop: true; delay: 300"
+                    animation="property: material.opacity; from: 0.7; to: 1.0; dur: 750; dir: alternate; easing: easeInOutSine; loop: true; delay: 300"
                 >
                     <a-image 
                         src="#profileImage" 
@@ -410,7 +410,7 @@
                 id="play-button-group"
                 position="0 0 0.05"
                 visible="false"
-                animation="property: scale; to: 1.1 1.1 1.1; dur: 750; dir: alternate; easing: easeInOutSine; loop: true"
+                animation="property: material.opacity; from: 0.6; to: 1.0; dur: 750; dir: alternate; easing: easeInOutSine; loop: true"
             >
                 <a-plane
                     id="play-button-plane-rounded"
@@ -433,7 +433,7 @@
                 id="show-abacus-button"
                 position="-0.340 0.420 0.01" 
                 visible="false"
-                animation="property: scale; to: 1.1 1.1 1.1; dur: 750; dir: alternate; easing: easeInOutSine; loop: true; delay: 150"
+                animation="property: material.opacity; from: 0.6; to: 1.0; dur: 750; dir: alternate; easing: easeInOutSine; loop: true; delay: 150"
             > 
                 <a-plane 
                     id="show-abacus-plane" 
@@ -449,7 +449,7 @@
             <a-plane
                 id="panel-overlay"
                 color="#000"
-                opacity="0.7"
+                opacity="0.75"
                 width="1"
                 height="1.41"
                 position="0 0 0.02"
@@ -459,7 +459,7 @@
 
             <a-entity 
                 id="chronogram-panel-group" 
-                position="0 0 0.1" 
+                position="0 0 0.2" 
                 visible="false"
             >
                 <a-plane
@@ -473,6 +473,7 @@
                 <a-entity
                     id="close-abacus-button-group" 
                     position="0.365 0.526 0.01"
+                    animation="property: material.opacity; from: 0.4; to: 0.8; dur: 750; dir: alternate; easing: easeInOutSine; loop: true; delay: 0"
                 >
                     <a-plane 
                         id="close-abacus-plane" 
