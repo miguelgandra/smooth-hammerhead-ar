@@ -102,7 +102,7 @@
                 this.showAbacusPlane = document.querySelector('#show-abacus-plane');
                 this.closeAbacusPlane = document.querySelector('#close-abacus-plane');
                 
-                // ADDED: Get reference to the new overlay
+                // Get reference to the new overlay
                 this.panelOverlay = document.querySelector('#panel-overlay');
 
 
@@ -196,7 +196,7 @@
                     this.sideContent.setAttribute('visible', false); 
                     this.showAbacusButton.setAttribute('visible', false); 
                     this.chronogramPanelGroup.setAttribute('visible', false); 
-                    this.panelOverlay.setAttribute('visible', false); // ADDED: Hide overlay
+                    this.panelOverlay.setAttribute('visible', false); 
 
                     if (this.fishSchoolModel) {
                         this.fishSchoolModel.setAttribute('animation-mixer', 'timeScale: 0');
@@ -211,13 +211,13 @@
                 this.onShowAbacusClick = (event) => {
                     console.log('Show Abacus clicked');
                     this.chronogramPanelGroup.setAttribute('visible', true);
-                    this.panelOverlay.setAttribute('visible', true); // ADDED: Show overlay
+                    this.panelOverlay.setAttribute('visible', true); 
                 };
 
                 this.onCloseAbacusClick = (event) => {
                     console.log('Close Abacus clicked');
                     this.chronogramPanelGroup.setAttribute('visible', false);
-                    this.panelOverlay.setAttribute('visible', false); // ADDED: Hide overlay
+                    this.panelOverlay.setAttribute('visible', false); 
                 };
 
                 // --- Event Listeners ---
@@ -252,7 +252,7 @@
         #starter-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.85); color: #fff; z-index: 1000;
-            display: flex; justify-content: center; align-items: center;
+            display: flex; justify-content: center; align: items-center;
             flex-direction: column; text-align: center;
             font-size: 1.3em; cursor: pointer;
         }
@@ -355,7 +355,9 @@
                 rotation="0 10 0"
                 visible="false"
             >
-                <a-entity id="paper-group">
+                <a-entity id="paper-group"
+                    animation="property: scale; to: 1.05 1.05 1.05; dur: 750; dir: alternate; easing: easeInOutSine; loop: true"
+                >
                     <a-image 
                         src="#paperImage" 
                         width="0.32" 
@@ -374,19 +376,13 @@
                             class="clickable"
                             clickable="url: https://doi.org/10.1016/j.ocecoaman.2025.107782"
                         ></a-plane>
-                        <a-text value="Read the Full Paper" align="center" color="#FFF" scale="0.09 0.09 0.09" position="0 0 0.01" wrap-count="20"></a-text> </a-entity>
-
-                    <a-animation
-                        attribute="scale"
-                        to="1.05 1.05 1.05"
-                        dur="750"
-                        direction="alternate"
-                        easing="easeInOutSine"
-                        repeat="indefinite"
-                    ></a-animation>
+                        <a-text value="Read the Full Paper" align="center" color="#FFF" scale="0.09 0.09 0.09" position="0 0 0.01" wrap-count="20"></a-text>
+                    </a-entity>
                 </a-entity>
 
-                <a-entity id="profile-group" position="0 -0.415 0">
+                <a-entity id="profile-group" position="0 -0.415 0"
+                    animation="property: scale; to: 1.05 1.05 1.05; dur: 750; dir: alternate; easing: easeInOutSine; loop: true; delay: 300"
+                >
                     <a-image 
                         src="#profileImage" 
                         width="0.24" 
@@ -405,17 +401,8 @@
                             class="clickable"
                             clickable="url: mailto:m3gandra@gmail.com"
                         ></a-plane>
-                        <a-text value="Get in Touch" align="center" color="#FFF" scale="0.09 0.09 0.09" position="0 0 0.01" wrap-count="20"></a-text> </a-entity>
-
-                    <a-animation
-                        attribute="scale"
-                        to="1.05 1.05 1.05"
-                        dur="750"
-                        direction="alternate"
-                        easing="easeInOutSine"
-                        repeat="indefinite"
-                        delay="300" 
-                    ></a-animation>
+                        <a-text value="Get in Touch" align="center" color="#FFF" scale="0.09 0.09 0.09" position="0 0 0.01" wrap-count="20"></a-text>
+                    </a-entity>
                 </a-entity>
             </a-entity>
             
@@ -423,6 +410,7 @@
                 id="play-button-group"
                 position="0 0 0.05"
                 visible="false"
+                animation="property: scale; to: 1.1 1.1 1.1; dur: 750; dir: alternate; easing: easeInOutSine; loop: true"
             >
                 <a-plane
                     id="play-button-plane-rounded"
@@ -436,23 +424,17 @@
                     align="center"
                     color="#FFF"
                     position="0 0 0.01"
-                    scale="0.17 0.17 0.17" wrap-count="20"
+                    scale="0.17 0.17 0.17"
+                    wrap-count="20"
                 ></a-text>
-
-                <a-animation
-                    attribute="scale"
-                    to="1.1 1.1 1.1"
-                    dur="750"
-                    direction="alternate"
-                    easing="easeInOutSine"
-                    repeat="indefinite"
-                ></a-animation>
             </a-entity>
 
             <a-entity
                 id="show-abacus-button"
                 position="-0.340 0.420 0.01" 
-                visible="false" > 
+                visible="false"
+                animation="property: scale; to: 1.1 1.1 1.1; dur: 750; dir: alternate; easing: easeInOutSine; loop: true; delay: 150"
+            > 
                 <a-plane 
                     id="show-abacus-plane" 
                     class="clickable" 
@@ -460,25 +442,17 @@
                     width="0.22" 
                     height="0.07"
                 ></a-plane>
-                <a-text value="Show Abacus" align="center" color="#FFF" scale="0.07 0.07 0.07" position="0 0 0.01" wrap-count="20"></a-text> <a-animation
-                    attribute="scale"
-                    to="1.1 1.1 1.1"
-                    dur="750"
-                    direction="alternate"
-                    easing="easeInOutSine"
-                    repeat="indefinite"
-                    delay="150"
-                ></a-animation>
+                <a-text value="Show Abacus" align="center" color="#FFF" scale="0.07 0.07 0.07" position="0 0 0.01" wrap-count="20"></a-text>
             </a-entity>
 
 
             <a-plane
                 id="panel-overlay"
                 color="#000"
-                opacity="0.6"
+                opacity="0.7"
                 width="1"
                 height="1.41"
-                position="0 0 0.09"
+                position="0 0 0.02"
                 visible="false"
             ></a-plane>
 
@@ -491,12 +465,15 @@
                 <a-plane
                     id="chronogram-panel"
                     src="#chronogramImage"
-                    height="1.128" width="0.8" position="0 0 0"
+                    height="1.128" 
+                    width="0.8"
+                    position="0 0 0"
                 ></a-plane>
                 
                 <a-entity
                     id="close-abacus-button-group" 
-                    position="0.365 0.526 0.01" >
+                    position="0.365 0.526 0.01"
+                >
                     <a-plane 
                         id="close-abacus-plane" 
                         class="clickable" 
@@ -505,7 +482,8 @@
                         height="0.07"
                         opacity="0.8"
                     ></a-plane>
-                    <a-text value="X" align="center" color="#FFF" scale="0.1 0.1 0.1" position="0 0 0.01"></a-text> </a-entity>
+                    <a-text value="X" align="center" color="#FFF" scale="0.1 0.1 0.1" position="0 0 0.01"></a-text>
+                </a-entity>
             </a-entity>
 
         </a-entity>
