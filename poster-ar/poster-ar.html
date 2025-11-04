@@ -102,6 +102,12 @@
                 this.showAbacusPlane = document.querySelector('#show-abacus-plane');
                 this.closeAbacusPlane = document.querySelector('#close-abacus-plane');
                 
+                // NEW: Get references to Maps elements
+                this.showMapsButton = document.querySelector('#show-maps-button');
+                this.mapsPanelGroup = document.querySelector('#maps-panel-group');
+                this.showMapsPlane = document.querySelector('#show-maps-plane');
+                this.closeMapsPlane = document.querySelector('#close-maps-plane');
+
                 // Get reference to the new overlay
                 this.panelOverlay = document.querySelector('#panel-overlay');
 
@@ -136,6 +142,8 @@
                     this.fishSchoolModel.setAttribute('visible', true);
                     this.sideContent.setAttribute('visible', true);
                     this.showAbacusButton.setAttribute('visible', true); 
+                    // NEW: Make Maps button visible too
+                    this.showMapsButton.setAttribute('visible', true);
                     this.fishSchoolModel.setAttribute('animation-mixer', 'timeScale: 1');
                 };
 
@@ -149,6 +157,8 @@
                         this.fishSchoolModel.setAttribute('visible', true);
                         this.sideContent.setAttribute('visible', true);
                         this.showAbacusButton.setAttribute('visible', true); 
+                        // NEW: Make Maps button visible too
+                        this.showMapsButton.setAttribute('visible', true);
                         this.fishSchoolModel.setAttribute('animation-mixer', 'timeScale: 1');
                         this.videoPlane.setAttribute('visible', false);
                         this.playButton.setAttribute('visible', false);
@@ -157,6 +167,8 @@
                         this.fishSchoolModel.setAttribute('visible', false);
                         this.sideContent.setAttribute('visible', false);
                         this.showAbacusButton.setAttribute('visible', false); 
+                        // NEW: Hide Maps button initially
+                        this.showMapsButton.setAttribute('visible', false);
                         this.videoPlane.setAttribute('visible', true);
                         
                         if (this.video.currentTime > 0) {
@@ -190,7 +202,11 @@
                     this.videoPlane.setAttribute('visible', false);
                     this.sideContent.setAttribute('visible', false); 
                     this.showAbacusButton.setAttribute('visible', false); 
+                    // NEW: Hide Maps button
+                    this.showMapsButton.setAttribute('visible', false);
                     this.chronogramPanelGroup.setAttribute('visible', false); 
+                    // NEW: Hide Maps panel
+                    this.mapsPanelGroup.setAttribute('visible', false);
                     this.panelOverlay.setAttribute('visible', false); 
 
                     if (this.fishSchoolModel) {
@@ -201,10 +217,13 @@
                     }
                 };
 
+                // Click handlers for Abacus panel
                 this.onShowAbacusClick = (event) => {
                     console.log('Show Abacus clicked');
                     this.chronogramPanelGroup.setAttribute('visible', true);
                     this.panelOverlay.setAttribute('visible', true); 
+                    // NEW: Hide maps panel if open
+                    this.mapsPanelGroup.setAttribute('visible', false);
                 };
 
                 this.onCloseAbacusClick = (event) => {
@@ -212,6 +231,22 @@
                     this.chronogramPanelGroup.setAttribute('visible', false);
                     this.panelOverlay.setAttribute('visible', false); 
                 };
+
+                // NEW: Click handlers for Maps panel
+                this.onShowMapsClick = (event) => {
+                    console.log('Show Maps clicked');
+                    this.mapsPanelGroup.setAttribute('visible', true);
+                    this.panelOverlay.setAttribute('visible', true);
+                    // NEW: Hide chronogram panel if open
+                    this.chronogramPanelGroup.setAttribute('visible', false);
+                };
+
+                this.onCloseMapsClick = (event) => {
+                    console.log('Close Maps clicked');
+                    this.mapsPanelGroup.setAttribute('visible', false);
+                    this.panelOverlay.setAttribute('visible', false);
+                };
+
 
                 // --- Event Listeners ---
                 this.video.addEventListener('ended', this.onVideoEnded);
@@ -222,6 +257,10 @@
                 
                 this.showAbacusPlane.addEventListener('click', this.onShowAbacusClick);
                 this.closeAbacusPlane.addEventListener('click', this.onCloseAbacusClick);
+
+                // NEW: Event Listeners for Maps
+                this.showMapsPlane.addEventListener('click', this.onShowMapsClick);
+                this.closeMapsPlane.addEventListener('click', this.onCloseMapsClick);
             },
 
             remove: function() {
@@ -233,6 +272,10 @@
 
                 this.showAbacusPlane.removeEventListener('click', this.onShowAbacusClick);
                 this.closeAbacusPlane.removeEventListener('click', 'click', this.onCloseAbacusClick);
+
+                // NEW: Remove Event Listeners for Maps
+                this.showMapsPlane.removeEventListener('click', this.onShowMapsClick);
+                this.closeMapsPlane.removeEventListener('click', this.onCloseMapsClick);
             }
         });
     </script>
@@ -300,6 +343,7 @@
             <img id="profileImage" src="https://miguelgandra.github.io/smooth-hammerhead-ar/media/Profile.png" crossorigin="anonymous">
 
             <img id="chronogramImage" src="https://miguelgandra.github.io/smooth-hammerhead-ar/media/chronogram-panel.jpg" crossorigin="anonymous">
+            <img id="homeRangesImage" src="https://miguelgandra.github.io/smooth-hammerhead-ar/media/home-ranges-panel.png" crossorigin="anonymous">
 
         </a-assets>
 
@@ -362,7 +406,7 @@
                         <a-plane 
                             id="paper-button-rounded" 
                             color="#008080" 
-                            width="0.42" 
+                            width="0.4" 
                             height="0.07"
                             class="clickable"
                             clickable="url: https://doi.org/10.1016/j.ocecoaman.2025.107782"
@@ -386,7 +430,7 @@
                         <a-plane 
                             id="profile-button-rounded" 
                             color="#008080" 
-                            width="0.32" 
+                            width="0.3" 
                             height="0.07"
                             class="clickable"
                             clickable="url: mailto:m3gandra@gmail.com"
@@ -435,6 +479,22 @@
                 ></a-plane>
                 <a-text value="Show Abacus" align="center" color="#FFF" scale="0.07 0.07 0.07" position="0 0 0.01" wrap-count="20"></a-text>
             </a-entity>
+            
+            <a-entity
+                id="show-maps-button"
+                position="0.154 0.259 0.01" 
+                visible="false"
+            > 
+                <a-plane 
+                    id="show-maps-plane" 
+                    class="clickable" 
+                    color="#008080" 
+                    width="0.22" 
+                    height="0.07"
+                    animation="property: material.opacity; from: 0.6; to: 1.0; dur: 750; dir: alternate; easing: easeInOutSine; loop: true; delay: 450"
+                ></a-plane>
+                <a-text value="Show Maps" align="center" color="#FFF" scale="0.07 0.07 0.07" position="0 0 0.01" wrap-count="20"></a-text>
+            </a-entity>
 
 
             <a-plane
@@ -465,6 +525,35 @@
                 >
                     <a-plane 
                         id="close-abacus-plane" 
+                        class="clickable" 
+                        color="#CC0000" 
+                        width="0.07" 
+                        height="0.07"
+                        opacity="0.8"
+                        animation="property: material.opacity; from: 0.4; to: 0.8; dur: 750; dir: alternate; easing: easeInOutSine; loop: true"
+                    ></a-plane>
+                    <a-text value="X" align="center" color="#FFF" scale="0.1 0.1 0.1" position="0 0 0.01"></a-text>
+                </a-entity>
+            </a-entity>
+
+            <a-entity 
+                id="maps-panel-group" 
+                position="0 0 0.25" visible="false"
+            >
+                <a-plane
+                    id="maps-panel"
+                    src="#homeRangesImage"
+                    height="1.128" 
+                    width="0.8"
+                    position="0 0 0"
+                ></a-plane>
+                
+                <a-entity
+                    id="close-maps-button-group" 
+                    position="0.365 0.526 0.01"
+                >
+                    <a-plane 
+                        id="close-maps-plane" 
                         class="clickable" 
                         color="#CC0000" 
                         width="0.07" 
