@@ -142,7 +142,6 @@
                     this.fishSchoolModel.setAttribute('visible', true);
                     this.sideContent.setAttribute('visible', true);
                     this.showAbacusButton.setAttribute('visible', true); 
-                    // NEW: Make Maps button visible too
                     this.showMapsButton.setAttribute('visible', true);
                     this.fishSchoolModel.setAttribute('animation-mixer', 'timeScale: 1');
                 };
@@ -157,7 +156,6 @@
                         this.fishSchoolModel.setAttribute('visible', true);
                         this.sideContent.setAttribute('visible', true);
                         this.showAbacusButton.setAttribute('visible', true); 
-                        // NEW: Make Maps button visible too
                         this.showMapsButton.setAttribute('visible', true);
                         this.fishSchoolModel.setAttribute('animation-mixer', 'timeScale: 1');
                         this.videoPlane.setAttribute('visible', false);
@@ -167,7 +165,6 @@
                         this.fishSchoolModel.setAttribute('visible', false);
                         this.sideContent.setAttribute('visible', false);
                         this.showAbacusButton.setAttribute('visible', false); 
-                        // NEW: Hide Maps button initially
                         this.showMapsButton.setAttribute('visible', false);
                         this.videoPlane.setAttribute('visible', true);
                         
@@ -202,10 +199,8 @@
                     this.videoPlane.setAttribute('visible', false);
                     this.sideContent.setAttribute('visible', false); 
                     this.showAbacusButton.setAttribute('visible', false); 
-                    // NEW: Hide Maps button
                     this.showMapsButton.setAttribute('visible', false);
                     this.chronogramPanelGroup.setAttribute('visible', false); 
-                    // NEW: Hide Maps panel
                     this.mapsPanelGroup.setAttribute('visible', false);
                     this.panelOverlay.setAttribute('visible', false); 
 
@@ -222,11 +217,13 @@
                     console.log('Show Abacus clicked');
                     this.chronogramPanelGroup.setAttribute('visible', true);
                     this.panelOverlay.setAttribute('visible', true); 
-                    // NEW: Hide maps panel if open
                     this.mapsPanelGroup.setAttribute('visible', false);
                 };
 
+                // MODIFIED: Added visibility check
                 this.onCloseAbacusClick = (event) => {
+                    if (this.chronogramPanelGroup.getAttribute('visible') === false) return;
+
                     console.log('Close Abacus clicked');
                     this.chronogramPanelGroup.setAttribute('visible', false);
                     this.panelOverlay.setAttribute('visible', false); 
@@ -237,11 +234,13 @@
                     console.log('Show Maps clicked');
                     this.mapsPanelGroup.setAttribute('visible', true);
                     this.panelOverlay.setAttribute('visible', true);
-                    // NEW: Hide chronogram panel if open
                     this.chronogramPanelGroup.setAttribute('visible', false);
                 };
 
+                // MODIFIED: Added visibility check
                 this.onCloseMapsClick = (event) => {
+                    if (this.mapsPanelGroup.getAttribute('visible') === false) return;
+
                     console.log('Close Maps clicked');
                     this.mapsPanelGroup.setAttribute('visible', false);
                     this.panelOverlay.setAttribute('visible', false);
