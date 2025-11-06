@@ -101,13 +101,15 @@
                 this.chronogramPanelGroup = document.querySelector('#chronogram-panel-group');
                 this.showAbacusPlane = document.querySelector('#show-abacus-plane');
                 this.closeAbacusPlane = document.querySelector('#close-abacus-plane');
-                
-                // NEW: Get references to Maps elements
+                this.closeAbacusText = document.querySelector('#close-abacus-text'); // <-- ADDED
+
+                // Get references to Maps elements
                 this.showMapsButton = document.querySelector('#show-maps-button');
                 this.mapsPanelGroup = document.querySelector('#maps-panel-group');
                 this.showMapsPlane = document.querySelector('#show-maps-plane');
                 this.closeMapsPlane = document.querySelector('#close-maps-plane');
-
+                this.closeMapsText = document.querySelector('#close-maps-text'); // <-- ADDED
+                
                 // Get reference to the new overlay
                 this.panelOverlay = document.querySelector('#panel-overlay');
 
@@ -115,7 +117,6 @@
                 this.targetVisible = false;
                 this.videoHasPlayed = false;
 
-                // --- (All your .on... functions are correct, no changes needed) ---
 
                 this.onPlayButtonClick = (event) => {
                     console.log('Play button clicked!');
@@ -220,13 +221,9 @@
                     this.mapsPanelGroup.setAttribute('visible', false);
                 };
 
-
-                // MODIFIED: Added visibility check and stop propagation
                 this.onCloseAbacusClick = (event) => {
                     if (this.chronogramPanelGroup.getAttribute('visible') === false) return;
-
                     console.log('Close Abacus clicked');
-                    event.stopPropagation();
                     this.chronogramPanelGroup.setAttribute('visible', false);
                     this.panelOverlay.setAttribute('visible', false); 
                 };
@@ -240,12 +237,9 @@
                     this.chronogramPanelGroup.setAttribute('visible', false);
                 };
 
-                // MODIFIED: Added visibility check and stop propagation
                 this.onCloseMapsClick = (event) => {
                     if (this.mapsPanelGroup.getAttribute('visible') === false) return;
-
                     console.log('Close Maps clicked');
-                    event.stopPropagation();  // <- THIS LINE WAS ADDED
                     this.mapsPanelGroup.setAttribute('visible', false);
                     this.panelOverlay.setAttribute('visible', false);
                 };
@@ -259,10 +253,12 @@
                 
                 this.showAbacusPlane.addEventListener('click', this.onShowAbacusClick);
                 this.closeAbacusPlane.addEventListener('click', this.onCloseAbacusClick);
+                this.closeAbacusText.addEventListener('click', this.onCloseAbacusClick); // <-- ADDED
 
                 // NEW: Event Listeners for Maps
                 this.showMapsPlane.addEventListener('click', this.onShowMapsClick);
                 this.closeMapsPlane.addEventListener('click', this.onCloseMapsClick);
+                this.closeMapsText.addEventListener('click', this.onCloseMapsClick); // <-- ADDED
             },
 
             remove: function() {
@@ -274,10 +270,12 @@
 
                 this.showAbacusPlane.removeEventListener('click', this.onShowAbacusClick);
                 this.closeAbacusPlane.removeEventListener('click', this.onCloseAbacusClick);
+                this.closeAbacusText.removeEventListener('click', this.onCloseAbacusClick); // <-- ADDED
 
                 // NEW: Remove Event Listeners for Maps
                 this.showMapsPlane.removeEventListener('click', this.onShowMapsClick);
                 this.closeMapsPlane.removeEventListener('click', this.onCloseMapsClick);
+                this.closeMapsText.removeEventListener('click', this.onCloseMapsClick); // <-- ADDED
             }
         });
     </script>
@@ -511,14 +509,6 @@
             <a-entity 
                 id="chronogram-panel-group" 
                 position="0 0 0.50" visible="false" >
-                <a-plane
-                    id="chronogram-panel"
-                    src="#chronogramImage"
-                    height="1.128" 
-                    width="0.8"
-                    position="0 0 0"
-                ></a-plane>
-                
                 <a-entity
                     id="close-abacus-button-group" 
                     position="0.365 0.526 0.01"
@@ -532,21 +522,22 @@
                         opacity="0.8"
                         animation="property: material.opacity; from: 0.4; to: 0.8; dur: 750; dir: alternate; easing: easeInOutSine; loop: true"
                     ></a-plane>
-                    <a-text value="X" align="center" color="#FFF" scale="0.1 0.1 0.1" position="0 0 0.01"></a-text>
+                    
+                    <a-text 
+                        id="close-abacus-text" 
+                        class="clickable" 
+                        value="X" 
+                        align="center" 
+                        color="#FFF" 
+                        scale="0.1 0.1 0.1" 
+                        position="0 0 0.01"></a-text>
+
                 </a-entity>
             </a-entity>
 
             <a-entity 
                 id="maps-panel-group" 
                 position="0 0 0.50" visible="false" >
-                <a-plane
-                    id="maps-panel"
-                    src="#homeRangesImage"
-                    height="1.128" 
-                    width="0.8"
-                    position="0 0 0"
-                ></a-plane>
-                
                 <a-entity
                     id="close-maps-button-group" 
                     position="0.365 0.526 0.01"
@@ -560,7 +551,16 @@
                         opacity="0.8"
                         animation="property: material.opacity; from: 0.4; to: 0.8; dur: 750; dir: alternate; easing: easeInOutSine; loop: true"
                     ></a-plane>
-                    <a-text value="X" align="center" color="#FFF" scale="0.1 0.1 0.1" position="0 0 0.01"></a-text>
+                    
+                    <a-text 
+                        id="close-maps-text" 
+                        class="clickable" 
+                        value="X" 
+                        align="center" 
+                        color="#FFF" 
+                        scale="0.1 0.1 0.1" 
+                        position="0 0 0.01"></a-text>
+
                 </a-entity>
             </a-entity>
 
