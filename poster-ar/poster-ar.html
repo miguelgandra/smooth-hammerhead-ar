@@ -84,39 +84,50 @@
             }
         });
 
-        AFRAME.registerComponent('poster-handler', {
+       AFRAME.registerComponent('poster-handler', {
             init: function() {
                 console.log('Poster handler initialized.');
                 
-                this.poster = document.querySelector('#static-poster');
-                this.videoPlane = document.querySelector('#video-plane');
-                this.video = document.querySelector('#posterVideo');
-                this.fishSchoolModel = document.querySelector('#fish-school-model'); 
-                this.sideContent = document.querySelector('#side-content-column');
-                this.playButton = document.querySelector('#play-button-group');
-                this.playButtonPlane = document.querySelector('#play-button-plane-rounded'); 
+                // Use this.el.querySelector to reliably find children
+                this.poster = this.el.querySelector('#static-poster');
+                this.videoPlane = this.el.querySelector('#video-plane');
+                this.video = document.querySelector('#posterVideo'); // This one is OK, it's in <a-assets>
+                this.fishSchoolModel = this.el.querySelector('#fish-school-model'); 
+                this.sideContent = this.el.querySelector('#side-content-column');
+                this.playButton = this.el.querySelector('#play-button-group');
+                this.playButtonPlane = this.el.querySelector('#play-button-plane-rounded'); 
 
                 // Get references to Abacus elements
-                this.showAbacusButton = document.querySelector('#show-abacus-button'); 
-                this.chronogramPanelGroup = document.querySelector('#chronogram-panel-group');
-                this.showAbacusPlane = document.querySelector('#show-abacus-plane');
-                this.closeAbacusPlane = document.querySelector('#close-abacus-plane');
-                this.closeAbacusText = document.querySelector('#close-abacus-text'); // <-- ADDED
+                this.showAbacusButton = this.el.querySelector('#show-abacus-button'); 
+                this.chronogramPanelGroup = this.el.querySelector('#chronogram-panel-group');
+                this.showAbacusPlane = this.el.querySelector('#show-abacus-plane');
+                this.closeAbacusPlane = this.el.querySelector('#close-abacus-plane');
+                this.closeAbacusText = this.el.querySelector('#close-abacus-text');
 
                 // Get references to Maps elements
-                this.showMapsButton = document.querySelector('#show-maps-button');
-                this.mapsPanelGroup = document.querySelector('#maps-panel-group');
-                this.showMapsPlane = document.querySelector('#show-maps-plane');
-                this.closeMapsPlane = document.querySelector('#close-maps-plane');
-                this.closeMapsText = document.querySelector('#close-maps-text'); // <-- ADDED
+                this.showMapsButton = this.el.querySelector('#show-maps-button');
+                this.mapsPanelGroup = this.el.querySelector('#maps-panel-group');
+                this.showMapsPlane = this.el.querySelector('#show-maps-plane');
+                this.closeMapsPlane = this.el.querySelector('#close-maps-plane');
+                this.closeMapsText = this.el.querySelector('#close-maps-text');
                 
                 // Get reference to the new overlay
-                this.panelOverlay = document.querySelector('#panel-overlay');
+                this.panelOverlay = this.el.querySelector('#panel-overlay');
 
+                // --- Add a check to confirm the elements were found ---
+                if (!this.closeMapsText) {
+                    console.error("❌ CRITICAL: Could not find #close-maps-text element!");
+                    return; 
+                }
+                if (!this.closeAbacusText) {
+                    console.error("❌ CRITICAL: Could not find #close-abacus-text element!");
+                    return;
+                }
 
                 this.targetVisible = false;
                 this.videoHasPlayed = false;
 
+                // --- (All your .on... functions are correct, no changes needed) ---
 
                 this.onPlayButtonClick = (event) => {
                     console.log('Play button clicked!');
@@ -229,7 +240,7 @@
                 };
 
 
-                // NEW: Click handlers for Maps panel
+                // Click handlers for Maps panel
                 this.onShowMapsClick = (event) => {
                     console.log('Show Maps clicked');
                     this.mapsPanelGroup.setAttribute('visible', true);
@@ -253,12 +264,12 @@
                 
                 this.showAbacusPlane.addEventListener('click', this.onShowAbacusClick);
                 this.closeAbacusPlane.addEventListener('click', this.onCloseAbacusClick);
-                this.closeAbacusText.addEventListener('click', this.onCloseAbacusClick); // <-- ADDED
+                this.closeAbacusText.addEventListener('click', this.onCloseAbacusClick);
 
-                // NEW: Event Listeners for Maps
+                // Event Listeners for Maps
                 this.showMapsPlane.addEventListener('click', this.onShowMapsClick);
                 this.closeMapsPlane.addEventListener('click', this.onCloseMapsClick);
-                this.closeMapsText.addEventListener('click', this.onCloseMapsClick); // <-- ADDED
+                this.closeMapsText.addEventListener('click', this.onCloseMapsClick);
             },
 
             remove: function() {
@@ -266,16 +277,18 @@
                 this.video.removeEventListener('play', this.onVideoPlay);
                 this.el.removeEventListener('targetFound', this.onTargetFound);
                 this.el.removeEventListener('targetLost', this.onTargetLost);
-                this.playButtonPlane.removeEventListener('click', this.onPlayButtonClick);
+                
+                // Use a null-check '?' in case remove() is called after a failed init
+                this.playButtonPlane?.removeEventListener('click', this.onPlayButtonClick);
 
-                this.showAbacusPlane.removeEventListener('click', this.onShowAbacusClick);
-                this.closeAbacusPlane.removeEventListener('click', this.onCloseAbacusClick);
-                this.closeAbacusText.removeEventListener('click', this.onCloseAbacusClick); // <-- ADDED
+                this.showAbacusPlane?.removeEventListener('click', this.onShowAbacusClick);
+                this.closeAbacusPlane?.removeEventListener('click', this.onCloseAbacusClick);
+                this.closeAbacusText?.removeEventListener('click', this.onCloseAbacusClick);
 
-                // NEW: Remove Event Listeners for Maps
-                this.showMapsPlane.removeEventListener('click', this.onShowMapsClick);
-                this.closeMapsPlane.removeEventListener('click', this.onCloseMapsClick);
-                this.closeMapsText.removeEventListener('click', this.onCloseMapsClick); // <-- ADDED
+                // Remove Event Listeners for Maps
+                this.showMapsPlane?.removeEventListener('click', this.onShowMapsClick);
+                this.closeMapsPlane?.removeEventListener('click', this.onCloseMapsClick);
+                this.closeMapsText?.removeEventListener('click', this.onCloseMapsClick);
             }
         });
     </script>
