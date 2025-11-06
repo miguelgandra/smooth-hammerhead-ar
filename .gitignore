@@ -1,0 +1,6 @@
+# .gitignore
+
+# Ignore these specific folders
+html/
+poster-ar/legacy
+

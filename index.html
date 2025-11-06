@@ -3,15 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smooth Hammerhead AR Experience</title>
+    <title>Digital Tools for Science Communication</title>
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-0CHHX4WET9"></script>
     <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
 
-    gtag('config', 'G-0CHHX4WET9');
+        // Track main page
+        gtag('config', 'G-0CHHX4WET9', {
+        'page_path': '/',
+        'page_title': 'Main Page'
+        });
     </script>
 
 
@@ -146,6 +150,7 @@
             position: relative;
             z-index: 2;
             padding: 20px;
+            padding-bottom: 100px; /* <-- CHANGE 1: Added */
             max-width: 1000px;
             transform: translateY(-40px); /* --- Moves the block up --- */
         }
@@ -935,7 +940,7 @@
 
             header {
                 transform: translateY(0); /* Reset on mobile */
-                padding: 40px 20px 20px 20px; /* Add padding-top */
+                padding: 40px 20px 100px 20px; /* <-- CHANGE 2: Modified padding-bottom */
             }
             /* --- END: HERO SECTION FIXES --- */
 
@@ -1329,7 +1334,7 @@
                     
                     <div class="mobile-instructions">
                         <h3>How to try it (Mobile):</h3>
-                        <p>You're already on your phone! Tap the button below to launch the experience.</p>
+                        <p>Tap the button below to launch the experience.</p>
                         <a href="./poster-ar/poster-ar.html" target="_blank" class="cta-button">Launch AR Demo</a>
                         <p style="margin-top: 20px;">After launching, you'll need to <strong>find the poster image</strong> (e.g., on another computer screen or a physical print-out) and point your camera at it.</p>
                     </div>
