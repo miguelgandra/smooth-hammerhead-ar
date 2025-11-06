@@ -15,16 +15,13 @@
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
 
-        // Track this page specifically
         gtag('config', 'G-0CHHX4WET9', {
         'page_path': '/poster-ar/poster-ar.html',
         'page_title': 'Poster AR Demo'
         });
     </script>
 
-
     <script>
-        // Your existing script logic
         let userInteracted = false;
         let videoReady = false;
 
@@ -63,7 +60,6 @@
             }
         }
 
-        // Custom clickable component
         AFRAME.registerComponent('clickable', {
             schema: {
                 url: {type: 'string', default: ''}
@@ -88,33 +84,30 @@
             init: function() {
                 console.log('Poster handler initialized.');
                 
-                // Use this.el.querySelector to reliably find children
                 this.poster = this.el.querySelector('#static-poster');
                 this.videoPlane = this.el.querySelector('#video-plane');
-                this.video = document.querySelector('#posterVideo'); // This one is OK, it's in <a-assets>
+                this.video = document.querySelector('#posterVideo');
                 this.fishSchoolModel = this.el.querySelector('#fish-school-model'); 
                 this.sideContent = this.el.querySelector('#side-content-column');
                 this.playButton = this.el.querySelector('#play-button-group');
                 this.playButtonPlane = this.el.querySelector('#play-button-plane-rounded'); 
 
-                // Get references to Abacus elements
                 this.showAbacusButton = this.el.querySelector('#show-abacus-button'); 
                 this.chronogramPanelGroup = this.el.querySelector('#chronogram-panel-group');
                 this.showAbacusPlane = this.el.querySelector('#show-abacus-plane');
                 this.closeAbacusPlane = this.el.querySelector('#close-abacus-plane');
                 this.closeAbacusText = this.el.querySelector('#close-abacus-text');
+                this.closeAbacusButtonGroup = this.el.querySelector('#close-abacus-button-group');
 
-                // Get references to Maps elements
                 this.showMapsButton = this.el.querySelector('#show-maps-button');
                 this.mapsPanelGroup = this.el.querySelector('#maps-panel-group');
                 this.showMapsPlane = this.el.querySelector('#show-maps-plane');
                 this.closeMapsPlane = this.el.querySelector('#close-maps-plane');
                 this.closeMapsText = this.el.querySelector('#close-maps-text');
+                this.closeMapsButtonGroup = this.el.querySelector('#close-maps-button-group');
                 
-                // Get reference to the new overlay
                 this.panelOverlay = this.el.querySelector('#panel-overlay');
 
-                // --- Add a check to confirm the elements were found ---
                 if (!this.closeMapsText) {
                     console.error("❌ CRITICAL: Could not find #close-maps-text element!");
                     return; 
@@ -126,8 +119,6 @@
 
                 this.targetVisible = false;
                 this.videoHasPlayed = false;
-
-                // --- (All your .on... functions are correct, no changes needed) ---
 
                 this.onPlayButtonClick = (event) => {
                     console.log('Play button clicked!');
@@ -224,7 +215,6 @@
                     }
                 };
 
-                // Click handlers for Abacus panel
                 this.onShowAbacusClick = (event) => {
                     console.log('Show Abacus clicked');
                     this.chronogramPanelGroup.setAttribute('visible', true);
@@ -239,8 +229,6 @@
                     this.panelOverlay.setAttribute('visible', false); 
                 };
 
-
-                // Click handlers for Maps panel
                 this.onShowMapsClick = (event) => {
                     console.log('Show Maps clicked');
                     this.mapsPanelGroup.setAttribute('visible', true);
@@ -249,13 +237,16 @@
                 };
 
                 this.onCloseMapsClick = (event) => {
-                    if (this.mapsPanelGroup.getAttribute('visible') === false) return;
-                    console.log('Close Maps clicked');
+                    console.log('Close Maps clicked - handler triggered');
+                    if (this.mapsPanelGroup.getAttribute('visible') === false) {
+                        console.log('Maps panel already hidden, skipping');
+                        return;
+                    }
+                    console.log('Hiding Maps panel');
                     this.mapsPanelGroup.setAttribute('visible', false);
                     this.panelOverlay.setAttribute('visible', false);
                 };
 
-                // --- Event Listeners ---
                 this.video.addEventListener('ended', this.onVideoEnded);
                 this.video.addEventListener('play', this.onVideoPlay);
                 this.el.addEventListener('targetFound', this.onTargetFound);
@@ -263,13 +254,10 @@
                 this.playButtonPlane.addEventListener('click', this.onPlayButtonClick);
                 
                 this.showAbacusPlane.addEventListener('click', this.onShowAbacusClick);
-                this.closeAbacusPlane.addEventListener('click', this.onCloseAbacusClick);
-                this.closeAbacusText.addEventListener('click', this.onCloseAbacusClick);
+                this.closeAbacusButtonGroup.addEventListener('click', this.onCloseAbacusClick);
 
-                // Event Listeners for Maps
                 this.showMapsPlane.addEventListener('click', this.onShowMapsClick);
-                this.closeMapsPlane.addEventListener('click', this.onCloseMapsClick);
-                this.closeMapsText.addEventListener('click', this.onCloseMapsClick);
+                this.closeMapsButtonGroup.addEventListener('click', this.onCloseMapsClick);
             },
 
             remove: function() {
@@ -278,17 +266,11 @@
                 this.el.removeEventListener('targetFound', this.onTargetFound);
                 this.el.removeEventListener('targetLost', this.onTargetLost);
                 
-                // Use a null-check '?' in case remove() is called after a failed init
                 this.playButtonPlane?.removeEventListener('click', this.onPlayButtonClick);
-
                 this.showAbacusPlane?.removeEventListener('click', this.onShowAbacusClick);
-                this.closeAbacusPlane?.removeEventListener('click', this.onCloseAbacusClick);
-                this.closeAbacusText?.removeEventListener('click', this.onCloseAbacusClick);
-
-                // Remove Event Listeners for Maps
+                this.closeAbacusButtonGroup?.removeEventListener('click', this.onCloseAbacusClick);
                 this.showMapsPlane?.removeEventListener('click', this.onShowMapsClick);
-                this.closeMapsPlane?.removeEventListener('click', this.onCloseMapsClick);
-                this.closeMapsText?.removeEventListener('click', this.onCloseMapsClick);
+                this.closeMapsButtonGroup?.removeEventListener('click', this.onCloseMapsClick);
             }
         });
     </script>
@@ -509,19 +491,22 @@
                 <a-text value="Show Maps" align="center" color="#FFF" scale="0.07 0.07 0.07" position="0 0 0.01" wrap-count="20"></a-text>
             </a-entity>
 
-
             <a-plane
                 id="panel-overlay"
                 color="#000"
                 opacity="0.75"
                 width="1"
                 height="1.41"
-                position="0 0 0.02" visible="false" ></a-plane>
-
+                position="0 0 0.02"
+                visible="false"
+            ></a-plane>
 
             <a-entity 
                 id="chronogram-panel-group" 
-                position="0 0 0.50" visible="false" > <a-plane
+                position="0 0 0.50"
+                visible="false"
+            >
+                <a-plane
                     id="chronogram-panel"
                     src="#chronogramImage"
                     height="1.128" 
@@ -532,10 +517,10 @@
                 <a-entity
                     id="close-abacus-button-group" 
                     position="0.365 0.526 0.01"
+                    class="clickable"
                 >
                     <a-plane 
                         id="close-abacus-plane" 
-                        class="clickable" 
                         color="#CC0000" 
                         width="0.07" 
                         height="0.07"
@@ -545,19 +530,21 @@
                     
                     <a-text 
                         id="close-abacus-text" 
-                        class="clickable" 
                         value="X" 
                         align="center" 
                         color="#FFF" 
                         scale="0.1 0.1 0.1" 
-                        position="0 0 0.01"></a-text>
-
+                        position="0 0 0.01"
+                    ></a-text>
                 </a-entity>
             </a-entity>
 
             <a-entity 
                 id="maps-panel-group" 
-                position="0 0 0.50" visible="false" > <a-plane
+                position="0 0 0.50"
+                visible="false"
+            >
+                <a-plane
                     id="maps-panel"
                     src="#homeRangesImage"
                     height="1.128" 
@@ -568,10 +555,10 @@
                 <a-entity
                     id="close-maps-button-group" 
                     position="0.365 0.526 0.01"
+                    class="clickable"
                 >
                     <a-plane 
                         id="close-maps-plane" 
-                        class="clickable" 
                         color="#CC0000" 
                         width="0.07" 
                         height="0.07"
@@ -581,13 +568,12 @@
                     
                     <a-text 
                         id="close-maps-text" 
-                        class="clickable" 
                         value="X" 
                         align="center" 
                         color="#FFF" 
                         scale="0.1 0.1 0.1" 
-                        position="0 0 0.01"></a-text>
-
+                        position="0 0 0.01"
+                    ></a-text>
                 </a-entity>
             </a-entity>
 
