@@ -220,14 +220,17 @@
                     this.mapsPanelGroup.setAttribute('visible', false);
                 };
 
-                // MODIFIED: Added visibility check
+
+                // MODIFIED: Added visibility check and stop propagation
                 this.onCloseAbacusClick = (event) => {
                     if (this.chronogramPanelGroup.getAttribute('visible') === false) return;
 
                     console.log('Close Abacus clicked');
+                    event.stopPropagation();
                     this.chronogramPanelGroup.setAttribute('visible', false);
                     this.panelOverlay.setAttribute('visible', false); 
                 };
+
 
                 // NEW: Click handlers for Maps panel
                 this.onShowMapsClick = (event) => {
@@ -237,15 +240,15 @@
                     this.chronogramPanelGroup.setAttribute('visible', false);
                 };
 
-                // MODIFIED: Added visibility check
+                // MODIFIED: Added visibility check and stop propagation
                 this.onCloseMapsClick = (event) => {
                     if (this.mapsPanelGroup.getAttribute('visible') === false) return;
 
                     console.log('Close Maps clicked');
+                    event.stopPropagation();  // <- THIS LINE WAS ADDED
                     this.mapsPanelGroup.setAttribute('visible', false);
                     this.panelOverlay.setAttribute('visible', false);
                 };
-
 
                 // --- Event Listeners ---
                 this.video.addEventListener('ended', this.onVideoEnded);
