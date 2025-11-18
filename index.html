@@ -2,20 +2,43 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>Digital Tools for Science Communication</title>
 
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-0CHHX4WET9"></script>
+   <script async src="https://www.googletagmanager.com/gtag/js?id=G-0CHHX4WET9"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
 
-        // Track main page
-        gtag('config', 'G-0CHHX4WET9', {
-        'page_path': '/',
-        'page_title': 'Main Page'
-        });
+        // --- 1. DEVELOPER EXCLUSION LOGIC ---
+        
+        // Check if the URL has ?dev=true (e.g. yoursite.com/?dev=true)
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('dev') === 'true') {
+            localStorage.setItem('is_developer', 'true');
+            alert("Developer Mode Enabled: Your visits are now excluded from Analytics.");
+        }
+
+        // Check if we are on localhost (development environment)
+        const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
+        // Check if the developer cookie exists
+        const isDevCookie = localStorage.getItem('is_developer') === 'true';
+
+        // --- 2. INITIALIZE ANALYTICS ---
+
+        if (isLocalhost || isDevCookie) {
+            // If it's you, don't send data, but log to console so you know it's working locally
+            console.log("GA4: Analytics blocked (Developer Mode Active)");
+        } else {
+            // If it's a real user, send the data
+            gtag('config', 'G-0CHHX4WET9', {
+                'page_path': '/',
+                'page_title': 'Main Page',
+                'anonymize_ip': true // Adds an extra layer of privacy compliance
+            });
+        }
     </script>
 
 
@@ -90,7 +113,7 @@
             z-index: 1;
         }
 
-        /* --- NEW: Header Load Animation --- */
+        /* --- Header Load Animation --- */
         @keyframes fadeInHero {
             to {
                 opacity: 1;
@@ -98,7 +121,7 @@
             }
         }
         
-        /* --- NEW: Bounce Animation for Scroll Indicator --- */
+        /* --- Bounce Animation for Scroll Indicator --- */
         @keyframes bounce {
             0%, 20%, 50%, 80%, 100% {
                 transform: translateY(0);
@@ -112,7 +135,7 @@
         }
 
 
-        /* --- NEW: Hero Section (Full Screen) --- */
+        /* --- Hero Section (Full Screen) --- */
         .hero-section {
             position: relative;
             height: 100vh;
@@ -123,6 +146,7 @@
             text-align: center;
             overflow: hidden;
             background: #020a1a; /* Fallback */
+            padding-top: 20px;
         }
         
         #hero-model {
@@ -150,9 +174,10 @@
             position: relative;
             z-index: 2;
             padding: 20px;
-            padding-bottom: 100px; /* <-- CHANGE 1: Added */
+            padding-bottom: 100px; 
             max-width: 1000px;
-            transform: translateY(-40px); /* --- Moves the block up --- */
+            transform: translateY(-30px); 
+            min-height: fit-content; 
         }
         
         .header-logos {
@@ -161,9 +186,9 @@
             align-items: center;
             gap: 70px; 
             margin-top: 40px; 
-            margin-bottom: 100px; /* --- ADJUSTED --- */
+            margin-bottom: 100px; 
             
-            /* --- ADDED: Animation --- */
+            /* --- Animation --- */
             animation: fadeInHero 1s ease-out 0.2s forwards;
             opacity: 0;
             transform: translateY(20px);
@@ -196,9 +221,9 @@
         
         h1 {
             font-family: 'Raleway', sans-serif;
-            font-size: 5.5em; /* --- ADJUSTED --- */
-            font-weight: 800;
-            margin-bottom: 30px; /* --- ADJUSTED --- */
+            font-size: 5.5em; 
+            font-weight: 900;
+            margin-bottom: 30px; 
             background: linear-gradient(135deg, #00e0c0, #00b0c0, #0099ff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -207,13 +232,13 @@
             line-height: 1.1em; 
             transition: text-shadow 0.2s ease-out;
             
-            /* --- ADDED: Animation --- */
+            /* --- Animation --- */
             animation: fadeInHero 1s ease-out 0.4s forwards;
             opacity: 0;
             transform: translateY(20px);
         }
 
-        /* --- MODIFIED: Subtitle Styles --- */
+        /* --- Subtitle Styles --- */
         .subtitle-container {
             margin-bottom: 35px;
             font-size: 1.3em;
@@ -221,7 +246,7 @@
             color: #b0d0d0;
             line-height: 1.5;
             
-            /* --- ADDED: Animation & Width Constraint --- */
+            /* --- Animation & Width Constraint --- */
             animation: fadeInHero 1s ease-out 0.6s forwards;
             opacity: 0;
             transform: translateY(20px);
@@ -246,9 +271,10 @@
             color: #00e0c0;
             font-weight: 500;
             display: block;
-            margin: 8px 0; /* --- Reduced from 12px --- */
+            margin: 8px 0; 
             position: relative;
             padding-left: 20px;
+            line-height: 1.2;
         }
 
         
@@ -257,19 +283,19 @@
             color: #b0d0d0;
             font-weight: 300;
             max-width: 900px;
-            margin: 40px auto 0; /* --- Increased top margin --- */
-            line-height: 1.7;
+            margin: 40px auto 0; 
+            line-height: 1.5;
             
-            /* --- ADDED: Animation --- */
+            /* --- Animation --- */
             animation: fadeInHero 1s ease-out 0.8s forwards;
             opacity: 0;
             transform: translateY(20px);
         }
         
-        /* --- NEW: Scroll Down Indicator --- */
+        /* --- Scroll Down Indicator --- */
         .scroll-indicator {
             position: absolute;
-            bottom: 20px; /* --- Decreased from 30px --- */
+            bottom: 20px; 
             left: 50%;
             transform: translateX(-50%);
             z-index: 3;
@@ -337,7 +363,6 @@
         }
         
         .model-credit a {
-             /* --- CHANGE 1: Removed color rule from here --- */
             text-decoration: none;
         }
         
@@ -409,38 +434,34 @@
             line-height: 1.7;
         }
         
-        /* --- START: User Request --- */
+        /* --- User Request: Text Content --- */
         .ar-description {
-            font-size: 1.1em; 
+            font-size: 1em; 
             color: #b0d0d0;
             max-width: 1200px; 
             margin: 40px auto 0;
-            /* margin-left: 40px; <-- CHANGE: Removed */
-            line-height: 1.7;
-            font-weight: 300;
-            text-align: left; /* Changed from 'center' */
+            line-height: 1.6;
+            font-weight: 250;
+            text-align: left; 
         }
         
-        /* --- NEW RULE --- */
         .ar-description p:first-child {
             font-size: 1.2em;
             font-weight: 400;
             color: #ffffff;
-            margin-bottom: 35px; /* More separation from the list */
+            margin-bottom: 35px; 
         }
         
         .ar-description p:not(:first-child) {
-            margin-bottom: 15px; /* Add spacing between paragraphs */
+            margin-bottom: 15px; 
         }
 
         .ar-description .step-list {
             list-style: none;
             padding-left: 0;
-            counter-reset: ar-step-counter; /* Use a new counter name */
-            margin-top: 30px; /* Add some space above the list */
-            /* max-width: 800px; <-- CHANGE: Removed (now inherited) */
+            counter-reset: ar-step-counter; 
+            margin-top: 30px; 
         }
-        /* --- END: User Request --- */
 
         .ar-description .step-list li {
             margin-bottom: 25px;
@@ -449,11 +470,11 @@
         }
         
         .ar-description .step-list li::before {
-            content: counter(ar-step-counter); /* Use the new counter */
-            counter-increment: ar-step-counter; /* Use the new counter */
+            content: counter(ar-step-counter); 
+            counter-increment: ar-step-counter; 
             position: absolute;
             left: 0;
-            top: 2px; /* <-- FIX: Was 0 */
+            top: 2px; 
             font-size: 1.1em;
             font-weight: 700;
             color: #00e0c0;
@@ -476,7 +497,27 @@
         .ar-description .step-list li p {
             color: #b0d0d0;
             margin-top: 5px;
-            margin-bottom: 0; /* Reset paragraph margin inside li */
+            margin-bottom: 0; 
+        }
+
+        /* --- NEW: Tool Links Styling --- */
+        .tool-link {
+            color: #00e0c0;
+            font-weight: 600;
+            text-decoration: none;
+            border-bottom: 1px dashed rgba(0, 224, 192, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .tool-link:hover {
+            color: #ffffff;
+            border-bottom-color: #ffffff;
+            text-shadow: 0 0 10px rgba(0, 224, 192, 0.5);
+        }
+
+        .code-style {
+            font-family: monospace;
+            font-size: 1.1em;
         }
 
 
@@ -502,7 +543,7 @@
 
         .animation-grid {
             display: grid;
-            grid-template-columns: 3fr 2fr; /* <-- CHANGE: Was 1fr 1fr */
+            grid-template-columns: 3fr 2fr; 
             gap: 40px;
             align-items: center;
         }
@@ -517,15 +558,12 @@
             background-clip: text;
         }
 
-        /* --- START: UPDATED STYLES --- */
-        /* This new rule creates the vertical stack with spacing */
         .animation-banner-stack {
             display: flex;
             flex-direction: column;
-            gap: 20px; /* Replaces the old p margin-bottom */
+            gap: 20px; 
         }
 
-        /* This is the new banner style, based on .instruction-card */
         .animation-banner {
             background: rgba(0, 224, 192, 0.05);
             padding: 25px;
@@ -534,21 +572,18 @@
             transition: all 0.3s ease;
         }
 
-        /* Optional: Add the same hover effect as the other cards */
         .animation-banner:hover {
             background: rgba(0, 224, 192, 0.1);
             transform: translateY(-5px);
             border-color: rgba(0, 224, 192, 0.4);
         }
 
-        /* This re-applies the text style to the <p> tags inside the new banners */
         .animation-banner p {
-            color: #b0d0d0;
+            color: #bed3d3;
             line-height: 1.7;
-            font-size: 1.1em;
-            margin-bottom: 0; /* No margin needed, 'gap' handles it */
+            font-size: 1.05em;
+            margin-bottom: 0; 
         }
-        /* --- END: UPDATED STYLES --- */
 
 
         .animation-video-container {
@@ -558,7 +593,6 @@
             align-items: center;
         }
         
-        /* --- NEW RULE --- */
         .video-wrapper {
             width: 100%;
             overflow: hidden;
@@ -568,11 +602,10 @@
         .animation-video-container video {
             width: 100%;
             height: auto;
-            /* border-radius: 15px; <-- REMOVED */
             background: transparent;
             margin-bottom: 0px;
             
-            /* --- NEW: Zoom and Pan --- */
+            /* --- Zoom and Pan --- */
             transform: scale(1.2) translateX(-18%);
             transform-origin: center center;
         }
@@ -584,7 +617,7 @@
             font-style: italic;
             width: 80%;
             margin: 0;
-            margin-top: 10px; /* <-- ADDED */
+            margin-top: 10px; 
         }
 
         /* Marker Demo Section */
@@ -641,7 +674,7 @@
         }
         
         .poster-credit {
-            font-size: 0.85em;
+            font-size: 0.8em;
             font-style: italic;
             color: #a0c0c0;
             text-align: center;
@@ -658,7 +691,7 @@
         .demo-instructions ol {
             list-style: none;
             padding-left: 0;
-            counter-reset: desktop-step-counter; /* --- FIX: Use a unique counter name --- */
+            counter-reset: desktop-step-counter; 
         }
 
         .demo-instructions li {
@@ -668,11 +701,11 @@
         }
         
         .demo-instructions li::before {
-            content: counter(desktop-step-counter); /* --- FIX: Use the unique counter name --- */
-            counter-increment: desktop-step-counter; /* --- FIX: Use the unique counter name --- */
+            content: counter(desktop-step-counter); 
+            counter-increment: desktop-step-counter; 
             position: absolute;
             left: 0;
-            top: 2px; /* <-- FIX: Was 0 */
+            top: 2px; 
             font-size: 1.1em;
             font-weight: 700;
             color: #00e0c0;
@@ -695,7 +728,7 @@
         .demo-instructions li p {
             color: #b0d0d0;
             margin-top: 5px;
-            max-width: 90%; /* --- Constrains text width --- */
+            max-width: 90%; 
         }
         
         .qr-code-img {
@@ -711,9 +744,90 @@
         }
         
         .mobile-instructions .cta-button {
-             margin-top: 15px;
+             margin-top: 40px; 
              text-decoration: none;
+             display: inline-block;
          }
+
+        /* --- NEW: Styles for Collapsible Tech Note --- */
+        .ar-tech-note {
+            /* --- UPDATED: Increased top margin for separation --- */
+            margin-top: 50px; 
+            
+            border: 1px solid rgba(0, 224, 192, 0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.2);
+            
+            /* --- UPDATED: Box Width fixed --- */
+            width: 100%;
+            max-width: 480px;
+        }
+
+        .tech-note-toggle {
+            width: 100%;
+            padding: 15px;
+            background: rgba(0, 224, 192, 0.1);
+            color: #00e0c0;
+            border: none;
+            text-align: left;
+            
+            /* --- UPDATED: Font size slightly reduced to 1.1em --- */
+            font-size: 1.1em; 
+            font-weight: 700;
+            
+            font-family: inherit;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s ease;
+        }
+        
+        .tech-note-toggle:hover {
+            background: rgba(0, 224, 192, 0.2);
+        }
+        
+        .tech-note-arrow {
+            transition: transform 0.3s ease;
+            font-size: 0.8em;
+        }
+        
+        .tech-note-toggle.active .tech-note-arrow {
+            transform: rotate(180deg);
+        }
+
+        .tech-note-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .tech-note-content p {
+            padding: 15px;
+            
+            /* --- UPDATED: Text smaller and thinner to match description --- */
+            font-size: 0.95em; 
+            color: #b0d0d0;
+            font-weight: 300;
+            
+            margin: 0;
+            line-height: 1.7; 
+        }
+        
+        .tech-note-content a {
+            color: #00e0c0;
+            text-decoration: none;
+        }
+        
+        .tech-note-content a:hover {
+            text-decoration: underline;
+        }
+        
+        .tech-note-content.open {
+            max-height: 600px; 
+        }
+        /* --- END: Tech Note Styles --- */
         
         /* Impact Section */
         .impact-section {
@@ -831,11 +945,11 @@
             display: inline-block;
             background: linear-gradient(135deg, #00e0c0, #00a0b0);
             color: #020a1a;
-            padding: 16px 40px;
+            padding: 18px 45px; /* Increased padding */
             border-radius: 50px;
             text-decoration: none;
             font-weight: 700;
-            font-size: 1em;
+            font-size: 1.1em; /* Increased font size */
             transition: all 0.3s ease;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -850,7 +964,7 @@
         .cta-button-stack .cta-button {
             display: block;
             margin: 15px auto;
-            max-width: 350px; /* Constrain width and center */
+            max-width: 350px; 
         }
         
         .cta-button-stack .cta-button:first-child {
@@ -861,7 +975,7 @@
         /* Footer */
         footer {
             text-align: center;
-            padding: 40px 20px 30px; /* --- CHANGE 2: Reduced height --- */
+            padding: 40px 20px 30px; 
             border-top: 1px solid rgba(0, 224, 192, 0.2);
             margin-top: 80px;
         }
@@ -882,25 +996,24 @@
             color: #00b0c0;
         }
         
-        /* --- CHANGE 1: Override for footer CC links --- */
         footer p a,
         footer .model-credit a {
-            color: #a0c0c0; /* Match surrounding text */
-            font-weight: 400; /* Reset to normal */
-            text-decoration: underline; /* Add underline for clarity */
+            color: #a0c0c0; 
+            font-weight: 400; 
+            text-decoration: underline; 
             transition: color 0.3s ease;
         }
 
         footer p a:hover,
         footer .model-credit a:hover {
-            color: #ffffff; /* Hover to white instead of teal */
+            color: #ffffff; 
         }
         
         .developer-info {
             color: #a0c0c0;
-            margin: 20px 0 30px; /* --- CHANGE 3: Increased bottom margin --- */
+            margin: 20px 0 30px; 
             font-size: 0.9em;
-            line-height: 1.8; /* Added for better spacing between lines */
+            line-height: 1.8; 
         }
         
         /* This span will hold the developer name */
@@ -932,17 +1045,16 @@
         /* --- Mobile Responsive Styles --- */
         @media (max-width: 768px) {
             
-            /* --- START: HERO SECTION FIXES --- */
+            /* --- Hero Section Fixes --- */
             .hero-section {
-                height: auto; /* Allow section to grow */
-                min-height: 100vh; /* Ensure it's at least fullscreen */
+                height: auto; 
+                min-height: 100vh; 
             }
 
             header {
-                transform: translateY(0); /* Reset on mobile */
-                padding: 40px 20px 100px 20px; /* <-- CHANGE 2: Modified padding-bottom */
+                transform: translateY(0); 
+                padding: 40px 20px 100px 20px; 
             }
-            /* --- END: HERO SECTION FIXES --- */
 
 
             @media (min-width: 769px) {
@@ -952,7 +1064,7 @@
             }
 
             h1 {
-                font-size: 2.8em; 
+                font-size: 2.5em; 
                 line-height: 1.25em;
                 margin-bottom: 20px; 
             }
@@ -961,7 +1073,7 @@
                 row-gap: 10px;
                 column-gap: 25px;
                 margin-bottom: 30px; 
-                margin-top: 0; /* --- REMOVED margin-top: 20px --- */
+                margin-top: 0; 
                 flex-wrap: wrap; 
             }
             .header-logos img {
@@ -1004,12 +1116,11 @@
                 margin-bottom: 25px; 
             }
             
-            /* --- START: AR BUTTON FIX --- */
+            /* --- AR Button Fix --- */
             .ar-button {
-                font-size: 0.8em; /* --- CHANGED from 0.9em --- */
-                padding: 10px 20px; /* --- CHANGED from 12px 24px --- */
+                font-size: 0.8em; 
+                padding: 10px 20px; 
             }
-            /* --- END: AR BUTTON FIX --- */
 
             .cta-button {
                 font-size: 1em;
@@ -1051,8 +1162,7 @@
             }
             
             .animation-video-container {
-                /* order: -1; */ 
-                align-items: center; /* Center wrapper and caption on mobile */
+                align-items: center; 
             }
             
             .video-caption {
@@ -1095,7 +1205,6 @@
                 box-sizing: border-box;
             }
 
-            /* --- NEW/UPDATED RULES for font and padding --- */
             .instruction-card p,
             .impact-card p,
             .demo-instructions li p,
@@ -1116,7 +1225,6 @@
             .impact-card {
                 padding: 30px 20px; 
             }
-            /* --- END NEW RULES --- */
         }
     </style>
 </head>
@@ -1234,11 +1342,11 @@
                     </li>
                     <li>
                         <strong>Create or Adapt Models</strong>
-                        <p>Build, modify, or animate 3D assets using free and open-source platforms such as <i>Blender</i>, or other modelling tools. Ready-made 3D models are also available through repositories like  <i>Sketchfab</i>, while novel AI-powered tools can automatically generate models from 2D images.</p>
+                        <p>Build, modify, or animate 3D assets using free and open-source platforms such as <a href="https://www.blender.org/" target="_blank" rel="noopener noreferrer" class="tool-link">Blender</a>, or other modelling tools. Ready-made 3D models are also available through repositories like <a href="https://sketchfab.com/" target="_blank" rel="noopener noreferrer" class="tool-link">Sketchfab</a>, while novel AI-powered tools can automatically generate models from 2D images.</p>
                     </li>
                     <li>
                         <strong>Share and Explore</strong>
-                        <p>Publish and embed interactive visualisations online using tools such as the <i>&lt;model-viewer&gt;</i> web component, which allows 3D assets to be displayed and explored directly in the browser. These interactive experiences help make marine research more accessible, engaging, and educational for diverse audiences.</p>
+                        <p>Publish and embed interactive visualisations online using tools such as the <a href="https://modelviewer.dev/" target="_blank" rel="noopener noreferrer" class="tool-link code-style">&lt;model-viewer&gt;</a> web component, which allows 3D assets to be displayed and explored directly in the browser. These interactive experiences help make marine research more accessible, engaging, and educational for diverse audiences.</p>
                     </li>
                 </ol>
             </div>
@@ -1260,7 +1368,7 @@
 
                         <div class="animation-banner">
                             <p>
-                                Using programming environments such as R, researchers can generate sequential plots or maps that illustrate animal tracks, environmental changes, or temporal patterns. These frames can then be combined and rendered into smooth animations using video processing tools like <i>FFmpeg</i> or video editors, resulting in polished, scientifically grounded visual content.
+                                Using programming environments such as R, researchers can generate sequential plots or maps that illustrate animal tracks, environmental changes, or temporal patterns. These frames can then be combined and rendered into smooth animations using video processing tools like <i>FFmpeg</i>, resulting in impactful visual content.
                             </p>
                         </div>
 
@@ -1339,7 +1447,17 @@
                         <p style="margin-top: 20px;">After launching, you'll need to <strong>find the poster image</strong> (e.g., on another computer screen or a physical print-out) and point your camera at it.</p>
                     </div>
                     
-                </div>
+                    <div class="ar-tech-note">
+                        <button class="tech-note-toggle" id="tech-note-btn">
+                            <span>Implementation Note</span>
+                            <span class="tech-note-arrow">▼</span>
+                        </button>
+                        <div class="tech-note-content" id="tech-note-body">
+                            <p>This demonstration was built using <a href="https://hiukim.github.io/mind-ar-js-doc/" target="_blank">MindAR</a>, an open-source web-based augmented reality library that enables marker-based AR directly in web browsers without requiring dedicated apps.</p>
+                            <p>The poster image serves as a natural feature tracker (image target), allowing the browser to recognize it and overlay digital content in real-time. This approach works best with larger-scale printed posters or markers, resulting in more stable and reliable AR experiences at conferences, exhibitions, or educational settings.</p>
+                        </div>
+                    </div>
+                    </div>
             </div>
         </div>
 
@@ -1510,8 +1628,62 @@
 
         // Start observing the animation section
         videoObserver.observe(animSection);
+        
+        /* --- SCRIPT FOR COLLAPSIBLE INFO BOX --- */
+        const techNoteBtn = document.getElementById('tech-note-btn');
+        const techNoteBody = document.getElementById('tech-note-body');
+        
+        if (techNoteBtn && techNoteBody) {
+            techNoteBtn.addEventListener('click', () => {
+                // Toggle button state for arrow rotation
+                techNoteBtn.classList.toggle('active');
+                // Toggle content visibility
+                techNoteBody.classList.toggle('open');
+            });
+        }
         /* --- END NEW SCRIPT --- */
 
     </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // 1. Define a helper function to send data to Google
+            function sendAREvent(arContentName) {
+                // Check if we are in Developer Mode first
+                const isDevMode = localStorage.getItem('is_developer') === 'true';
+                
+                if (!isDevMode && typeof gtag === 'function') {
+                    gtag('event', 'ar_experience_start', {
+                        'event_category': 'AR Interaction',
+                        'event_label': arContentName,
+                        'transport_type': 'beacon'
+                    });
+                    console.log(`Analytics: AR Event sent for ${arContentName}`);
+                } else if (isDevMode) {
+                    console.log(`Analytics: AR Event BLOCKED (Dev Mode) for ${arContentName}`);
+                }
+            }
+
+            // 2. Track the 3D Model Viewer Button (Shark)
+            const sharkButton = document.querySelector('.ar-button');
+            if (sharkButton) {
+                sharkButton.addEventListener('click', function() {
+                    sendAREvent('Shark 3D Model');
+                });
+            }
+
+            // 3. Track the Marker/Poster AR Demo Button (Mobile CTA)
+            // We target the specific link inside the mobile instructions
+            const posterButton = document.querySelector('.mobile-instructions .cta-button');
+            if (posterButton) {
+                posterButton.addEventListener('click', function() {
+                    sendAREvent('Poster AR Demo');
+                });
+            }
+        });
+    </script>
+
+
 </body>
 </html>
