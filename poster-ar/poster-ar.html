@@ -87,7 +87,11 @@
                 this.poster = this.el.querySelector('#static-poster');
                 this.videoPlane = this.el.querySelector('#video-plane');
                 this.video = document.querySelector('#posterVideo');
+                
+                // --- Models ---
                 this.fishSchoolModel = this.el.querySelector('#fish-school-model'); 
+                this.psatModel = this.el.querySelector('#psat-model'); // NEW PSAT REFERENCE
+
                 this.sideContent = this.el.querySelector('#side-content-column');
                 this.playButton = this.el.querySelector('#play-button-group');
                 this.playButtonPlane = this.el.querySelector('#play-button-plane-rounded'); 
@@ -138,11 +142,15 @@
                 this.onVideoEnded = () => {
                     this.videoHasPlayed = true; 
                     if (!this.targetVisible) return;
-                    console.log('Video ended. Switching to poster and fish model.');
+                    console.log('Video ended. Switching to poster and models.');
                     this.videoPlane.setAttribute('visible', false);
                     this.playButton.setAttribute('visible', false); 
                     this.poster.setAttribute('visible', true);
+                    
+                    // Show Models
                     this.fishSchoolModel.setAttribute('visible', true);
+                    this.psatModel.setAttribute('visible', true); // SHOW PSAT
+
                     this.sideContent.setAttribute('visible', true);
                     this.showAbacusButton.setAttribute('visible', true); 
                     this.showMapsButton.setAttribute('visible', true);
@@ -154,9 +162,13 @@
                     this.targetVisible = true;
                     
                     if (this.videoHasPlayed) {
-                        console.log('Video has already played. Showing poster/fish model.');
+                        console.log('Video has already played. Showing poster/models.');
                         this.poster.setAttribute('visible', true);
+                        
+                        // Show Models
                         this.fishSchoolModel.setAttribute('visible', true);
+                        this.psatModel.setAttribute('visible', true); // SHOW PSAT
+                        
                         this.sideContent.setAttribute('visible', true);
                         this.showAbacusButton.setAttribute('visible', true); 
                         this.showMapsButton.setAttribute('visible', true);
@@ -165,7 +177,11 @@
                         this.playButton.setAttribute('visible', false);
                     } else {
                         this.poster.setAttribute('visible', false);
+                        
+                        // Hide Models initially
                         this.fishSchoolModel.setAttribute('visible', false);
+                        this.psatModel.setAttribute('visible', false); // HIDE PSAT
+
                         this.sideContent.setAttribute('visible', false);
                         this.showAbacusButton.setAttribute('visible', false); 
                         this.showMapsButton.setAttribute('visible', false);
@@ -198,7 +214,11 @@
                     this.targetVisible = false;
                     this.playButton.setAttribute('visible', false); 
                     this.poster.setAttribute('visible', false);
+                    
+                    // Hide Models
                     this.fishSchoolModel.setAttribute('visible', false);
+                    this.psatModel.setAttribute('visible', false); // HIDE PSAT
+
                     this.videoPlane.setAttribute('visible', false);
                     this.sideContent.setAttribute('visible', false); 
                     this.showAbacusButton.setAttribute('visible', false); 
@@ -329,6 +349,11 @@
                 src="https://miguelgandra.github.io/digital-scicomm/models/the_fish_particle.glb"
             ></a-asset-item>
 
+            <a-asset-item
+                id="psatModel"
+                src="https://miguelgandra.github.io/digital-scicomm/models/PSAT/PSAT.glb"
+            ></a-asset-item>
+
             <img 
                 id="posterImage" 
                 src="https://miguelgandra.github.io/digital-scicomm/media/BLS8-poster-train.jpg" 
@@ -379,6 +404,16 @@
                 scale="0.3 0.3 0.3" 
                 visible="false"
                 animation-mixer="clip: *; loop: repeat; timeScale: 0"
+            ></a-entity>
+
+            <a-entity
+                id="psat-model"
+                gltf-model="#psatModel"
+                position="0.3 -0.4 0.2" 
+                rotation="0 0 0"
+                scale="0.3 0.3 0.3" 
+                visible="false"
+                animation="property: rotation; to: 0 360 0; loop: true; dur: 10000; easing: linear"
             ></a-entity>
             
             <a-entity 
