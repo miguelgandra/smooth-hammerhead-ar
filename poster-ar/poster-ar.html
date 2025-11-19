@@ -90,44 +90,39 @@
                 
                 // --- Models ---
                 this.fishSchoolModel = this.el.querySelector('#fish-school-model'); 
-                this.psatModel = this.el.querySelector('#psat-model'); // NEW PSAT REFERENCE
+                this.psatModel = this.el.querySelector('#psat-model'); 
 
                 this.sideContent = this.el.querySelector('#side-content-column');
                 this.playButton = this.el.querySelector('#play-button-group');
                 this.playButtonPlane = this.el.querySelector('#play-button-plane-rounded'); 
 
+                // --- Panel Groups ---
                 this.showAbacusButton = this.el.querySelector('#show-abacus-button'); 
                 this.chronogramPanelGroup = this.el.querySelector('#chronogram-panel-group');
                 this.showAbacusPlane = this.el.querySelector('#show-abacus-plane');
                 this.closeAbacusPlane = this.el.querySelector('#close-abacus-plane');
-                this.closeAbacusText = this.el.querySelector('#close-abacus-text');
                 this.closeAbacusButtonGroup = this.el.querySelector('#close-abacus-button-group');
 
                 this.showMapsButton = this.el.querySelector('#show-maps-button');
                 this.mapsPanelGroup = this.el.querySelector('#maps-panel-group');
                 this.showMapsPlane = this.el.querySelector('#show-maps-plane');
                 this.closeMapsPlane = this.el.querySelector('#close-maps-plane');
-                this.closeMapsText = this.el.querySelector('#close-maps-text');
                 this.closeMapsButtonGroup = this.el.querySelector('#close-maps-button-group');
                 
-                this.panelOverlay = this.el.querySelector('#panel-overlay');
+                // --- NEW PSAT PANEL ---
+                this.psatPanelGroup = this.el.querySelector('#psat-panel-group');
+                this.closePsatButtonGroup = this.el.querySelector('#close-psat-button-group');
 
-                if (!this.closeMapsText) {
-                    console.error("❌ CRITICAL: Could not find #close-maps-text element!");
-                    return; 
-                }
-                if (!this.closeAbacusText) {
-                    console.error("❌ CRITICAL: Could not find #close-abacus-text element!");
-                    return;
-                }
+                this.panelOverlay = this.el.querySelector('#panel-overlay');
 
                 this.targetVisible = false;
                 this.videoHasPlayed = false;
 
+                // --- Handlers ---
+
                 this.onPlayButtonClick = (event) => {
                     console.log('Play button clicked!');
                     if (this.video && this.targetVisible && !this.videoHasPlayed) {
-                        console.log('Fallback button clicked. Playing video from start.');
                         this.video.currentTime = 0; 
                         this.video.play().catch(e => console.error('❌ Button play error:', e));
                     }
@@ -142,14 +137,19 @@
                 this.onVideoEnded = () => {
                     this.videoHasPlayed = true; 
                     if (!this.targetVisible) return;
-                    console.log('Video ended. Switching to poster and models.');
+                    this.showPosterContent();
+                };
+
+                // Helper to show static content
+                this.showPosterContent = () => {
+                    console.log('Showing poster and models.');
                     this.videoPlane.setAttribute('visible', false);
                     this.playButton.setAttribute('visible', false); 
                     this.poster.setAttribute('visible', true);
                     
                     // Show Models
                     this.fishSchoolModel.setAttribute('visible', true);
-                    this.psatModel.setAttribute('visible', true); // SHOW PSAT
+                    this.psatModel.setAttribute('visible', true); 
 
                     this.sideContent.setAttribute('visible', true);
                     this.showAbacusButton.setAttribute('visible', true); 
@@ -162,25 +162,13 @@
                     this.targetVisible = true;
                     
                     if (this.videoHasPlayed) {
-                        console.log('Video has already played. Showing poster/models.');
-                        this.poster.setAttribute('visible', true);
-                        
-                        // Show Models
-                        this.fishSchoolModel.setAttribute('visible', true);
-                        this.psatModel.setAttribute('visible', true); // SHOW PSAT
-                        
-                        this.sideContent.setAttribute('visible', true);
-                        this.showAbacusButton.setAttribute('visible', true); 
-                        this.showMapsButton.setAttribute('visible', true);
-                        this.fishSchoolModel.setAttribute('animation-mixer', 'timeScale: 1');
-                        this.videoPlane.setAttribute('visible', false);
-                        this.playButton.setAttribute('visible', false);
+                        this.showPosterContent();
                     } else {
                         this.poster.setAttribute('visible', false);
                         
                         // Hide Models initially
                         this.fishSchoolModel.setAttribute('visible', false);
-                        this.psatModel.setAttribute('visible', false); // HIDE PSAT
+                        this.psatModel.setAttribute('visible', false); 
 
                         this.sideContent.setAttribute('visible', false);
                         this.showAbacusButton.setAttribute('visible', false); 
@@ -188,14 +176,12 @@
                         this.videoPlane.setAttribute('visible', true);
                         
                         if (this.video.currentTime > 0) {
-                            console.log('Resuming video playback.');
                             this.video.play().catch(e => {
                                 console.error('❌ Video resume error:', e);
                                 this.playButton.setAttribute('visible', true);
                             });
                         }
                         else if (userInteracted && videoReady) {
-                            console.log('Attempting to play video from start...');
                             this.video.currentTime = 0;
                             this.video.play().catch(e => {
                                 console.error('❌ Video autoplay error:', e);
@@ -210,21 +196,24 @@
                 };
 
                 this.onTargetLost = () => {
-                    console.log('Target lost. Hiding all.');
+                    console.log('Target lost.');
                     this.targetVisible = false;
                     this.playButton.setAttribute('visible', false); 
                     this.poster.setAttribute('visible', false);
                     
                     // Hide Models
                     this.fishSchoolModel.setAttribute('visible', false);
-                    this.psatModel.setAttribute('visible', false); // HIDE PSAT
+                    this.psatModel.setAttribute('visible', false); 
 
                     this.videoPlane.setAttribute('visible', false);
                     this.sideContent.setAttribute('visible', false); 
                     this.showAbacusButton.setAttribute('visible', false); 
                     this.showMapsButton.setAttribute('visible', false);
+                    
+                    // Hide All Panels
                     this.chronogramPanelGroup.setAttribute('visible', false); 
                     this.mapsPanelGroup.setAttribute('visible', false);
+                    this.psatPanelGroup.setAttribute('visible', false); 
                     this.panelOverlay.setAttribute('visible', false); 
 
                     if (this.fishSchoolModel) {
@@ -235,38 +224,55 @@
                     }
                 };
 
-                this.onShowAbacusClick = (event) => {
-                    console.log('Show Abacus clicked');
+                // --- Panel Interactions ---
+
+                this.onShowAbacusClick = () => {
                     this.chronogramPanelGroup.setAttribute('visible', true);
                     this.panelOverlay.setAttribute('visible', true); 
                     this.mapsPanelGroup.setAttribute('visible', false);
+                    this.psatPanelGroup.setAttribute('visible', false);
                 };
 
-                this.onCloseAbacusClick = (event) => {
-                    if (this.chronogramPanelGroup.getAttribute('visible') === false) return;
-                    console.log('Close Abacus clicked');
+                this.onCloseAbacusClick = () => {
                     this.chronogramPanelGroup.setAttribute('visible', false);
                     this.panelOverlay.setAttribute('visible', false); 
                 };
 
-                this.onShowMapsClick = (event) => {
-                    console.log('Show Maps clicked');
+                this.onShowMapsClick = () => {
                     this.mapsPanelGroup.setAttribute('visible', true);
                     this.panelOverlay.setAttribute('visible', true);
                     this.chronogramPanelGroup.setAttribute('visible', false);
+                    this.psatPanelGroup.setAttribute('visible', false);
                 };
 
-                this.onCloseMapsClick = (event) => {
-                    console.log('Close Maps clicked - handler triggered');
-                    if (this.mapsPanelGroup.getAttribute('visible') === false) {
-                        console.log('Maps panel already hidden, skipping');
-                        return;
-                    }
-                    console.log('Hiding Maps panel');
+                this.onCloseMapsClick = () => {
                     this.mapsPanelGroup.setAttribute('visible', false);
                     this.panelOverlay.setAttribute('visible', false);
                 };
 
+                // --- NEW PSAT Logic ---
+                this.onPsatClick = () => {
+                    console.log('PSAT Clicked');
+                    this.psatPanelGroup.setAttribute('visible', true);
+                    this.panelOverlay.setAttribute('visible', true);
+                    
+                    // Close others
+                    this.mapsPanelGroup.setAttribute('visible', false);
+                    this.chronogramPanelGroup.setAttribute('visible', false);
+                    
+                    // Pause rotation for readability
+                    this.psatModel.removeAttribute('animation');
+                };
+
+                this.onClosePsatClick = () => {
+                    this.psatPanelGroup.setAttribute('visible', false);
+                    this.panelOverlay.setAttribute('visible', false);
+                    
+                    // Resume rotation
+                    this.psatModel.setAttribute('animation', 'property: rotation; to: 0 360 0; loop: true; dur: 10000; easing: linear');
+                };
+
+                // --- Event Listeners ---
                 this.video.addEventListener('ended', this.onVideoEnded);
                 this.video.addEventListener('play', this.onVideoPlay);
                 this.el.addEventListener('targetFound', this.onTargetFound);
@@ -278,6 +284,10 @@
 
                 this.showMapsPlane.addEventListener('click', this.onShowMapsClick);
                 this.closeMapsButtonGroup.addEventListener('click', this.onCloseMapsClick);
+
+                // Add listeners for PSAT
+                this.psatModel.addEventListener('click', this.onPsatClick);
+                this.closePsatButtonGroup.addEventListener('click', this.onClosePsatClick);
             },
 
             remove: function() {
@@ -291,6 +301,9 @@
                 this.closeAbacusButtonGroup?.removeEventListener('click', this.onCloseAbacusClick);
                 this.showMapsPlane?.removeEventListener('click', this.onShowMapsClick);
                 this.closeMapsButtonGroup?.removeEventListener('click', this.onCloseMapsClick);
+                
+                this.psatModel?.removeEventListener('click', this.onPsatClick);
+                this.closePsatButtonGroup?.removeEventListener('click', this.onClosePsatClick);
             }
         });
     </script>
@@ -408,8 +421,9 @@
 
             <a-entity
                 id="psat-model"
+                class="clickable"
                 gltf-model="#psatModel"
-                position="0.3 -0.4 0.2" 
+                position="0.3 -0.4 0.5" 
                 rotation="0 0 0"
                 scale="0.3 0.3 0.3" 
                 visible="false"
@@ -607,6 +621,59 @@
                         align="center" 
                         color="#FFF" 
                         scale="0.1 0.1 0.1" 
+                        position="0 0 0.01"
+                    ></a-text>
+                </a-entity>
+            </a-entity>
+
+            <a-entity 
+                id="psat-panel-group" 
+                position="0 0 0.8" 
+                visible="false"
+            >
+                <a-plane
+                    color="#222"
+                    opacity="0.95"
+                    width="0.85"
+                    height="0.6"
+                    position="0 0 0"
+                ></a-plane>
+
+                <a-text
+                    value="PSAT TAG"
+                    color="#4CC3D9"
+                    align="center"
+                    position="0 0.2 0.01"
+                    scale="0.25 0.25 0.25"
+                ></a-text>
+
+                <a-text
+                    value="Type of satellite transmitter used to track the movements and diving behaviour of sharks.\n\nWhen deployed, it records depth, temperature, and light levels, detaches after a programmed period, and sends the data to passing satellites."
+                    color="#FFF"
+                    align="left"
+                    baseline="top"
+                    position="-0.38 0.1 0.01"
+                    scale="0.13 0.13 0.13"
+                    wrap-count="38"
+                    line-height="60"
+                ></a-text>
+
+                <a-entity
+                    id="close-psat-button-group" 
+                    position="0.38 0.25 0.02"
+                    class="clickable"
+                >
+                    <a-plane 
+                        color="#CC0000" 
+                        width="0.08" 
+                        height="0.08"
+                        opacity="0.8"
+                    ></a-plane>
+                    <a-text 
+                        value="X" 
+                        align="center" 
+                        color="#FFF" 
+                        scale="0.12 0.12 0.12" 
                         position="0 0 0.01"
                     ></a-text>
                 </a-entity>

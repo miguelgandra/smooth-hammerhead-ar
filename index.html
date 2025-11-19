@@ -142,11 +142,11 @@
             width: 100%;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
             text-align: center;
             overflow: hidden;
             background: #020a1a; /* Fallback */
-            padding-top: 20px;
+            padding-top: 0px;
         }
         
         #hero-model {
@@ -175,8 +175,8 @@
             z-index: 2;
             padding: 20px;
             padding-bottom: 100px; 
+            padding-top: 0;
             max-width: 1000px;
-            transform: translateY(-30px); 
             min-height: fit-content; 
         }
         
@@ -979,14 +979,14 @@
         /* Footer */
         footer {
             text-align: center;
-            padding: 40px 20px 10px; 
+            padding: 10px 0px 25px; 
             border-top: 1px solid rgba(0, 224, 192, 0.2);
-            margin-top: 80px;
+            margin-top: 60px;
         }
 
         footer p {
             color: #a0c0c0;
-            margin: 10px 0;
+            margin: 0px 0;
         }
 
         footer a {
@@ -1017,8 +1017,8 @@
         .developer-info {
             color: #a0c0c0;
             margin: 20px 0 20px; 
-            font-size: 0.9em;
-            line-height: 1.8; 
+            font-size: 1em;
+            line-height: 1.6; 
         }
         
         /* This span will hold the developer name */
@@ -1521,11 +1521,13 @@
         </div>
 
 
-        <footer>
-            <p style="margin-top: 0;">Demonstrating impactful digital storytelling for ocean conservation</p>
+       <footer>
             
             <div class="developer-info">
-                Developed by <span class="dev-name">Miguel Gandra</span>
+                Developed by 
+                <a href="https://saveourseas.com/project-leader/miguel-gandra/" target="_blank" rel="noopener noreferrer" class="dev-name">
+                    Miguel Gandra
+                </a>
                 <br>
                 Get in touch 
                 <a href="mailto:m3gandra@gmail.com" class="dev-email-link" aria-label="Email Miguel Gandra">
@@ -1536,7 +1538,7 @@
                 </a>
             </div>
             
-            <p class="model-credit" style="margin-top: 0;">
+            <p class="model-credit" style="margin-top: 0; margin-bottom: 0">
                 3D Model "Juvenile Hammerhead" by sharkingaround is licensed under 
                 <a href="http://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>.
             </p>
