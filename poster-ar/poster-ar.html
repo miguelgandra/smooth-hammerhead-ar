@@ -211,7 +211,26 @@
                     }
                 };
 
-                // --- INTERACTION LOGIC ---
+                // --- UNIFIED CLOSING LOGIC ---
+                // This function closes ANY open panel and resets the PSAT model
+                this.closeAllPanels = () => {
+                    console.log("Closing all panels and resetting PSAT");
+                    
+                    // 1. Hide all panels
+                    this.chronogramPanelGroup.setAttribute('visible', false);
+                    this.mapsPanelGroup.setAttribute('visible', false);
+                    this.psatPanelGroup.setAttribute('visible', false);
+                    this.panelOverlay.setAttribute('visible', false);
+
+                    // 2. Show PSAT Model
+                    this.psatModel.setAttribute('visible', true);
+
+                    // 3. Resume/Ensure Rotation Animation
+                    this.psatModel.setAttribute('animation', 'property: rotation; to: 0 360 0; loop: true; dur: 10000; easing: linear');
+                };
+
+
+                // --- OPENING LOGIC ---
 
                 // 1. ABACUS
                 this.onShowAbacusClick = () => {
@@ -224,17 +243,8 @@
                     this.psatModel.setAttribute('visible', false);
                 };
 
-                this.onCloseAbacusClick = () => {
-                    this.chronogramPanelGroup.setAttribute('visible', false);
-                    this.panelOverlay.setAttribute('visible', false); 
-                    
-                    // Show PSAT Model
-                    this.psatModel.setAttribute('visible', true);
-                };
-
-                // 2. MAPS (Fixed Logic)
+                // 2. MAPS
                 this.onShowMapsClick = () => {
-                    console.log("Show Maps Clicked");
                     this.mapsPanelGroup.setAttribute('visible', true);
                     this.panelOverlay.setAttribute('visible', true);
                     this.chronogramPanelGroup.setAttribute('visible', false);
@@ -244,35 +254,18 @@
                     this.psatModel.setAttribute('visible', false);
                 };
 
-                this.onCloseMapsClick = () => {
-                    console.log("Close Maps Clicked");
-                    this.mapsPanelGroup.setAttribute('visible', false);
-                    this.panelOverlay.setAttribute('visible', false);
-                    
-                    // Show PSAT Model
-                    this.psatModel.setAttribute('visible', true);
-                };
-
                 // 3. PSAT INFO
                 this.onPsatClick = () => {
-                    console.log('PSAT Model Clicked');
                     this.psatPanelGroup.setAttribute('visible', true);
                     this.panelOverlay.setAttribute('visible', true);
                     
                     this.mapsPanelGroup.setAttribute('visible', false);
                     this.chronogramPanelGroup.setAttribute('visible', false);
 
-                    // Pause rotation for readability
+                    // Pause rotation for readability while reading
                     this.psatModel.removeAttribute('animation');
                 };
 
-                this.onClosePsatClick = () => {
-                    this.psatPanelGroup.setAttribute('visible', false);
-                    this.panelOverlay.setAttribute('visible', false);
-                    
-                    // Resume rotation
-                    this.psatModel.setAttribute('animation', 'property: rotation; to: 0 360 0; loop: true; dur: 10000; easing: linear');
-                };
 
                 // --- Event Listeners ---
                 this.video.addEventListener('ended', this.onVideoEnded);
@@ -281,17 +274,15 @@
                 this.el.addEventListener('targetLost', this.onTargetLost);
                 this.playButtonPlane.addEventListener('click', this.onPlayButtonClick);
                 
+                // Open Handlers
                 this.showAbacusPlane.addEventListener('click', this.onShowAbacusClick);
-                // Listen to the plane directly
-                if(this.closeAbacusPlane) this.closeAbacusPlane.addEventListener('click', this.onCloseAbacusClick);
-
                 this.showMapsPlane.addEventListener('click', this.onShowMapsClick);
-                // Listen to the plane directly (Fix for maps closing)
-                if(this.closeMapsPlane) this.closeMapsPlane.addEventListener('click', this.onCloseMapsClick);
-
                 this.psatModel.addEventListener('click', this.onPsatClick);
-                // Listen to the plane directly
-                if(this.closePsatPlane) this.closePsatPlane.addEventListener('click', this.onClosePsatClick);
+
+                // Close Handlers (All point to the Unified Function)
+                if(this.closeAbacusPlane) this.closeAbacusPlane.addEventListener('click', this.closeAllPanels);
+                if(this.closeMapsPlane) this.closeMapsPlane.addEventListener('click', this.closeAllPanels);
+                if(this.closePsatPlane) this.closePsatPlane.addEventListener('click', this.closeAllPanels);
             },
 
             remove: function() {
@@ -302,12 +293,13 @@
                 
                 this.playButtonPlane?.removeEventListener('click', this.onPlayButtonClick);
                 this.showAbacusPlane?.removeEventListener('click', this.onShowAbacusClick);
-                this.closeAbacusPlane?.removeEventListener('click', this.onCloseAbacusClick);
                 this.showMapsPlane?.removeEventListener('click', this.onShowMapsClick);
-                this.closeMapsPlane?.removeEventListener('click', this.onCloseMapsClick);
-                
                 this.psatModel?.removeEventListener('click', this.onPsatClick);
-                this.closePsatPlane?.removeEventListener('click', this.onClosePsatClick);
+                
+                // Remove Close Listeners
+                this.closeAbacusPlane?.removeEventListener('click', this.closeAllPanels);
+                this.closeMapsPlane?.removeEventListener('click', this.closeAllPanels);
+                this.closePsatPlane?.removeEventListener('click', this.closeAllPanels);
             }
         });
     </script>
