@@ -150,6 +150,7 @@
         }
         
         #hero-model {
+            /* UPDATED: Reverted to absolute so it scrolls WITH the content */
             position: absolute;
             top: 0;
             left: 0;
@@ -296,17 +297,17 @@
         .scroll-indicator {
             position: absolute;
             bottom: 20px; 
-            left: 50%;
-            transform: translateX(-50%);
+            left: 0;
+            width: 100%; /* Ensures centering on mobile */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             z-index: 3;
             color: #00e0c0;
             font-size: 0.9em;
             font-weight: 300;
             letter-spacing: 1px;
-            
-            display: flex;
-            flex-direction: column;
-            align-items: center;
             gap: 8px;
             
             animation: fadeInHero 1s ease-out 1.2s forwards;
@@ -356,7 +357,7 @@
 
         .model-credit {
             text-align: center;
-            font-size: 0.85em;
+            font-size: 0.75em; /* UPDATED: Smaller font */
             color: #a0c0c0; 
             margin-top: 15px;
             font-style: italic;
@@ -1000,11 +1001,12 @@
             color: #00b0c0;
         }
         
+        /* UPDATED: Removed text-decoration: underline */
         footer p a,
         footer .model-credit a {
             color: #a0c0c0; 
             font-weight: 400; 
-            text-decoration: underline; 
+            text-decoration: none; 
             transition: color 0.3s ease;
             margin-bottom: 0;
         }
@@ -1012,6 +1014,7 @@
         footer p a:hover,
         footer .model-credit a:hover {
             color: #ffffff; 
+            text-decoration: underline;
         }
         
         .developer-info {
@@ -1539,11 +1542,16 @@
             </div>
             
             <p class="model-credit" style="margin-top: 0; margin-bottom: 0">
-                3D Model "Juvenile Hammerhead" by sharkingaround is licensed under 
+                3D Model 'Juvenile Hammerhead' by sharkingaround is licensed under 
+                <a href="http://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>.
+            </p>
+
+            <p class="model-credit" style="margin-top: 0; margin-bottom: 15px;">
+                3D Model 'The Fish Particle' by Loïc Norgeot is licensed under 
                 <a href="http://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>.
             </p>
             
-            <p style="margin-top: 0px; font-size: 0.85em;"> Page content licensed under <a href="http://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>.
+            <p style="margin-top: 0px; font-size: 0.8em;"> Page content licensed under <a href="http://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>.
             </p>
             
         </footer>

@@ -96,32 +96,32 @@
                 this.playButton = this.el.querySelector('#play-button-group');
                 this.playButtonPlane = this.el.querySelector('#play-button-plane-rounded'); 
 
-                // --- Panel Groups ---
+                this.panelOverlay = this.el.querySelector('#panel-overlay');
+
+                // --- Panel 1: Abacus (Chronogram) ---
                 this.showAbacusButton = this.el.querySelector('#show-abacus-button'); 
                 this.chronogramPanelGroup = this.el.querySelector('#chronogram-panel-group');
                 this.showAbacusPlane = this.el.querySelector('#show-abacus-plane');
-                this.closeAbacusPlane = this.el.querySelector('#close-abacus-plane');
-                this.closeAbacusButtonGroup = this.el.querySelector('#close-abacus-button-group');
+                // FIX: Select the specific plane ID for closing
+                this.closeAbacusPlane = this.el.querySelector('#close-abacus-plane'); 
 
+                // --- Panel 2: Maps (Home Ranges) ---
                 this.showMapsButton = this.el.querySelector('#show-maps-button');
                 this.mapsPanelGroup = this.el.querySelector('#maps-panel-group');
                 this.showMapsPlane = this.el.querySelector('#show-maps-plane');
-                this.closeMapsPlane = this.el.querySelector('#close-maps-plane');
-                this.closeMapsButtonGroup = this.el.querySelector('#close-maps-button-group');
-                
-                // --- NEW PSAT PANEL ---
-                this.psatPanelGroup = this.el.querySelector('#psat-panel-group');
-                this.closePsatButtonGroup = this.el.querySelector('#close-psat-button-group');
+                // FIX: Select the specific plane ID for closing
+                this.closeMapsPlane = this.el.querySelector('#close-maps-plane'); 
 
-                this.panelOverlay = this.el.querySelector('#panel-overlay');
+                // --- Panel 3: PSAT Info ---
+                this.psatPanelGroup = this.el.querySelector('#psat-panel-group');
+                // FIX: Select the specific plane ID for closing
+                this.closePsatPlane = this.el.querySelector('#close-psat-plane'); 
 
                 this.targetVisible = false;
                 this.videoHasPlayed = false;
 
-                // --- Handlers ---
-
+                // --- Video Logic ---
                 this.onPlayButtonClick = (event) => {
-                    console.log('Play button clicked!');
                     if (this.video && this.targetVisible && !this.videoHasPlayed) {
                         this.video.currentTime = 0; 
                         this.video.play().catch(e => console.error('❌ Button play error:', e));
@@ -129,9 +129,7 @@
                 };
                 
                 this.onVideoPlay = () => {
-                    if (this.playButton) {
-                        this.playButton.setAttribute('visible', false);
-                    }
+                    if (this.playButton) this.playButton.setAttribute('visible', false);
                 };
 
                 this.onVideoEnded = () => {
@@ -140,7 +138,7 @@
                     this.showPosterContent();
                 };
 
-                // Helper to show static content
+                // --- Core State Helper ---
                 this.showPosterContent = () => {
                     console.log('Showing poster and models.');
                     this.videoPlane.setAttribute('visible', false);
@@ -165,11 +163,8 @@
                         this.showPosterContent();
                     } else {
                         this.poster.setAttribute('visible', false);
-                        
-                        // Hide Models initially
                         this.fishSchoolModel.setAttribute('visible', false);
                         this.psatModel.setAttribute('visible', false); 
-
                         this.sideContent.setAttribute('visible', false);
                         this.showAbacusButton.setAttribute('visible', false); 
                         this.showMapsButton.setAttribute('visible', false);
@@ -177,19 +172,16 @@
                         
                         if (this.video.currentTime > 0) {
                             this.video.play().catch(e => {
-                                console.error('❌ Video resume error:', e);
                                 this.playButton.setAttribute('visible', true);
                             });
                         }
                         else if (userInteracted && videoReady) {
                             this.video.currentTime = 0;
                             this.video.play().catch(e => {
-                                console.error('❌ Video autoplay error:', e);
                                 this.playButton.setAttribute('visible', true);
                             });
                         } 
                         else {
-                            console.warn('Video not ready. Showing fallback button.');
                             this.playButton.setAttribute('visible', true);
                         }
                     }
@@ -200,17 +192,14 @@
                     this.targetVisible = false;
                     this.playButton.setAttribute('visible', false); 
                     this.poster.setAttribute('visible', false);
-                    
-                    // Hide Models
                     this.fishSchoolModel.setAttribute('visible', false);
                     this.psatModel.setAttribute('visible', false); 
-
                     this.videoPlane.setAttribute('visible', false);
                     this.sideContent.setAttribute('visible', false); 
                     this.showAbacusButton.setAttribute('visible', false); 
                     this.showMapsButton.setAttribute('visible', false);
                     
-                    // Hide All Panels
+                    // Close all panels
                     this.chronogramPanelGroup.setAttribute('visible', false); 
                     this.mapsPanelGroup.setAttribute('visible', false);
                     this.psatPanelGroup.setAttribute('visible', false); 
@@ -224,42 +213,53 @@
                     }
                 };
 
-                // --- Panel Interactions ---
+                // --- Panel Interaction Logic ---
 
+                // 1. ABACUS
                 this.onShowAbacusClick = () => {
                     this.chronogramPanelGroup.setAttribute('visible', true);
                     this.panelOverlay.setAttribute('visible', true); 
                     this.mapsPanelGroup.setAttribute('visible', false);
                     this.psatPanelGroup.setAttribute('visible', false);
+
+                    // Hide PSAT Model to reduce clutter
+                    this.psatModel.setAttribute('visible', false);
                 };
 
                 this.onCloseAbacusClick = () => {
                     this.chronogramPanelGroup.setAttribute('visible', false);
                     this.panelOverlay.setAttribute('visible', false); 
+                    // Show PSAT Model again
+                    this.psatModel.setAttribute('visible', true);
                 };
 
+                // 2. MAPS
                 this.onShowMapsClick = () => {
                     this.mapsPanelGroup.setAttribute('visible', true);
                     this.panelOverlay.setAttribute('visible', true);
                     this.chronogramPanelGroup.setAttribute('visible', false);
                     this.psatPanelGroup.setAttribute('visible', false);
+
+                    // Hide PSAT Model to reduce clutter
+                    this.psatModel.setAttribute('visible', false);
                 };
 
                 this.onCloseMapsClick = () => {
                     this.mapsPanelGroup.setAttribute('visible', false);
                     this.panelOverlay.setAttribute('visible', false);
+                    // Show PSAT Model again
+                    this.psatModel.setAttribute('visible', true);
                 };
 
-                // --- NEW PSAT Logic ---
+                // 3. PSAT INFO
                 this.onPsatClick = () => {
-                    console.log('PSAT Clicked');
+                    console.log('PSAT Model Clicked');
                     this.psatPanelGroup.setAttribute('visible', true);
                     this.panelOverlay.setAttribute('visible', true);
                     
-                    // Close others
                     this.mapsPanelGroup.setAttribute('visible', false);
                     this.chronogramPanelGroup.setAttribute('visible', false);
-                    
+
                     // Pause rotation for readability
                     this.psatModel.removeAttribute('animation');
                 };
@@ -272,7 +272,7 @@
                     this.psatModel.setAttribute('animation', 'property: rotation; to: 0 360 0; loop: true; dur: 10000; easing: linear');
                 };
 
-                // --- Event Listeners ---
+                // --- Event Binding ---
                 this.video.addEventListener('ended', this.onVideoEnded);
                 this.video.addEventListener('play', this.onVideoPlay);
                 this.el.addEventListener('targetFound', this.onTargetFound);
@@ -280,14 +280,16 @@
                 this.playButtonPlane.addEventListener('click', this.onPlayButtonClick);
                 
                 this.showAbacusPlane.addEventListener('click', this.onShowAbacusClick);
-                this.closeAbacusButtonGroup.addEventListener('click', this.onCloseAbacusClick);
+                // FIX: Listening to the plane, not the group
+                this.closeAbacusPlane.addEventListener('click', this.onCloseAbacusClick);
 
                 this.showMapsPlane.addEventListener('click', this.onShowMapsClick);
-                this.closeMapsButtonGroup.addEventListener('click', this.onCloseMapsClick);
+                // FIX: Listening to the plane, not the group
+                this.closeMapsPlane.addEventListener('click', this.onCloseMapsClick);
 
-                // Add listeners for PSAT
                 this.psatModel.addEventListener('click', this.onPsatClick);
-                this.closePsatButtonGroup.addEventListener('click', this.onClosePsatClick);
+                // FIX: Listening to the plane, not the group
+                if(this.closePsatPlane) this.closePsatPlane.addEventListener('click', this.onClosePsatClick);
             },
 
             remove: function() {
@@ -298,12 +300,12 @@
                 
                 this.playButtonPlane?.removeEventListener('click', this.onPlayButtonClick);
                 this.showAbacusPlane?.removeEventListener('click', this.onShowAbacusClick);
-                this.closeAbacusButtonGroup?.removeEventListener('click', this.onCloseAbacusClick);
+                this.closeAbacusPlane?.removeEventListener('click', this.onCloseAbacusClick);
                 this.showMapsPlane?.removeEventListener('click', this.onShowMapsClick);
-                this.closeMapsButtonGroup?.removeEventListener('click', this.onCloseMapsClick);
+                this.closeMapsPlane?.removeEventListener('click', this.onCloseMapsClick);
                 
                 this.psatModel?.removeEventListener('click', this.onPsatClick);
-                this.closePsatButtonGroup?.removeEventListener('click', this.onClosePsatClick);
+                this.closePsatPlane?.removeEventListener('click', this.onClosePsatClick);
             }
         });
     </script>
@@ -566,25 +568,17 @@
                 <a-entity
                     id="close-abacus-button-group" 
                     position="0.365 0.526 0.01"
-                    class="clickable"
                 >
                     <a-plane 
                         id="close-abacus-plane" 
+                        class="clickable"
                         color="#CC0000" 
                         width="0.07" 
                         height="0.07"
                         opacity="0.8"
                         animation="property: material.opacity; from: 0.4; to: 0.8; dur: 750; dir: alternate; easing: easeInOutSine; loop: true"
                     ></a-plane>
-                    
-                    <a-text 
-                        id="close-abacus-text" 
-                        value="X" 
-                        align="center" 
-                        color="#FFF" 
-                        scale="0.1 0.1 0.1" 
-                        position="0 0 0.01"
-                    ></a-text>
+                    <a-text value="X" align="center" color="#FFF" scale="0.1 0.1 0.1" position="0 0 0.01"></a-text>
                 </a-entity>
             </a-entity>
 
@@ -604,25 +598,17 @@
                 <a-entity
                     id="close-maps-button-group" 
                     position="0.365 0.526 0.01"
-                    class="clickable"
                 >
-                    <a-plane 
+                     <a-plane 
                         id="close-maps-plane" 
+                        class="clickable"
                         color="#CC0000" 
                         width="0.07" 
                         height="0.07"
                         opacity="0.8"
                         animation="property: material.opacity; from: 0.4; to: 0.8; dur: 750; dir: alternate; easing: easeInOutSine; loop: true"
                     ></a-plane>
-                    
-                    <a-text 
-                        id="close-maps-text" 
-                        value="X" 
-                        align="center" 
-                        color="#FFF" 
-                        scale="0.1 0.1 0.1" 
-                        position="0 0 0.01"
-                    ></a-text>
+                    <a-text value="X" align="center" color="#FFF" scale="0.1 0.1 0.1" position="0 0 0.01"></a-text>
                 </a-entity>
             </a-entity>
 
@@ -661,9 +647,10 @@
                 <a-entity
                     id="close-psat-button-group" 
                     position="0.38 0.25 0.02"
-                    class="clickable"
                 >
                     <a-plane 
+                        id="close-psat-plane"
+                        class="clickable"
                         color="#CC0000" 
                         width="0.08" 
                         height="0.08"
