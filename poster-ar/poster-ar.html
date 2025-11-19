@@ -84,37 +84,35 @@
             init: function() {
                 console.log('Poster handler initialized.');
                 
+                // --- Core Elements ---
                 this.poster = this.el.querySelector('#static-poster');
                 this.videoPlane = this.el.querySelector('#video-plane');
                 this.video = document.querySelector('#posterVideo');
+                this.panelOverlay = this.el.querySelector('#panel-overlay');
                 
                 // --- Models ---
                 this.fishSchoolModel = this.el.querySelector('#fish-school-model'); 
                 this.psatModel = this.el.querySelector('#psat-model'); 
 
+                // --- Interface Elements ---
                 this.sideContent = this.el.querySelector('#side-content-column');
                 this.playButton = this.el.querySelector('#play-button-group');
                 this.playButtonPlane = this.el.querySelector('#play-button-plane-rounded'); 
-
-                this.panelOverlay = this.el.querySelector('#panel-overlay');
 
                 // --- Panel 1: Abacus (Chronogram) ---
                 this.showAbacusButton = this.el.querySelector('#show-abacus-button'); 
                 this.chronogramPanelGroup = this.el.querySelector('#chronogram-panel-group');
                 this.showAbacusPlane = this.el.querySelector('#show-abacus-plane');
-                // FIX: Select the specific plane ID for closing
                 this.closeAbacusPlane = this.el.querySelector('#close-abacus-plane'); 
 
                 // --- Panel 2: Maps (Home Ranges) ---
                 this.showMapsButton = this.el.querySelector('#show-maps-button');
                 this.mapsPanelGroup = this.el.querySelector('#maps-panel-group');
                 this.showMapsPlane = this.el.querySelector('#show-maps-plane');
-                // FIX: Select the specific plane ID for closing
                 this.closeMapsPlane = this.el.querySelector('#close-maps-plane'); 
 
                 // --- Panel 3: PSAT Info ---
                 this.psatPanelGroup = this.el.querySelector('#psat-panel-group');
-                // FIX: Select the specific plane ID for closing
                 this.closePsatPlane = this.el.querySelector('#close-psat-plane'); 
 
                 this.targetVisible = false;
@@ -138,7 +136,7 @@
                     this.showPosterContent();
                 };
 
-                // --- Core State Helper ---
+                // --- State Management ---
                 this.showPosterContent = () => {
                     console.log('Showing poster and models.');
                     this.videoPlane.setAttribute('visible', false);
@@ -213,7 +211,7 @@
                     }
                 };
 
-                // --- Panel Interaction Logic ---
+                // --- INTERACTION LOGIC ---
 
                 // 1. ABACUS
                 this.onShowAbacusClick = () => {
@@ -221,33 +219,37 @@
                     this.panelOverlay.setAttribute('visible', true); 
                     this.mapsPanelGroup.setAttribute('visible', false);
                     this.psatPanelGroup.setAttribute('visible', false);
-
-                    // Hide PSAT Model to reduce clutter
+                    
+                    // Hide PSAT Model (Clean view)
                     this.psatModel.setAttribute('visible', false);
                 };
 
                 this.onCloseAbacusClick = () => {
                     this.chronogramPanelGroup.setAttribute('visible', false);
                     this.panelOverlay.setAttribute('visible', false); 
-                    // Show PSAT Model again
+                    
+                    // Show PSAT Model
                     this.psatModel.setAttribute('visible', true);
                 };
 
-                // 2. MAPS
+                // 2. MAPS (Fixed Logic)
                 this.onShowMapsClick = () => {
+                    console.log("Show Maps Clicked");
                     this.mapsPanelGroup.setAttribute('visible', true);
                     this.panelOverlay.setAttribute('visible', true);
                     this.chronogramPanelGroup.setAttribute('visible', false);
                     this.psatPanelGroup.setAttribute('visible', false);
-
-                    // Hide PSAT Model to reduce clutter
+                    
+                    // Hide PSAT Model (Clean view)
                     this.psatModel.setAttribute('visible', false);
                 };
 
                 this.onCloseMapsClick = () => {
+                    console.log("Close Maps Clicked");
                     this.mapsPanelGroup.setAttribute('visible', false);
                     this.panelOverlay.setAttribute('visible', false);
-                    // Show PSAT Model again
+                    
+                    // Show PSAT Model
                     this.psatModel.setAttribute('visible', true);
                 };
 
@@ -272,7 +274,7 @@
                     this.psatModel.setAttribute('animation', 'property: rotation; to: 0 360 0; loop: true; dur: 10000; easing: linear');
                 };
 
-                // --- Event Binding ---
+                // --- Event Listeners ---
                 this.video.addEventListener('ended', this.onVideoEnded);
                 this.video.addEventListener('play', this.onVideoPlay);
                 this.el.addEventListener('targetFound', this.onTargetFound);
@@ -280,15 +282,15 @@
                 this.playButtonPlane.addEventListener('click', this.onPlayButtonClick);
                 
                 this.showAbacusPlane.addEventListener('click', this.onShowAbacusClick);
-                // FIX: Listening to the plane, not the group
-                this.closeAbacusPlane.addEventListener('click', this.onCloseAbacusClick);
+                // Listen to the plane directly
+                if(this.closeAbacusPlane) this.closeAbacusPlane.addEventListener('click', this.onCloseAbacusClick);
 
                 this.showMapsPlane.addEventListener('click', this.onShowMapsClick);
-                // FIX: Listening to the plane, not the group
-                this.closeMapsPlane.addEventListener('click', this.onCloseMapsClick);
+                // Listen to the plane directly (Fix for maps closing)
+                if(this.closeMapsPlane) this.closeMapsPlane.addEventListener('click', this.onCloseMapsClick);
 
                 this.psatModel.addEventListener('click', this.onPsatClick);
-                // FIX: Listening to the plane, not the group
+                // Listen to the plane directly
                 if(this.closePsatPlane) this.closePsatPlane.addEventListener('click', this.onClosePsatClick);
             },
 
