@@ -1061,7 +1061,7 @@
 
             header {
                 transform: translateY(0); 
-                padding: 20px 20px 100px 20px; 
+                padding: 10px 20px 100px 20px; 
             }
 
 
@@ -1073,9 +1073,9 @@
 
             h1 {
                 font-size: 2.5em; 
-                font-weight: 1300;
+                font-weight: 1500;
                 line-height: 1.1em;
-                margin-bottom: 20px; 
+                margin-bottom: 35px; 
             }
             
             .header-logos {
@@ -1086,20 +1086,20 @@
                 flex-wrap: wrap; 
             }
             .header-logos img {
-                height: 36px;
+                height: 34px;
             }
             .header-logos .ccmar-logo {
                 margin-top: 4px;
                 order: 1;
             }
             .header-logos .art-logo {
-                height: 44px;
+                height: 42px;
                 margin-top: 8px;
                 order: 3;
             }
             
             .header-logos .fct-logo {
-                height: 32px;
+                height: 30px;
                 margin-top: 4px;
                 order: 2;
             }
@@ -1109,7 +1109,7 @@
             }
 
             .header-logos .fam-logo {
-                height: 40px;
+                height: 38px;
                 margin-top: 6px;
                 order: 5;
             }
@@ -1660,23 +1660,23 @@
 
     </script>
 
-    <script>
+   <script>
         document.addEventListener('DOMContentLoaded', function() {
             
             // 1. Define a helper function to send data to Google
-            function sendAREvent(arContentName) {
+            function sendAnalyticsEvent(eventName) {
                 // Check if we are in Developer Mode first
                 const isDevMode = localStorage.getItem('is_developer') === 'true';
                 
                 if (!isDevMode && typeof gtag === 'function') {
-                    gtag('event', 'ar_experience_start', {
+                    // Use the eventName passed to the function
+                    gtag('event', eventName, {
                         'event_category': 'AR Interaction',
-                        'event_label': arContentName,
                         'transport_type': 'beacon'
                     });
-                    console.log(`Analytics: AR Event sent for ${arContentName}`);
+                    console.log(`Analytics: Event '${eventName}' sent.`);
                 } else if (isDevMode) {
-                    console.log(`Analytics: AR Event BLOCKED (Dev Mode) for ${arContentName}`);
+                    console.log(`Analytics: Event '${eventName}' BLOCKED (Dev Mode).`);
                 }
             }
 
@@ -1684,7 +1684,7 @@
             const sharkButton = document.querySelector('.ar-button');
             if (sharkButton) {
                 sharkButton.addEventListener('click', function() {
-                    sendAREvent('Shark 3D Model');
+                    sendAnalyticsEvent('ar_model_shark_opened');
                 });
             }
 
@@ -1693,7 +1693,7 @@
             const posterButton = document.querySelector('.mobile-instructions .cta-button');
             if (posterButton) {
                 posterButton.addEventListener('click', function() {
-                    sendAREvent('Poster AR Demo');
+                    sendAnalyticsEvent('ar_poster_demo_opened');
                 });
             }
         });
